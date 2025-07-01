@@ -25,7 +25,7 @@
       >
         <img
           class="thumbnail-image"
-          :src="app_url + thumbnail?.image_url"
+          :src="thumbnail?.image_url"
           :class="{ 'cursor-pointer': thumbnail.product_url }"
           @click="handleThumbnailClick(thumbnail)"
         />

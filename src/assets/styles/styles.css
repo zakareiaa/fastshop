@@ -1,0 +1,54 @@
+.app-container {
+  inline-size: 100%;
+  margin-block: 0;
+  margin-inline: auto;
+  max-inline-size: 1440px;
+  padding-inline: 20px;
+}
+
+@media (max-width: 600px) {
+  .app-container {
+    padding-inline: 8px;
+  }
+}
+
+/* background colors */
+
+.bg-white {
+  background-color: white !important;
+}
+
+.bg-dark {
+  background-color: #1a1a1a !important;
+}
+
+.bg-black {
+  background-color: #2f2b3de6;
+}
+
+/* text colors */
+.color-black {
+  color: #2f2b3de6;
+}
+
+.color-white {
+  color: white;
+}
+
+.color-primary {
+  color: #fff;
+}
+
+.color-6e6b7b {
+  color: #6e6b7b;
+}
+
+/* font weights */
+.font-weight-600 {
+  font-weight: 600;
+}
+
+/* border */
+.b-radius-16 {
+  border-radius: 16px !important;
+}

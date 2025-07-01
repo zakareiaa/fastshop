@@ -37,6 +37,7 @@
         "
         @click="product.id && $router.push(`/product/${product.id}`)"
       >
+
         <div
           :class="
             viewMode === 'list'
@@ -44,24 +45,12 @@
               : 'd-flex align-center justify-space-between align-center pb-1'
           "
         >
-          <VCardTitle
-            class="product-title text-h6 font-weight-bold"
-            :class="viewMode === 'list' ? 'px-0' : 'ps-4 pe-1 pt-0 pb-0'"
-            >{{ product.name || "Product" }}</VCardTitle
+          <h1
+            class="product-title text-h6 font-weight-bold text-truncate-1 w-100"
+            :class="viewMode === 'list' ? 'px-0' : 'ps-4 pe-4 pt-0 pb-0'"
           >
-          <div
-            class="d-flex align-end gap-2 pe-4 ps-1"
-            v-if="viewMode === 'grid'"
-          >
-            <!-- <span
-                v-if="product.old_price"
-                class="text-secondary text text-decoration-line-through"
-                >{{ product.old_price }} DA</span
-              > -->
-            <span class="text-primary text-h6 font-weight-bold"
-              >{{ product.price }} DA</span
-            >
-          </div>
+            {{ product.name || "Product" }}
+          </h1>
           <!-- <div class="d-flex align-end">
             <VRating
               :model-value="product.average_rating || 0"
@@ -83,10 +72,21 @@
           :class="
             viewMode === 'list'
               ? 'px-0 text-truncate-5'
-              : 'text-truncate-1 px-4 mb-5'
+              : 'text-truncate-1 px-4 mb-3'
           "
           >{{ product.short_description || "" }}</span
         >
+
+         <div class="d-flex align-end justify-end gap-2 px-4 pb-1" v-if="viewMode === 'grid'">
+          <span
+            v-if="product.old_price"
+            class="text-secondary text-h6 text-decoration-line-through"
+            >{{ product.old_price }} DA</span
+          >
+          <span class="text-primary text-h5 font-weight-bold"
+            >{{ product.price }} DA</span
+          >
+        </div>
 
         <VDivider class="my-2" v-show="viewMode === 'grid'" />
       </div>

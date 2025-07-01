@@ -48,24 +48,12 @@
               : 'd-flex align-center justify-space-between align-center pb-1'
           "
         >
-          <VCardTitle
-            class="product-title text-h6 font-weight-bold"
+          <h1
+            class="product-title text-h6 font-weight-bold text-truncate-1 w-100"
             :class="viewMode === 'list' ? 'px-0' : 'ps-4 pe-1 pt-0 pb-0'"
-            >{{ productProp.name || $t("product.no_description") }}</VCardTitle
           >
-          <div
-            class="d-flex align-end gap-2 pe-4 ps-1"
-            v-if="viewMode === 'grid'"
-          >
-            <span class="text-primary text-h6 font-weight-bold"
-              >{{
-                productProp.price
-                  ? productProp.price
-                  : "0.00"
-              }}
-              DA</span
-            >
-          </div>
+            {{ productProp.name || $t("product.no_description") }}
+          </h1>
         </div>
         <!-- <div class="d-flex align-end">
             <VRating
@@ -87,7 +75,7 @@
           :class="
             viewMode === 'list'
               ? 'px-0 text-truncate-5'
-              : 'text-truncate-1 px-4 mb-5'
+              : 'text-truncate-1 px-4 mb-3'
           "
           >{{
             productProp.short_description ||
@@ -95,6 +83,20 @@
             $t("product.no_description")
           }}</span
         >
+
+         <div
+          class="d-flex align-end justify-end mb-1 gap-2 px-4"
+          v-if="viewMode === 'grid'"
+        >
+          <span
+            v-if="productProp.old_price"
+            class="text-secondary text-h6 text-decoration-line-through"
+            >{{ productProp.old_price }} DA</span
+          >
+          <span class="text-primary text-h5 font-weight-bold"
+            >{{ productProp.price ? productProp.price : "0.00" }} DA</span
+          >
+        </div>
 
         <VDivider class="my-2" v-show="viewMode === 'grid'" />
       </div>
@@ -114,11 +116,7 @@
             >{{ productProp.old_price }} DA</span
           >
           <span class="text-primary font-weight-bold">
-            {{
-              productProp.price
-                ? productProp.price
-                : "0.00"
-            }}
+            {{ productProp.price ? productProp.price : "0.00" }}
             DA
           </span>
         </div>

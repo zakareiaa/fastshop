@@ -98,7 +98,7 @@ export const themes = {
       'error-darken-1': '#E64449',
       background: '#000',
       'on-background': '#FaFaFa',
-      surface: '#111',
+      surface: '#1a1a1a',
       'on-surface': '#F5F5F5',
       'grey-50': '#26293A',
       'grey-100': '#2F3349',

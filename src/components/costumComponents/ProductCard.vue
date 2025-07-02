@@ -226,14 +226,17 @@ export default {
   align-items: center;
   justify-content: center;
   block-size: 200px;
-  padding-block: 1rem 0;
-  padding-inline: 1rem;
+  margin-block-end: 1rem;
+
+  // padding-block: 1rem 0;
+  // padding-inline: 1rem;
 }
 
 .product-image {
   max-block-size: 100%;
   max-inline-size: 100%;
   object-fit: contain;
+  border-radius: 8px;
 }
 
 .product-title {

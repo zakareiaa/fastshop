@@ -728,22 +728,6 @@ definePage({
   transform: translateY(-5px);
 }
 
-.product-image-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-
-  // background-color: #f9f9f9;
-  // block-size: 200px;
-}
-
-.product-image {
-  max-block-size: 100%;
-  max-inline-size: 100%;
-  object-fit: contain;
-}
-
 .product-title {
   overflow: hidden;
   font-size: 1.1rem;

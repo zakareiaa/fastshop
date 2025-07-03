@@ -1,6 +1,6 @@
 <template>
   <VCard class="product-card cursor-pointer">
-    <div class="cursor-pointer" :class="viewMode === 'list' ? 'd-flex' : ''">
+    <div class="cursor-pointer product-image-info" :class="viewMode === 'list' ? 'd-flex' : ''">
       <div
         class="product-image-container"
         :class="{ 'bg-white': !$vuetify.theme.current.dark }"
@@ -29,28 +29,29 @@
         </div>
       </div>
 
-      <div
-        :class="
-          viewMode === 'list'
-            ? 'border-right flex-1 flex-grow-1 px-6 pb-5'
-            : 'flex-grow-1'
-        "
-        @click="product.id && $router.push(`/product/${product.id}`)"
-      >
+      <div>
         <div
           :class="
             viewMode === 'list'
-              ? 'd-flex align-center justify-space-between align-center pt-5 pb-1'
-              : 'd-flex align-center justify-space-between align-center pb-1'
+              ? 'border-right flex-1 flex-grow-1 px-6 pb-5'
+              : 'flex-grow-1'
           "
+          @click="product.id && $router.push(`/product/${product.id}`)"
         >
-          <h1
-            class="product-title text-h6 font-weight-bold text-truncate-1 w-100"
-            :class="viewMode === 'list' ? 'px-0' : 'ps-4 pe-4 pt-0 pb-0'"
+          <div
+            :class="
+              viewMode === 'list'
+                ? 'd-flex align-center justify-space-between align-center pt-5 pb-1'
+                : 'd-flex align-center justify-space-between align-center pb-1'
+            "
           >
-            {{ product.name || "Product" }}
-          </h1>
-          <!-- <div class="d-flex align-end">
+            <h1
+              class="product-title text-h6 font-weight-bold text-truncate-1 w-100"
+              :class="viewMode === 'list' ? 'px-0' : 'ps-4 pe-4 pt-0 pb-0'"
+            >
+              {{ product.name || "Product" }}
+            </h1>
+            <!-- <div class="d-flex align-end">
             <VRating
               :model-value="product.average_rating || 0"
               readonly
@@ -64,85 +65,88 @@
               >({{ product.reviews_count }})</span
             >
           </div> -->
+          </div>
+
+          <span
+            class="product-description"
+            :class="
+              viewMode === 'list'
+                ? 'px-0 text-truncate-5'
+                : 'text-truncate-1 px-4 mb-3'
+            "
+            >{{ product.short_description || "" }}</span
+          >
+
+          <div
+            class="d-flex align-end justify-end gap-2 px-4 pb-1"
+            v-if="viewMode === 'grid'"
+          >
+            <span
+              v-if="product.old_price"
+              class="text-secondary text-h6 text-decoration-line-through d-none d-md-inline"
+              >{{ product.old_price }} DA</span
+            >
+            <span class="text-primary text-h5 font-weight-bold"
+              >{{ product.price }} DA</span
+            >
+          </div>
+
+          <VDivider class="my-2" v-show="viewMode === 'grid'" />
         </div>
 
-        <span
-          class="product-description"
+        <VCardActions
+          class="product-card-actions align-center"
           :class="
             viewMode === 'list'
-              ? 'px-0 text-truncate-5'
-              : 'text-truncate-1 px-4 mb-3'
+              ? 'list flex-column justify-center'
+              : 'justify-space-between gap-0 pa-0 pb-2 px-1'
           "
-          >{{ product.short_description || "" }}</span
+          :style="viewMode !== 'list' ? 'gap: 0' : ''"
         >
-
-        <div
-          class="d-flex align-end justify-end gap-2 px-4 pb-1"
-          v-if="viewMode === 'grid'"
-        >
-          <span
-            v-if="product.old_price"
-            class="text-secondary text-h6 text-decoration-line-through d-none d-md-inline"
-            >{{ product.old_price }} DA</span
+          <div class="d-flex align-end mb-2" v-if="viewMode === 'list'">
+            <span
+              v-if="product.old_price"
+              class="text-secondary text-body-2 text-decoration-line-through text-strike me-1"
+              >{{ product.old_price }} DA</span
+            >
+            <span class="text-primary font-weight-bold">
+              {{ product.price }} DA
+            </span>
+          </div>
+          <VBtn
+            :variant="viewMode === 'list' ? 'tonal' : 'text'"
+            color="error"
+            :class="viewMode === 'list' ? 'w-100' : 'pe-2 ps-2'"
+            @click="toggleWishlist()"
           >
-          <span class="text-primary text-h5 font-weight-bold"
-            >{{ product.price }} DA</span
+            <VIcon
+              :icon="isInWishlist ? 'tabler-heart-filled' : 'tabler-heart'"
+            />
+            <span class="ms-1">{{
+              isInWishlist
+                ? $t("product.remove_from_wishlist")
+                : $t("product.add_to_wishlist")
+            }}</span>
+          </VBtn>
+          <VBtn
+            :variant="viewMode === 'list' ? 'flat' : 'text'"
+            color="primary"
+            :class="viewMode === 'list' ? 'w-100' : 'ps-2 pe-2'"
+            @click="addToCart()"
           >
-        </div>
-
-        <VDivider class="my-2" v-show="viewMode === 'grid'" />
+            <VIcon
+              :icon="
+                isInCart
+                  ? 'tabler-shopping-cart-filled'
+                  : 'tabler-shopping-cart'
+              "
+            />
+            <span class="ms-1">{{
+              isInCart ? $t("product.added_to_cart") : $t("product.add_to_cart")
+            }}</span>
+          </VBtn>
+        </VCardActions>
       </div>
-
-      <VCardActions
-        class="product-card-actions align-center"
-        :class="
-          viewMode === 'list'
-            ? 'list flex-column justify-center'
-            : 'justify-space-between gap-0 pa-0 pb-2 px-1'
-        "
-        :style="viewMode !== 'list' ? 'gap: 0' : ''"
-      >
-        <div class="d-flex align-end mb-2" v-if="viewMode === 'list'">
-          <span
-            v-if="product.old_price"
-            class="text-secondary text-body-2 text-decoration-line-through text-strike me-1"
-            >{{ product.old_price }} DA</span
-          >
-          <span class="text-primary font-weight-bold">
-            {{ product.price }} DA
-          </span>
-        </div>
-        <VBtn
-          :variant="viewMode === 'list' ? 'tonal' : 'text'"
-          color="error"
-          :class="viewMode === 'list' ? 'w-100' : 'pe-2 ps-2'"
-          @click="toggleWishlist()"
-        >
-          <VIcon
-            :icon="isInWishlist ? 'tabler-heart-filled' : 'tabler-heart'"
-          />
-          <span class="ms-1">{{
-            isInWishlist
-              ? $t("product.remove_from_wishlist")
-              : $t("product.add_to_wishlist")
-          }}</span>
-        </VBtn>
-        <VBtn
-          :variant="viewMode === 'list' ? 'flat' : 'text'"
-          color="primary"
-          :class="viewMode === 'list' ? 'w-100' : 'ps-2 pe-2'"
-          @click="addToCart()"
-        >
-          <VIcon
-            :icon="
-              isInCart ? 'tabler-shopping-cart-filled' : 'tabler-shopping-cart'
-            "
-          />
-          <span class="ms-1">{{
-            isInCart ? $t("product.added_to_cart") : $t("product.add_to_cart")
-          }}</span>
-        </VBtn>
-      </VCardActions>
     </div>
   </VCard>
 </template>
@@ -229,6 +233,7 @@ export default {
   overflow: hidden;
   align-items: center;
   justify-content: center;
+  flex: 1;
 
   // max-block-size: 233px;
   // margin-block-end: 1rem;
@@ -240,7 +245,8 @@ export default {
 
 .product-image {
   border-radius: 8px;
-  block-size: 220px !important;
+
+  // max-block-size: 233px !important;
   max-inline-size: 100%;
   object-fit: contain;
   transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -275,6 +281,12 @@ export default {
   font-size: 0.875rem;
   inline-size: -webkit-fill-available;
   line-height: 1.6;
+}
+
+.product-image-info {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .text-truncate-1 {

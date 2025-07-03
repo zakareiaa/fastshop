@@ -2,11 +2,7 @@
   <Header />
 
   <!-- Hero Section -->
-  <div
-    class="app-container heroContainer"
-    data-aos="fade-up"
-    data-aos-duration="1000"
-  >
+  <div class="app-container heroContainer py-sm-6 py-3">
     <div v-show="getThumbnailLoading">
       <div class="skeleton hero-swiper" style="border-radius: 16px"></div>
     </div>
@@ -35,16 +31,10 @@
   </div>
 
   <!-- Categories Section -->
-  <div data-aos="fade-up" data-aos-delay="200">
-    <CategoriesSection />
-  </div>
+  <CategoriesSection />
 
   <!-- New Arrivals -->
-  <div
-    v-show="!getNewProductsLoading && newProducts.length > 0"
-    data-aos="slide-up"
-    data-aos-delay="300"
-  >
+  <div v-show="!getNewProductsLoading && newProducts.length > 0">
     <CategoryProductsSection
       :title="$t('home.new_arrivals')"
       :products="newProducts"
@@ -57,10 +47,7 @@
     v-for="(category, index) in productsCategorySection"
     :key="category.id"
   >
-    <div
-      :data-aos="index % 2 === 0 ? 'slide-left' : 'slide-right'"
-      :data-aos-delay="400 + index * 100"
-    >
+    <div>
       <CategoryProductsSection
         :title="category[`name_${currentLanguage}`] || category?.name"
         :products="category.products"
@@ -70,7 +57,7 @@
   </template>
 
   <!-- 👉 Brand-logo Swiper  -->
-  <div class="app-container pt-2 pb-4" data-aos="slide-up" data-aos-delay="600">
+  <div class="app-container pt-2 pb-4">
     <div class="swiper-brands-carousel pt-6 pb-4">
       <swiper-container
         slides-per-view="3"
@@ -102,9 +89,7 @@
     </div>
   </div>
 
-  <div data-aos="fade-up" data-aos-delay="700">
-    <Reviews />
-  </div>
+  <Reviews />
 
   <Footer />
 
@@ -133,7 +118,6 @@
 <script>
 import axios from "axios";
 
-import AOS from "aos";
 import { register } from "swiper/element/bundle";
 register();
 
@@ -230,10 +214,6 @@ export default {
         );
       } finally {
         this.getThumbnailLoading = false;
-        // Refresh AOS after content loads
-        this.$nextTick(() => {
-          AOS.refresh();
-        });
       }
     },
 
@@ -272,10 +252,6 @@ export default {
         );
       } finally {
         this.getNewProductsLoading = false;
-        // Refresh AOS after content loads
-        this.$nextTick(() => {
-          AOS.refresh();
-        });
       }
     },
 
@@ -315,10 +291,6 @@ export default {
         );
       } finally {
         this.getProductsCategorySectionLoading = false;
-        // Refresh AOS after content loads
-        this.$nextTick(() => {
-          AOS.refresh();
-        });
       }
     },
 

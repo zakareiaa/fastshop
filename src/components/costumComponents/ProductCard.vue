@@ -37,7 +37,6 @@
         "
         @click="product.id && $router.push(`/product/${product.id}`)"
       >
-
         <div
           :class="
             viewMode === 'list'
@@ -77,10 +76,13 @@
           >{{ product.short_description || "" }}</span
         >
 
-         <div class="d-flex align-end justify-end gap-2 px-4 pb-1" v-if="viewMode === 'grid'">
+        <div
+          class="d-flex align-end justify-end gap-2 px-4 pb-1"
+          v-if="viewMode === 'grid'"
+        >
           <span
             v-if="product.old_price"
-            class="text-secondary text-h6 text-decoration-line-through"
+            class="text-secondary text-h6 text-decoration-line-through d-none d-md-inline"
             >{{ product.old_price }} DA</span
           >
           <span class="text-primary text-h5 font-weight-bold"
@@ -212,31 +214,44 @@ export default {
   flex-direction: column !important;
   border-radius: 8px !important;
   block-size: 100% !important;
-  transition: transform 0.2s, box-shadow 0.2s !important;
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    box-shadow 0.3s ease !important;
 }
 
 .product-card:hover {
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 10%) !important;
-  transform: translateY(-5px) !important;
+  // box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12) !important;
+  transform: translateY(-3px) !important;
 }
 
 .product-image-container {
   position: relative;
   display: flex;
+  overflow: hidden;
   align-items: center;
   justify-content: center;
-  block-size: 200px;
-  margin-block-end: 1rem;
+
+  // max-block-size: 233px;
+  // margin-block-end: 1rem;
+  padding: 1rem;
 
   // padding-block: 1rem 0;
   // padding-inline: 1rem;
 }
 
 .product-image {
-  max-block-size: 100%;
+  border-radius: 8px;
+  block-size: 220px !important;
   max-inline-size: 100%;
   object-fit: contain;
-  border-radius: 8px;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  @media (max-width: 768px) {
+    block-size: 170px !important;
+  }
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.03);
 }
 
 .product-title {
@@ -245,7 +260,12 @@ export default {
   font-weight: 600;
   line-height: 1.4;
   text-overflow: ellipsis;
+  transition: color 0.3s ease;
   white-space: nowrap;
+}
+
+.product-card:hover .product-title {
+  color: rgb(var(--v-theme-primary)) !important;
 }
 
 .product-description {

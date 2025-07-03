@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container py-6">
+  <div class="app-container py-sm-6 py-3">
     <div class="d-flex justify-space-between align-center">
       <div class="position-relative mb-1 me-2">
         <div class="section-title">{{ $t("home.categories") }}</div>
@@ -47,7 +47,7 @@
             slidesPerView: 3,
           },
           0: {
-            slidesPerView: 2.3,
+            slidesPerView: 3,
           },
         }"
         events-prefix="swiper-"

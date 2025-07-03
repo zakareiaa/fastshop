@@ -191,9 +191,9 @@
           <VCol
             v-for="product in products"
             :key="product.id"
-            cols="12"
-            :sm="viewMode === 'grid' ? 6 : 12"
-            :lg="viewMode === 'grid' ? 4 : 12"
+            cols="6"
+            :sm="viewMode === 'grid' ? 4 : 12"
+            :lg="viewMode === 'grid' ? 3 : 12"
             v-show="!getProductsLoading && products.length > 0"
           >
             <ProductCard :productProp="product" :viewMode="viewMode" />
@@ -225,9 +225,9 @@
           <VCol
             v-for="i in 12"
             :key="i"
-            cols="12"
-            :sm="viewMode === 'grid' ? 6 : 12"
-            :lg="viewMode === 'grid' ? 4 : 12"
+            cols="6"
+            :sm="viewMode === 'grid' ? 4 : 12"
+            :lg="viewMode === 'grid' ? 3 : 12"
             v-show="getProductsLoading"
           >
             <div
@@ -453,7 +453,7 @@ export default {
       selectedAttributes: [],
 
       page: 1,
-      per_page: 15,
+      per_page: 16,
       totalProducts: null,
 
       isSnackbarVisible: false,
@@ -735,7 +735,7 @@ definePage({
   padding: 1rem;
 
   // background-color: #f9f9f9;
-  block-size: 200px;
+  // block-size: 200px;
 }
 
 .product-image {

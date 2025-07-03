@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container py-6">
+  <div class="app-container py-sm-6 py-3">
     <div class="d-flex justify-space-between align-center">
       <div class="position-relative mb-1 me-2">
         <div class="section-title">{{ title }}</div>
@@ -31,22 +31,22 @@
         slides-per-view="4"
         :breakpoints="{
           1280: {
-            slidesPerView: 4,
+            slidesPerView: 5,
           },
           1024: {
-            slidesPerView: 3,
+            slidesPerView: 4,
           },
           768: {
             slidesPerView: 3,
           },
           600: {
-            slidesPerView: 2,
+            slidesPerView: 3,
           },
           480: {
-            slidesPerView: 1.3,
+            slidesPerView: 2,
           },
           0: {
-            slidesPerView: 1.3,
+            slidesPerView: 2,
           },
         }"
         events-prefix="swiper-"

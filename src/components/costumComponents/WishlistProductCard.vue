@@ -214,7 +214,7 @@ const goToProductDetail = () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  block-size: 200px;
+  // block-size: 200px;
   padding-block: 1rem 0;
   padding-inline: 1rem;
 }

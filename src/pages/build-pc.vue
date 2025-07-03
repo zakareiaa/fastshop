@@ -102,7 +102,7 @@
               >
                 <div
                   class="d-flex align-start gap-4 pa-6 px-3 px-sm-6 position-relative flex-sm-row"
-                  :class="index ? 'border-t' : ''" 
+                  :class="index ? 'border-t' : ''"
                 >
                   <div style="block-size: 85px; min-inline-size: 100px">
                     <img
@@ -118,7 +118,6 @@
 
                   <div
                     class="d-flex w-100 justify-space-between gap-4 align-start"
-                   
                   >
                     <div>
                       <div class="d-flex align-center mb-2">
@@ -331,28 +330,18 @@
                 >
                 </VImg>
 
-                <VCardTitle class="text-h6 px-6 pb-1 pt-4">{{
+                <VCardTitle class="text-h6 px-3 pb-0 pt-4">{{
                   product.name
                 }}</VCardTitle>
 
-                <VCardText>
-                  <div class="d-flex align-center mb-2">
-                    <div class="text-primary font-weight-bold">
-                      {{ product.price }} DA
-                    </div>
-                    <VSpacer></VSpacer>
-                    <VChip
-                      color="success"
-                      size="small"
-                      v-if="product.in_stock"
-                      >{{ $t("build_pc.in_stock") }}</VChip
-                    >
-                    <VChip color="warning" size="small" v-else>{{
-                      $t("build_pc.out_of_stock")
-                    }}</VChip>
-                  </div>
-                  <div class="text-truncate">
+                <VCardText class="pb-2 px-3">
+                  <div class="text-truncate text-body-2 mb-1">
                     {{ product.short_description }}
+                  </div>
+                  <div
+                    class="d-flex align-center justify-end text-primary font-weight-bold"
+                  >
+                    {{ product.price }} DA
                   </div>
                 </VCardText>
 
@@ -476,7 +465,7 @@ export default {
         },
         {
           id: 4,
-          name: "RAM",
+          name: "Memory",
           icon: markRaw(ram),
           selected: false,
           selectedItem: null,
@@ -624,7 +613,7 @@ export default {
         CPU: this.$t("build_pc.cpu"),
         "CPU Cooler": this.$t("build_pc.cpu_cooler"),
         Motherboard: this.$t("build_pc.motherboard"),
-        RAM: this.$t("build_pc.memory"),
+        Memory: this.$t("build_pc.memory"),
         SSD: this.$t("build_pc.ssd"),
         HDD: this.$t("build_pc.hdd"),
         GPU: this.$t("build_pc.gpu"),

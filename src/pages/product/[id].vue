@@ -103,6 +103,7 @@
                       block-size: 650px;
                       object-fit: contain;
                     "
+                    @click="openImagePreview(image.image_url)"
                   />
                 </swiper-slide>
               </swiper-container>
@@ -114,9 +115,9 @@
                 events-prefix="swiper-"
                 slides-per-view="4"
                 :breakpoints="{
-                  0: { slidesPerView: 2 },
-                  600: { slidesPerView: 3 },
-                  900: { slidesPerView: 4 }
+                  0: { slidesPerView: 2.5 },
+                  600: { slidesPerView: 3.2 },
+                  900: { slidesPerView: 4.3 },
                 }"
                 watch-slides-progress="true"
                 space-between="10"
@@ -426,6 +427,28 @@
     </template>
   </VSnackbar>
 
+  <!-- Full Screen Image Preview Modal -->
+  <VDialog v-model="imagePreviewDialog" max-width="90vw" max-height="90vh">
+    <VCard class="image-preview-card">
+      <VCardText class="pa-0 position-relative">
+        <VBtn
+          icon="tabler-x"
+          variant="elevated"
+          color="white"
+          class="position-absolute close-btn"
+          style="z-index: 10; inset-block-start: 16px; inset-inline-end: 16px"
+          @click="imagePreviewDialog = false"
+        />
+        <img
+          :src="previewImageUrl"
+          alt="Product preview"
+          class="preview-image w-100"
+          style="max-block-size: 85vh; object-fit: contain"
+        />
+      </VCardText>
+    </VCard>
+  </VDialog>
+
   <Footer />
 </template>
 
@@ -469,6 +492,10 @@ export default {
       isSnackbarVisible: false,
       snackbarText: "",
       snackbarColor: "",
+
+      // Image preview
+      imagePreviewDialog: false,
+      previewImageUrl: "",
 
       api_url: import.meta.env.VITE_API_URL,
 
@@ -611,6 +638,11 @@ export default {
     thumbClick(index) {
       this.thumbActiveIndex = index;
     },
+
+    openImagePreview(imageUrl) {
+      this.previewImageUrl = imageUrl;
+      this.imagePreviewDialog = true;
+    },
   },
 
   watch: {
@@ -668,6 +700,7 @@ definePage({
 .mySwiper {
   overflow: hidden;
   border-radius: 8px;
+  cursor: pointer;
 }
 
 .mySwiper2 {
@@ -693,6 +726,11 @@ definePage({
   max-inline-size: 100%;
   min-inline-size: 100%;
   object-fit: contain;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.mySwiper:hover .product-detail-image {
+  transform: scale(1.05);
 }
 
 .thumb-slide {
@@ -702,8 +740,9 @@ definePage({
 
 .thumbnail-image {
   border-radius: 8px;
-  max-block-size: 120px;
-  max-inline-size: 100%;
+
+  // max-block-size: 120px;
+  // max-inline-size: 100%;
   object-fit: cover !important;
 }
 
@@ -804,5 +843,24 @@ td {
   block-size: 44px;
   inline-size: 100%;
   margin-block-end: 12px;
+}
+
+.image-preview-card {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.preview-image {
+  border-radius: 8px;
+  cursor: zoom-out;
+}
+
+.close-btn {
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
+}
+
+.close-btn:hover {
+  opacity: 1;
 }
 </style>

@@ -742,7 +742,7 @@ definePage({
   border-radius: 8px;
 
   // max-block-size: 120px;
-  // max-inline-size: 100%;
+  max-inline-size: 100%;
   object-fit: cover !important;
 }
 

@@ -46,7 +46,7 @@
             slidesPerView: 2,
           },
           0: {
-            slidesPerView: 2,
+            slidesPerView: 1.3,
           },
         }"
         events-prefix="swiper-"
@@ -68,22 +68,22 @@
         slides-per-view="4"
         :breakpoints="{
           1280: {
-            slidesPerView: 4,
+            slidesPerView: 5,
           },
           1024: {
-            slidesPerView: 3,
+            slidesPerView: 4,
           },
           768: {
-            slidesPerView: 2,
+            slidesPerView: 3,
           },
           600: {
-            slidesPerView: 1,
+            slidesPerView: 3,
           },
           480: {
-            slidesPerView: 1,
+            slidesPerView: 2,
           },
           0: {
-            slidesPerView: 1,
+            slidesPerView: 1.3,
           },
         }"
         events-prefix="swiper-"

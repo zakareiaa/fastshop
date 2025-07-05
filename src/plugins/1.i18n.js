@@ -27,6 +27,7 @@ const setDirection = (locale) => {
   // Set document direction to LTR for all languages
   document.documentElement.setAttribute('dir', 'ltr')
   document.documentElement.setAttribute('lang', locale)
+  document.documentElement.setAttribute('data-locale', locale)
   document.documentElement.classList.add('ltr')
   document.documentElement.classList.remove('rtl')
   document.body.classList.add('ltr')

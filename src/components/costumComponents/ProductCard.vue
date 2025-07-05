@@ -1,6 +1,9 @@
 <template>
   <VCard class="product-card cursor-pointer">
-    <div class="cursor-pointer product-image-info" :class="viewMode === 'list' ? 'd-flex' : ''">
+    <div
+      class="cursor-pointer product-image-info"
+      :class="viewMode === 'list' ? 'd-flex' : ''"
+    >
       <div
         class="product-image-container"
         :class="{ 'bg-white': !$vuetify.theme.current.dark }"
@@ -12,19 +15,40 @@
         <img :src="product.main_image_url" class="product-image" />
         <div class="new-tag">
           <VChip
-            class="me-2"
             color="warning"
             variant="flat"
             v-if="!product.in_stock && viewMode === 'grid'"
+            class="font-weight-bold"
+            size="small"
           >
             {{ $t("product.out_of_stock") }}
           </VChip>
           <VChip
             color="error"
             variant="flat"
+            class="font-weight-bold"
+            size="small"
             v-if="product.is_new && viewMode === 'grid'"
           >
             {{ $t("product.new") }}
+          </VChip>
+          <VChip
+            color="success"
+            variant="flat"
+            v-if="product.is_promo && viewMode === 'grid'"
+            class="font-weight-bold"
+            size="small"
+          >
+            {{ $t("product.promo") }}
+          </VChip>
+          <VChip
+            color="primary"
+            variant="flat"
+            v-if="product.limited_offer && viewMode === 'grid'"
+            class="font-weight-bold"
+            size="small"
+          >
+            {{ $t("product.limited_offer") }}
           </VChip>
         </div>
       </div>
@@ -47,7 +71,7 @@
           >
             <h1
               class="product-title text-h6 font-weight-bold text-truncate-1 w-100"
-              :class="viewMode === 'list' ? 'px-0' : 'ps-4 pe-4 pt-0 pb-0'"
+              :class="viewMode === 'list' ? 'px-0' : 'ms-3 me-3 pt-0 pb-0'"
             >
               {{ product.name || "Product" }}
             </h1>
@@ -72,7 +96,7 @@
             :class="
               viewMode === 'list'
                 ? 'px-0 text-truncate-5'
-                : 'text-truncate-1 px-4 mb-3'
+                : 'text-truncate-1 px-3 mb-3'
             "
             >{{ product.short_description || "" }}</span
           >
@@ -231,13 +255,13 @@ export default {
   position: relative;
   display: flex;
   overflow: hidden;
+  flex: 1;
   align-items: center;
   justify-content: center;
-  flex: 1;
 
   // max-block-size: 233px;
   // margin-block-end: 1rem;
-  padding: 1rem;
+  padding: 0.75rem;
 
   // padding-block: 1rem 0;
   // padding-inline: 1rem;
@@ -245,15 +269,11 @@ export default {
 
 .product-image {
   border-radius: 8px;
-
-  // max-block-size: 233px !important;
+  block-size: 245px !important;
+  inline-size: 100%;
   max-inline-size: 100%;
-  object-fit: contain;
+  object-fit: cover;
   transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-
-  @media (max-width: 768px) {
-    block-size: 170px !important;
-  }
 }
 
 .product-card:hover .product-image {
@@ -286,7 +306,7 @@ export default {
 .product-image-info {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  block-size: 100%;
 }
 
 .text-truncate-1 {
@@ -310,8 +330,12 @@ export default {
 .new-tag {
   position: absolute;
   z-index: 999;
-  inset-block-start: 10px;
-  inset-inline-end: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 4px;
+  inset-block-start: 12px;
+  inset-inline-end: 12px;
 }
 
 .filters-sidebar {

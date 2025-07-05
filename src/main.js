@@ -6,6 +6,7 @@ import { createApp } from 'vue'
 // import '@/assets/styles/rtl.css'
 import '@core/scss/template/index.scss'
 import '@styles/components.css'
+import '@styles/fonts.scss'
 import '@styles/header.css'
 import '@styles/styles.css'
 

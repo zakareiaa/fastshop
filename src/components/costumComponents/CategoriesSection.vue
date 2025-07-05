@@ -27,29 +27,35 @@
     <div class="mt-3" v-show="!categoriesLoading">
       <swiper-container
         ref="swiperEl"
-        space-between="20"
-        slides-per-view="6"
+        space-between="25"
+        slides-per-view="8"
         dir="ltr"
         :breakpoints="{
           1440: {
             slidesPerView: 8,
-          },
-          1024: {
+            spaceBetween: 20,
+            },
+            1024: {
             slidesPerView: 6,
-          },
-          768: {
+            spaceBetween: 20,
+            },
+            768: {
             slidesPerView: 5,
-          },
-          600: {
+            spaceBetween: 20,
+            },
+            600: {
             slidesPerView: 4,
-          },
-          480: {
-            slidesPerView: 3,
-          },
-          0: {
-            slidesPerView: 3,
-          },
-        }"
+            spaceBetween: 15,
+            },
+            350: {
+            slidesPerView: 2.5,
+            spaceBetween: 12,
+            },
+            0: {
+            slidesPerView: 2,
+            spaceBetween: 10,
+            },
+          }"
         events-prefix="swiper-"
       >
         <swiper-slide
@@ -70,19 +76,19 @@
         dir="ltr"
         :breakpoints="{
           1440: {
-            slidesPerView: 7,
+            slidesPerView: 8,
           },
           1024: {
-            slidesPerView: 7,
+            slidesPerView: 6,
           },
           768: {
-            slidesPerView: 4,
+            slidesPerView: 5,
           },
           600: {
-            slidesPerView: 2,
+            slidesPerView: 4,
           },
-          480: {
-            slidesPerView: 2,
+          350: {
+            slidesPerView: 3,
           },
           0: {
             slidesPerView: 2,

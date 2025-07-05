@@ -72,7 +72,7 @@
             slidesPerView: 7,
           },
           768: {
-            slidesPerView: 4,
+            slidesPerView: 3.5,
           },
         }"
       >
@@ -340,6 +340,8 @@ definePage({
 
 <style lang="scss">
 .hero-swiper {
+  overflow: hidden;
+  border-radius: 8px;
   block-size: 500px;
   inline-size: 100%;
 }
@@ -352,7 +354,7 @@ definePage({
 
 @media (max-width: 600px) {
   .hero-swiper {
-    block-size: 180px;
+    block-size: 200px;
   }
 }
 

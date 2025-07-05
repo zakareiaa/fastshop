@@ -1,0 +1,90 @@
+/* Global font styles for multi-language support */
+
+/* Smooth transition for font changes */
+* {
+  transition: font-family 0.2s ease-in-out;
+}
+
+/* Default font stack for English and French */
+:root {
+  --font-family-primary:
+    "Public Sans",
+    sans-serif,
+    -apple-system,
+    blinkmacsystemfont,
+    "Segoe UI",
+    roboto,
+    "Helvetica Neue",
+    arial,
+    sans-serif,
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol";
+  --font-family-arabic:
+    "IBM Plex Sans Arabic",
+    -apple-system,
+    blinkmacsystemfont,
+    "Segoe UI",
+    roboto,
+    "Helvetica Neue",
+    arial,
+    sans-serif,
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol";
+}
+
+/* Apply default font */
+body {
+  font-family: var(--font-family-primary);
+  transition: font-family 0.3s ease;
+}
+
+/* Alternative approach using data attribute (if needed) */
+[data-locale="ar"] body,
+[data-locale="ar"] .v-application {
+  font-family: var(--font-family-arabic) !important;
+}
+
+/* Apply Arabic font when Arabic language is active */
+html[lang="ar"] body,
+html[lang="ar"] .v-application,
+html[lang="ar"] .v-btn,
+html[lang="ar"] .v-field,
+html[lang="ar"] .v-text-field,
+html[lang="ar"] .v-select,
+html[lang="ar"] .v-autocomplete,
+html[lang="ar"] .v-combobox,
+html[lang="ar"] .v-textarea,
+html[lang="ar"] .v-card-title,
+html[lang="ar"] .v-card-subtitle,
+html[lang="ar"] .v-card-text,
+html[lang="ar"] .v-list-item-title,
+html[lang="ar"] .v-list-item-subtitle,
+html[lang="ar"] .v-navigation-drawer,
+html[lang="ar"] .v-app-bar-title,
+html[lang="ar"] .v-toolbar-title,
+html[lang="ar"] .v-menu,
+html[lang="ar"] .v-dialog,
+html[lang="ar"] .v-snackbar,
+html[lang="ar"] .text-h1,
+html[lang="ar"] .text-h2,
+html[lang="ar"] .text-h3,
+html[lang="ar"] .text-h4,
+html[lang="ar"] .text-h5,
+html[lang="ar"] .text-h6,
+html[lang="ar"] .text-subtitle-1,
+html[lang="ar"] .text-subtitle-2,
+html[lang="ar"] .text-body-1,
+html[lang="ar"] .text-body-2,
+html[lang="ar"] .text-caption,
+html[lang="ar"] .text-overline {
+  font-family: var(--font-family-arabic) !important;
+}
+
+/* Ensure proper font weight support for Arabic */
+html[lang="ar"] * {
+  font-feature-settings: "kern" 1, "liga" 1;
+  font-variant-ligatures: common-ligatures;
+  text-rendering: optimizelegibility;
+}

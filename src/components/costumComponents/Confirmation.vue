@@ -49,7 +49,7 @@
         </p>
         <p class="mb-1">{{ orderSummary?.customer_phone || "N/A" }}</p>
         <p class="mb-1">{{ wilaya || "N/A" }}, {{ commune || "N/A" }}</p>
-        <p class="mb-1">{{ orderSummary?.address.address || "N/A" }}</p>
+        <p class="mb-1">{{ orderSummary?.address?.address || "N/A" }}</p>
 
         <p v-if="orderSummary?.notes" class="mt-4 mb-0">
           <span class="font-weight-medium">{{ $t("confirmation.note") }}</span>
@@ -297,16 +297,18 @@ export default {
 
   computed: {
     wilaya() {
+      if (!this.orderSummary?.address?.wilaya_id) return "N/A";
       const wilaya = wilayas.find(
         (w) => w.id === this.orderSummary.address.wilaya_id
       );
-      return wilaya.name;
+      return wilaya?.name || "N/A";
     },
     commune() {
+      if (!this.orderSummary?.address?.commune_id) return "N/A";
       const commune = communes.find(
         (c) => c.id === this.orderSummary.address.commune_id
       );
-      return commune.name;
+      return commune?.name || "N/A";
     },
 
     isReady() {
@@ -314,7 +316,8 @@ export default {
       return (
         this.orderSummary &&
         Object.keys(this.orderSummary).length > 0 &&
-        Array.isArray(this.orderItems)
+        Array.isArray(this.orderItems) &&
+        this.orderItems.length > 0
       );
     },
 

@@ -350,7 +350,7 @@
 
                         <!-- Warning message when pickup is not available -->
                         <VAlert
-                          v-if="selectedWilaya && !isPickupAvailable"
+                          v-if="selectedWilaya && isPickupAvailable == false"
                           type="info"
                           variant="tonal"
                           class="mt-3"
@@ -360,15 +360,33 @@
                           </template>
                           {{ $t("checkout.pickup_not_available_message") }}
                         </VAlert>
+
+                        <VAlert
+                          v-if="
+                            isDeliveryOfficeAvailable == 'false' &&
+                            selectedCheckbox.includes('pickup')
+                          "
+                          type="info"
+                          variant="tonal"
+                          class="mt-3"
+                        >
+                          <template #prepend>
+                            <VIcon icon="tabler-info-circle" />
+                          </template>
+                          {{
+                            $t(
+                              "checkout.office_not_available_in_your_commune_message"
+                            )
+                          }}
+                        </VAlert>
                       </VCol>
 
-                      <VCol cols="12">
+                      <VCol cols="12" v-if="selectedCheckbox.includes('home')">
                         <VTextField
                           v-model="address"
                           :label="$t('checkout.detailed_address')"
                           :placeholder="$t('checkout.address_placeholder')"
                           :rules="[requiredValidator]"
-                          v-if="selectedCheckbox.includes('home')"
                         />
                       </VCol>
 
@@ -477,11 +495,16 @@
           </VWindowItem>
 
           <VWindowItem>
-            <Confirmation
-              v-if="orderSummary && orderItems?.length"
-              :order-summary="orderSummary"
-              :order-items="orderItems"
-            />
+            <div v-if="orderSummary && orderItems && orderItems.length > 0">
+              <Confirmation
+                :order-summary="orderSummary"
+                :order-items="orderItems"
+              />
+            </div>
+            <div v-else class="text-center py-8">
+              <VProgressCircular indeterminate color="primary" />
+              <p class="mt-4">Loading order confirmation...</p>
+            </div>
           </VWindowItem>
         </VWindow>
       </VCardText>
@@ -606,6 +629,21 @@ export default {
       return this.$i18n.locale;
     },
 
+    // Check if selected commune has delivery office
+    isDeliveryOfficeAvailable() {
+      if (!this.commune || !this.communesByWilaya.length) return null;
+
+      const selectedCommune = this.communesByWilaya.find(
+        (c) => c.id === this.commune
+      );
+
+      if (!selectedCommune) return null;
+
+      console.log(selectedCommune.have_delivery_office);
+
+      return selectedCommune.have_delivery_office;
+    },
+
     // Translated validators
     requiredValidator() {
       return createRequiredValidator(this.$t);
@@ -683,7 +721,7 @@ export default {
 
     // Add isPickupAvailable computed property
     isPickupAvailable() {
-      if (!this.selectedWilaya) return false;
+      if (!this.selectedWilaya) return null;
       return this.selectedWilaya.shipping_price.pickup !== null;
     },
   },
@@ -716,6 +754,12 @@ export default {
         // Submit order to API
         try {
           this.confirmOrderLoading = true;
+
+          // Capture order items BEFORE clearing the cart
+          this.orderItems = [...this.cartStore.items];
+
+          console.log("Order items captured:", this.orderItems);
+
           const response = await axios.post(
             `${this.api_url}/orders`,
             orderData,
@@ -727,7 +771,10 @@ export default {
             }
           );
           this.orderSummary = response.data.data;
-          this.orderItems = this.cartStore.items;
+
+          console.log("Order summary received:", this.orderSummary);
+
+          // Clear cart after capturing items
           this.cartStore.clearCart();
 
           // Scroll to top smoothly
@@ -758,43 +805,49 @@ export default {
     },
 
     triggerConfetti() {
-      // Trigger multiple confetti bursts for a celebration effect
-      const count = 200;
-      const defaults = {
-        origin: { y: 0.7 },
-      };
-
-      function fire(particleRatio, opts) {
-        confetti({
-          ...defaults,
-          ...opts,
-          particleCount: Math.floor(count * particleRatio),
-        });
-      }
-
-      // Multiple confetti bursts with different configurations
-      fire(0.25, {
-        spread: 26,
-        startVelocity: 55,
+      // Left side confetti
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { x: 0.1, y: 0.6 },
+        angle: 60,
+        colors: ["#bb0000", "#ffffff", "#00bb00", "#0000bb", "#ffff00"],
       });
-      fire(0.2, {
+
+      // Center confetti
+      confetti({
+        particleCount: 120,
         spread: 60,
+        origin: { x: 0.5, y: 0.6 },
+        angle: 90,
+        colors: ["#ff6b6b", "#4ecdc4", "#45b7d1", "#96ceb4", "#ffeaa7"],
       });
-      fire(0.35, {
-        spread: 100,
-        decay: 0.91,
-        scalar: 0.8,
+
+      // Right side confetti
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { x: 0.9, y: 0.6 },
+        angle: 120,
+        colors: ["#a29bfe", "#fd79a8", "#fdcb6e", "#6c5ce7", "#fd79a8"],
       });
-      fire(0.1, {
-        spread: 120,
-        startVelocity: 25,
-        decay: 0.92,
-        scalar: 1.2,
-      });
-      fire(0.1, {
-        spread: 120,
-        startVelocity: 45,
-      });
+
+      // Add a second wave after a short delay
+      setTimeout(() => {
+        confetti({
+          particleCount: 80,
+          spread: 50,
+          origin: { x: 0.2, y: 0.7 },
+          angle: 75,
+        });
+
+        confetti({
+          particleCount: 80,
+          spread: 50,
+          origin: { x: 0.8, y: 0.7 },
+          angle: 105,
+        });
+      }, 300);
     },
 
     removeItem(productId) {
@@ -872,7 +925,10 @@ export default {
       }
 
       // Prevent selecting pickup if not available
-      if (this.selectedCheckbox.includes('pickup') && !this.isPickupAvailable) {
+      if (
+        this.selectedCheckbox.includes("pickup") &&
+        this.isPickupAvailable == false
+      ) {
         this.selectedCheckbox = ["home"];
       }
     },

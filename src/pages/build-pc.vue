@@ -128,7 +128,7 @@
                             height="20"
                             :src="component.image"
                           />
-                          <VIcon v-else size="20" :icon="component.icon" />
+                          <VIcon v-else size="20" color="primary" :icon="component.icon" />
                         </div>
                         <h6 class="text-h6 ms-1">
                           {{ getComponentName(component.name) }}
@@ -147,7 +147,7 @@
                           : 'align-self-center'
                       "
                     >
-                      <div class="text-primary">{{ component.price }} DA</div>
+                      <div class="text-primary" style="min-inline-size: 70px">{{ component.price }} DA</div>
                     </div>
                   </div>
                 </div>

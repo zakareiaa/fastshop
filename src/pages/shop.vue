@@ -1,7 +1,7 @@
 <template>
   <Header />
 
-  <div class="app-container py-6">
+  <div class="app-container shop py-6">
     <VRow>
       <!-- Desktop Filters sidebar -->
       <VCol cols="12" md="3" class="filters-sidebar d-none d-md-block">
@@ -728,6 +728,19 @@ definePage({
   transform: translateY(-5px);
 }
 
+.shop .product-image {
+  border-radius: 8px;
+  block-size: auto !important;
+  inline-size: auto;
+  max-inline-size: 100%;
+  object-fit: contain;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  @media (max-width: 768px) {
+    block-size: 170px !important;
+  }
+}
+
 .product-title {
   overflow: hidden;
   font-size: 1.1rem;
@@ -785,9 +798,19 @@ definePage({
 /* Mobile filters drawer styles */
 .mobile-filters-drawer {
   z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  block-size: 100vh;
+}
+
+.mobile-filters-drawer .v-navigation-drawer__content {
+  display: flex;
+  flex-direction: column;
+  block-size: 100%;
 }
 
 .drawer-header {
+  flex-shrink: 0;
   backdrop-filter: blur(10px);
   background: rgba(var(--v-theme-surface), 0.8);
   border-block-end: 1px solid rgba(var(--v-border-color), 0.08);
@@ -795,10 +818,12 @@ definePage({
 
 .filters-content {
   flex: 1;
+  max-block-size: calc(100vh - 120px); /* Account for header and footer */
   overflow-y: auto;
 }
 
 .drawer-footer {
+  flex-shrink: 0;
   background: rgba(var(--v-theme-surface), 0.9);
   border-block-start: 1px solid rgba(var(--v-border-color), 0.08);
 }

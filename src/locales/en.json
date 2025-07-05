@@ -195,6 +195,7 @@
         "no_products_found": "No products found",
         "no_products_message": "Try adjusting your search or filter criteria",
         "component_added": "added to your build",
+        "component_removed": "removed from your build",
         "build_reset": "PC Builder has been reset",
         "category_not_found": "Component category not found.",
         "failed_to_load_products": "Failed to load products",

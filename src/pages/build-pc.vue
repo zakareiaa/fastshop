@@ -40,6 +40,19 @@
               @click="!getCategoriesLoading && openProductDialog(component)"
               :disabled="getCategoriesLoading"
             >
+              <!-- Delete button for selected components -->
+              <VBtn
+                v-if="component.selected"
+                icon
+                size="small"
+                variant="tonal"
+                color="error"
+                class="component-delete-btn"
+                @click.stop="removeComponent(component)"
+              >
+                <VIcon size="20">tabler-x</VIcon>
+              </VBtn>
+
               <div class="flex-grow-1">
                 <div v-if="!getCategoriesLoading">
                   <VIcon
@@ -119,7 +132,7 @@
                   <div
                     class="d-flex w-100 justify-space-between gap-4 align-start"
                   >
-                    <div>
+                    <div class="flex-grow-1">
                       <div class="d-flex align-center mb-2">
                         <div>
                           <VImg
@@ -128,7 +141,12 @@
                             height="20"
                             :src="component.image"
                           />
-                          <VIcon v-else size="20" color="primary" :icon="component.icon" />
+                          <VIcon
+                            v-else
+                            size="20"
+                            color="primary"
+                            :icon="component.icon"
+                          />
                         </div>
                         <h6 class="text-h6 ms-1">
                           {{ getComponentName(component.name) }}
@@ -139,15 +157,10 @@
                       </div>
                     </div>
 
-                    <div
-                      class="d-flex text-base"
-                      :class="
-                        $vuetify.display.width <= 700
-                          ? 'align-self-start'
-                          : 'align-self-center'
-                      "
-                    >
-                      <div class="text-primary" style="min-inline-size: 70px">{{ component.price }} DA</div>
+                    <div class="d-flex align-center gap-2">
+                      <div class="text-primary" style="min-inline-size: 70px">
+                        {{ component.price }} DA
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -800,6 +813,22 @@ export default {
       }
     },
 
+    // Remove a component from the build
+    removeComponent(component) {
+      component.selected = false;
+      component.selectedItem = null;
+      component.price = 0;
+      component.image = null;
+      component.productId = null;
+
+      this.showSnackbar(
+        `${this.getComponentName(component.name)} ${this.$t(
+          "build_pc.component_removed"
+        )}`,
+        "info"
+      );
+    },
+
     proceedToCheckout() {
       this.selectedComponents.forEach((component) => {
         this.cartStore.addItem(component.selectedItem);
@@ -868,6 +897,20 @@ definePage({
 
     &:hover {
       transform: translateY(-4px);
+    }
+
+    .component-delete-btn {
+      position: absolute;
+      z-index: 10;
+      inset-block-start: 10px;
+      inset-inline-end: 10px;
+
+      // opacity: 0.8;
+      // transition: opacity 0.2s ease;
+
+      // &:hover {
+      //   opacity: 1;
+      // }
     }
 
     .compatibility-warning {

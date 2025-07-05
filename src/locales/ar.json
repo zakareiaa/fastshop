@@ -236,6 +236,7 @@
         "no_products_found": "لم يتم العثور على منتجات",
         "no_products_message": "جرب تعديل البحث أو معايير التصفية",
         "component_added": "تمت إضافته إلى البناء الخاص بك",
+        "component_removed": "تمت إزالته من البناء الخاص بك",
         "build_reset": "تم إعادة تعيين منشئ الكمبيوتر",
         "category_not_found": "فئة المكون غير موجودة.",
         "failed_to_load_products": "فشل في تحميل المنتجات",

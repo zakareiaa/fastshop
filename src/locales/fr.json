@@ -238,6 +238,7 @@
         "no_products_found": "Aucun produit trouvé",
         "no_products_message": "Essayez d'ajuster vos critères de recherche ou de filtre",
         "component_added": "ajouté à votre configuration",
+        "component_removed": "retiré de votre configuration",
         "build_reset": "Le constructeur de PC a été réinitialisé",
         "category_not_found": "Catégorie de composant non trouvée.",
         "failed_to_load_products": "Échec du chargement des produits",

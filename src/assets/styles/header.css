@@ -11,21 +11,22 @@
   align-items: center;
   justify-content: center;
   max-inline-size: 250px;
-  padding-inline: 0 30px;
   padding-block: 6px !important;
+  padding-inline: 0 30px;
 }
 
 @media (max-width: 1279px) {
   .headerLogoContainer {
-    padding-inline: 0 !important;
     padding-block: 0 !important;
+    padding-inline: 0 !important;
   }
 }
 
 .headerLogo {
+  margin-block: 16px;
+  margin-inline: 0;
   max-block-size: 75px;
   object-fit: contain;
-  margin: 16px 0;
 }
 
 .headerSearchContainer {
@@ -41,7 +42,7 @@
 .headerIconsContainer {
   display: flex;
   align-items: center;
-  gap: 0px;
+  gap: 0;
   padding-block: 10px;
   padding-inline: 20px;
 }

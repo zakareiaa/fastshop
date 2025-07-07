@@ -2,7 +2,7 @@
   <VCard class="product-card cursor-pointer">
     <div
       class="cursor-pointer product-image-info"
-      :class="viewMode === 'list' ? 'd-flex' : ''"
+      :class="viewMode === 'list' ? 'd-flex flex-row' : ''"
     >
       <div
         class="product-image-container"
@@ -53,7 +53,7 @@
         </div>
       </div>
 
-      <div>
+      <div :class="viewMode === 'list' ? 'd-flex' : ''">
         <div
           :class="
             viewMode === 'list'
@@ -288,6 +288,7 @@ export default {
   text-overflow: ellipsis;
   transition: color 0.3s ease;
   white-space: nowrap;
+  text-wrap: wrap !important;
 }
 
 .product-card:hover .product-title {

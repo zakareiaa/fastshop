@@ -5,8 +5,10 @@
     <!-- Hero Section -->
     <VAlert color="primary" variant="tonal" class="text-center py-8 my-8">
       <VCol cols="12">
-        <h1 class="mb-4">{{ $t("build_pc.title") }}</h1>
-        <h2 class="font-weight-regular">{{ $t("build_pc.subtitle") }}</h2>
+        <h1 class="mb-4" style="color: rgb(var(--v-theme-on-background))">
+          {{ $t("build_pc.title") }}
+        </h1>
+        <h2 class="font-weight-regular" style="color: rgb(var(--v-theme-on-background))">{{ $t("build_pc.subtitle") }}</h2>
       </VCol>
     </VAlert>
 
@@ -948,17 +950,19 @@ definePage({
   line-height: 36px;
 }
 
-.section-title-after {
-  position: absolute;
-  background: url("@assets/images/section-title-icon.png") no-repeat left
-    bottom/contain;
-  block-size: 100%;
-
-  // filter: grayscale(100%) contrast(100%) brightness(100%);
-  font-weight: 800;
-  inline-size: 120%;
-  inset-block-end: 0;
-  inset-inline-start: -12%;
+.section-title::after {
+  position: absolute !important;
+  z-index: 1 !important;
+  background: #ea580c !important;
+  background-size: contain !important;
+  block-size: 0% !important;
+  content: "" !important;
+  font-weight: 800 !important;
+  inline-size: 100% !important;
+  inset-block-end: 0 !important;
+  inset-inline-start: 0% !important;
+  opacity: 0.4 !important;
+  box-shadow: 0 0 5px 5px #ea580c !important;
 }
 
 .cursor-not-allowed {

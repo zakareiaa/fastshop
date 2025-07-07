@@ -84,7 +84,7 @@
           }}</span
         >
 
-         <div
+        <div
           class="d-flex align-end justify-end mb-1 gap-2 px-4"
           v-if="viewMode === 'grid'"
         >
@@ -214,6 +214,7 @@ const goToProductDetail = () => {
   display: flex;
   align-items: center;
   justify-content: center;
+
   // block-size: 200px;
   padding-block: 1rem 0;
   padding-inline: 1rem;

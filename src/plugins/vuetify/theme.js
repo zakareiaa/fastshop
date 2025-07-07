@@ -2,9 +2,9 @@ export const themes = {
   light: {
     dark: false,
     colors: {
-      primary: '#6A0DAD',
+      primary: '#ea580c',
       'on-primary': '#fff',
-      'primary-darken-1': '#56098c',
+      'primary-darken-1': '#d1470a',
       secondary: '#656f75',
       'on-secondary': '#fff',
       'secondary-darken-1': '#666974',
@@ -22,9 +22,9 @@ export const themes = {
       'error-darken-1': '#E64449',
       // background: '#f8eefe',
       // background: '#F7F4FF',
-      // background: '#f9f7fa',
-      background: '#f0eeef',
-      // background: '#faf6f8',  
+      // background: '#fff8f0',  
+      // background: '#fffef9',
+      background: '#fffbf6',
       'on-background': '#1A1A1A',
       surface: '#FFFFFF',
       'on-surface': '#1A1A1A',
@@ -79,9 +79,9 @@ export const themes = {
       dark: {
         dark: true,
         colors: {
-      primary: '#BB86FC',
+      primary: '#ff7d47',
       'on-primary': '#1A1A1A',
-      'primary-darken-1': '#a56ffb',
+      'primary-darken-1': '#e86b3d',
       secondary: '#737682',
       'on-secondary': '#fff',
       'secondary-darken-1': '#666974',

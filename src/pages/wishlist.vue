@@ -118,21 +118,23 @@ const clearWishlist = () => {
 }
 
 .section-title::after {
-  position: absolute;
-  background: url("@assets/images/section-title-icon.png") no-repeat left
-    bottom/contain;
-  background-size: contain;
-  block-size: 100%;
-  content: "";
-  font-weight: 800;
-  inline-size: 120%;
-  inset-block-end: 0;
-  inset-inline-start: -12%;
+  position: absolute !important;
+  z-index: 1 !important;
+  background: #ea580c !important;
+  background-size: contain !important;
+  block-size: 0% !important;
+  content: "" !important;
+  font-weight: 800 !important;
+  inline-size: 100% !important;
+  inset-block-end: 0 !important;
+  inset-inline-start: 0% !important;
+  opacity: 0.4 !important;
+  box-shadow: 0 0 5px 5px #ea580c !important;
 }
 
 @media (max-width: 600px) {
   .wishlist-page-buttons {
-    width: 100%;
+    inline-size: 100%;
     margin-block-start: 10px;
   }
 
@@ -140,7 +142,7 @@ const clearWishlist = () => {
   .clear-wishlist-button {
     inline-size: 100%;
     margin-block-end: 10px;
-    margin-inline-end: 0px !important;
+    margin-inline-end: 0 !important;
   }
 }
 </style>

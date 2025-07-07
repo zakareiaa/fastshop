@@ -32,7 +32,12 @@
                 <VIcon start icon="tabler-shopping-cart" class="me-2"></VIcon>
                 {{ $t("about.shop_now") }}
               </VBtn>
-              <VBtn variant="outlined" size="large" href="tel:+2130558967409" class="contact-us-button">
+              <VBtn
+                variant="outlined"
+                size="large"
+                href="tel:+213557097634"
+                class="contact-us-button"
+              >
                 <VIcon start icon="tabler-phone" class="me-2"></VIcon>
                 {{ $t("about.contact_us") }}
               </VBtn>
@@ -40,7 +45,7 @@
           </VCol>
           <VCol cols="12" md="6" class="d-flex justify-center align-center">
             <img
-              src="@/assets/images/about1.jpeg"
+              src="@/assets/images/about1.png"
               alt="About Us Hero Image"
               class="hero-image rounded"
               cover
@@ -49,11 +54,11 @@
         </VRow>
       </VCard>
       <!-- Our Mission Section -->
-      <VCard class="mt-8 pa-6 px-3 px-sm-6 mb-3" >
+      <VCard class="mt-8 pa-6 px-3 px-sm-6 mb-3">
         <VRow>
           <VCol cols="12" md="6" class="d-flex justify-center align-center">
             <img
-              src="@/assets/images/about2.jpeg"
+              src="@/assets/images/about2.jpg"
               alt="Our Mission Image"
               class="hero-image rounded"
               cover
@@ -78,9 +83,9 @@
                   >{{ $t("about.contact_questions") }}
                   <span
                     class="pa-0 text-primary cursor-pointer"
-                    @click="callPhoneNumber('0558967409')"
+                    @click="callPhoneNumber('0557097634')"
                   >
-                    0558967409
+                    0557 09 76 34
                   </span>
                 </span>
               </div>
@@ -90,9 +95,9 @@
                   >{{ $t("about.contact_email") }}
                   <span
                     class="pa-0 text-primary cursor-pointer"
-                    @click="openEmail('zerostech@gmail.com')"
+                    @click="openEmail('contact@hichem-technology.com')"
                   >
-                    zerostech@gmail.com
+                    contact@hichem-technology.com
                   </span>
                 </span>
               </div>
@@ -101,7 +106,7 @@
         </VRow>
       </VCard>
 
-        <Reviews />
+      <Reviews />
     </div>
   </div>
 
@@ -165,7 +170,8 @@ definePage({
 
     .hero-image {
       block-size: 100%;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 10%);
+
+      // box-shadow: 0 10px 30px rgba(0, 0, 0, 10%);
       inline-size: 100%;
 
       // max-block-size: 400px;
@@ -254,9 +260,9 @@ definePage({
 @media (max-width: 600px) {
   .shop-now-button,
   .contact-us-button {
-    width: 100%;
-    margin-inline-end: 0;
+    inline-size: 100%;
     margin-block-end: 1rem;
+    margin-inline-end: 0;
   }
 }
 </style>

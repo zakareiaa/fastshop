@@ -81,43 +81,38 @@
               >Zakaria Djeddai</a
             >
           </div>
-          <div class="d-flex align-center gap-x-4">
+            <div class="d-flex align-center gap-x-4">
             <h6 class="text-h6">{{ $t("footer.follow_us") }}</h6>
             <div class="d-flex gap-x-0">
               <VBtn
-                icon="tabler-brand-facebook"
-                color="#1877F2"
-                size="small"
-                variant="text"
-                @click="
-                  openLink(
-                    'https://www.facebook.com/profile.php?id=100083778390910'
-                  )
-                "
+              icon="tabler-brand-facebook"
+              color="#1877F2"
+              size="small"
+              variant="text"
+              @click="
+                openLink(
+                'https://www.facebook.com/Hichem.techno?_rdc=1&_rdr#'
+                )
+              "
               />
               <VBtn
-                icon="tabler-brand-instagram"
-                color="#E4405F"
-                size="small"
-                variant="text"
-                @click="openLink('https://www.instagram.com/zerostech/')"
+              icon="tabler-brand-instagram"
+              color="#E4405F"
+              size="small"
+              variant="text"
+              @click="
+                openLink('https://www.instagram.com/hichem_technology/')
+              "
               />
               <VBtn
-                icon="tabler-brand-tiktok"
-                :color="!$vuetify.theme.current.dark ? '#000000' : '#FFFFFF'"
-                size="small"
-                variant="text"
-                @click="openLink('https://www.tiktok.com/@zeros.dz')"
-              />
-              <VBtn
-                icon="tabler-brand-youtube"
-                color="#FF0000"
-                size="small"
-                variant="text"
-                @click="openLink('https://www.youtube.com/@zeros_dz')"
+              icon="tabler-brand-tiktok"
+              :color="!$vuetify.theme.current.dark ? '#000000' : '#FFFFFF'"
+              size="small"
+              variant="text"
+              @click="openLink('https://www.tiktok.com/@hichem_technology')"
               />
             </div>
-          </div>
+            </div>
         </div>
 
         <!-- Mobile Layout -->
@@ -133,7 +128,7 @@
                 variant="text"
                 @click="
                   openLink(
-                    'https://www.facebook.com/profile.php?id=100083778390910'
+                    'https://www.facebook.com/Hichem.techno?_rdc=1&_rdr#'
                   )
                 "
               />
@@ -142,21 +137,16 @@
                 color="#E4405F"
                 size="small"
                 variant="text"
-                @click="openLink('https://www.instagram.com/zerostech/')"
+                @click="
+                  openLink('https://www.instagram.com/hichem_technology/')
+                "
               />
               <VBtn
                 icon="tabler-brand-tiktok"
                 :color="!$vuetify.theme.current.dark ? '#000000' : '#FFFFFF'"
                 size="small"
                 variant="text"
-                @click="openLink('https://www.tiktok.com/@zeros.dz')"
-              />
-              <VBtn
-                icon="tabler-brand-youtube"
-                color="#FF0000"
-                size="small"
-                variant="text"
-                @click="openLink('https://www.youtube.com/@zeros_dz')"
+                @click="openLink('https://www.tiktok.com/@hichem_technology')"
               />
             </div>
           </div>
@@ -208,14 +198,18 @@ const openLink = (url) => {
 
 <style lang="scss" scoped>
 .section-title::after {
-  position: absolute;
-  background: url("@assets/images/section-title-icon.png") no-repeat left bottom;
-  background-size: contain;
-  block-size: 100%;
-  content: "";
-  inline-size: 120%;
-  inset-block-end: 0;
-  inset-inline-start: -12%;
+  position: absolute !important;
+  z-index: 1 !important;
+  background: #ea580c !important;
+  background-size: contain !important;
+  block-size: 0% !important;
+  content: "" !important;
+  font-weight: 800 !important;
+  inline-size: 100% !important;
+  inset-block-end: 0 !important;
+  inset-inline-start: 0% !important;
+  opacity: 0.4 !important;
+  box-shadow: 0 0 5px 5px #ea580c !important;
 }
 
 .section-title {

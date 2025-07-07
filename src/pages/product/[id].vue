@@ -553,10 +553,32 @@ export default {
             },
           }
         );
-        console.log(response.data.data);
+
+        // Check if response has valid data
+        if (!response.data || !response.data.data) {
+          throw new Error("Invalid response data");
+        }
 
         this.product = response.data.data;
-        this.product.product_options = JSON.parse(this.product.product_options);
+
+        // Safely parse product_options if it exists and is a string
+        if (this.product.product_options) {
+          try {
+            // Check if it's already an object or a string that needs parsing
+            if (typeof this.product.product_options === "string") {
+              this.product.product_options = JSON.parse(
+                this.product.product_options
+              );
+            }
+          } catch (parseError) {
+            console.warn("Failed to parse product_options:", parseError);
+            // Set to empty array if parsing fails
+            this.product.product_options = [];
+          }
+        } else {
+          // Set to empty array if product_options doesn't exist
+          this.product.product_options = [];
+        }
       } catch (error) {
         console.error("Error fetching product:", error);
         this.showSnackbar(this.$t("common.failed_to_load_product"), "error");
@@ -578,7 +600,13 @@ export default {
             Accept: "application/json",
           },
         });
-        this.relatedProducts = response.data.data;
+
+        // Check if response has valid data
+        if (response.data && response.data.data) {
+          this.relatedProducts = response.data.data;
+        } else {
+          this.relatedProducts = [];
+        }
       } catch (error) {
         console.error("Error fetching related products:", error);
         this.showSnackbar(
@@ -680,17 +708,18 @@ definePage({
 }
 
 .section-title::after {
-  position: absolute;
-  background-image: url("@assets/images/section-title-icon.png");
-  background-position: left bottom;
-  background-repeat: no-repeat;
-  background-size: contain;
-  block-size: 100%;
-  content: "";
-  font-weight: 800;
-  inline-size: 120%;
-  inset-block-end: 0;
-  inset-inline-start: -12%;
+  position: absolute !important;
+  z-index: 1 !important;
+  background: #ea580c !important;
+  background-size: contain !important;
+  block-size: 0% !important;
+  content: "" !important;
+  font-weight: 800 !important;
+  inline-size: 100% !important;
+  inset-block-end: 0 !important;
+  inset-inline-start: 0% !important;
+  opacity: 0.4 !important;
+  box-shadow: 0 0 5px 5px #ea580c !important;
 }
 
 .swiper-container {

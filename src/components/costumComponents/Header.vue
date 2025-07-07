@@ -222,7 +222,11 @@
           <VBtn
             variant="text"
             size="large"
-            :color="this.$vuetify.theme.current.dark ? 'white' : 'rgb(var(--v-theme-on-background))'"
+            :color="
+              this.$vuetify.theme.current.dark
+                ? 'white'
+                : 'rgb(var(--v-theme-on-background))'
+            "
             @click="$router.push('/shop')"
           >
             <VIcon icon="tabler-building-store" class="mr-2" />
@@ -232,7 +236,11 @@
           <VBtn
             variant="text"
             size="large"
-            :color="this.$vuetify.theme.current.dark ? 'white' : 'rgb(var(--v-theme-on-background))'"
+            :color="
+              this.$vuetify.theme.current.dark
+                ? 'white'
+                : 'rgb(var(--v-theme-on-background))'
+            "
             @click="$router.push('/build-pc')"
           >
             <VIcon icon="tabler-cpu" class="mr-2" />
@@ -242,7 +250,11 @@
           <VBtn
             variant="text"
             size="large"
-            :color="this.$vuetify.theme.current.dark ? 'white' : 'rgb(var(--v-theme-on-background))'"
+            :color="
+              this.$vuetify.theme.current.dark
+                ? 'white'
+                : 'rgb(var(--v-theme-on-background))'
+            "
             @click="$router.push('/about')"
           >
             <VIcon icon="tabler-info-circle" class="mr-2" />
@@ -255,7 +267,7 @@
             variant="text"
             size="large"
             color="secondary"
-            @click="callPhoneNumber('0558967409')"
+            @click="callPhoneNumber('0557097634')"
           >
             <VIcon
               icon="tabler-phone"
@@ -264,7 +276,7 @@
               color="primary"
             />
             <div class="contactUsContainer">
-              <span class="contactUsNumber">0558967409</span>
+              <span class="contactUsNumber">+213 557 09 76 34 </span>
               <span
                 class="text-start text-sm"
                 :style="{
@@ -828,7 +840,7 @@ export default {
 }
 
 .headerLogo {
-  block-size: 40px;
+  block-size: 62px;
   inline-size: auto;
 }
 

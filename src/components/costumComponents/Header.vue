@@ -18,7 +18,7 @@
     </div>
   </VAlert>
 
-  <div :class="{ 'bg-white': !$vuetify.theme.current.dark }">
+  <div :class="{ 'bg-white': !$vuetify.theme.current.dark }" class="header">
     <div class="headerContainer app-container">
       <!-- Mobile Menu Button -->
       <VBtn
@@ -778,6 +778,7 @@ export default {
 /* Alert banner animations */
 .alert-banner {
   overflow: hidden;
+  font-weight: 600;
   padding-block: 8px;
 }
 
@@ -1041,9 +1042,16 @@ export default {
   .headerContainer {
     padding-block: 0.75rem;
   }
+
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
 }
 
-@media (max-width: 480px) {
+/* @media (max-width: 480px) {
   .headerLogo {
     block-size: 30px;
   }
@@ -1052,7 +1060,7 @@ export default {
     gap: 0.5rem;
     padding-block: 0.5rem;
   }
-}
+} */
 
 .fs-17 {
   font-size: 17px;

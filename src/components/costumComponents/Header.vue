@@ -18,7 +18,11 @@
     </div>
   </VAlert>
 
-  <div :class="{ 'bg-white': !$vuetify.theme.current.dark }" class="header">
+  <div
+    :class="{ 'bg-white': !$vuetify.theme.current.dark }"
+    style="background-color: rgb(var(--v-theme-background))"
+    class="header"
+  >
     <div class="headerContainer app-container">
       <!-- Mobile Menu Button -->
       <VBtn
@@ -323,8 +327,8 @@
     class="mobile-sidebar"
     elevation="0"
   >
-    <div class="d-flex flex-column justify-space-between h-100">
-      <div>
+    <div class="sidebar-content">
+      <div class="sidebar-scrollable">
         <!-- Sidebar Header with Logo -->
         <div
           class="sidebar-header px-6 py-4 pt-5 d-flex align-center justify-space-between"
@@ -575,27 +579,27 @@
             </VBtn>
           </div>
         </div>
-      </div>
 
-      <!-- Contact Section -->
-      <div class="px-6 py-4 pb-8">
-        <VCard
-          flat
-          color="primary"
-          rounded="xl"
-          class="contact-card"
-          @click="callPhoneNumber('0558967409')"
-        >
-          <VCardText class="pa-4">
-            <div class="d-flex align-center">
-              <VIcon class="mr-3" size="24" color="white">tabler-phone</VIcon>
-              <div class="contact-info">
-                <div class="phone-number">0558967409</div>
-                <div class="contact-label">{{ $t("header.contact_us") }}</div>
+        <!-- Contact Section -->
+        <div class="px-6 py-8">
+          <VCard
+            flat
+            color="primary"
+            rounded="xl"
+            class="contact-card"
+            @click="callPhoneNumber('0557097634')"
+          >
+            <VCardText class="pa-4">
+              <div class="d-flex align-center">
+                <VIcon class="mr-3" size="24" color="white">tabler-phone</VIcon>
+                <div class="contact-info">
+                  <div class="phone-number">0557 09 76 34</div>
+                  <div class="contact-label">{{ $t("header.contact_us") }}</div>
+                </div>
               </div>
-            </div>
-          </VCardText>
-        </VCard>
+            </VCardText>
+          </VCard>
+        </div>
       </div>
     </div>
   </VNavigationDrawer>
@@ -865,6 +869,37 @@ export default {
   z-index: 9999;
 }
 
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
+  block-size: 100vh;
+}
+
+.sidebar-scrollable {
+  flex: 1;
+  min-block-size: 0;
+  overflow-y: auto;
+  scrollbar-color: rgba(var(--v-theme-primary), 0.3) transparent;
+  scrollbar-width: thin;
+
+  &::-webkit-scrollbar {
+    inline-size: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background: rgba(var(--v-theme-primary), 0.3);
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(var(--v-theme-primary), 0.5);
+  }
+}
+
 .sidebar-header {
   backdrop-filter: blur(10px);
   background: rgba(var(--v-theme-surface), 0.8);
@@ -1045,9 +1080,9 @@ export default {
 
   .header {
     position: sticky;
-    top: 0;
     z-index: 1000;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 10%);
+    inset-block-start: 0;
   }
 }
 
@@ -1064,5 +1099,32 @@ export default {
 
 .fs-17 {
   font-size: 17px;
+}
+</style>
+
+<style>
+/* Global styles for mobile sidebar scrolling */
+.mobile-sidebar .v-navigation-drawer__content {
+  block-size: 100vh !important;
+  overflow-y: auto !important;
+  scrollbar-color: rgba(234, 88, 12, 30%) transparent;
+  scrollbar-width: thin;
+}
+
+.mobile-sidebar .v-navigation-drawer__content::-webkit-scrollbar {
+  inline-size: 6px;
+}
+
+.mobile-sidebar .v-navigation-drawer__content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.mobile-sidebar .v-navigation-drawer__content::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+  background: rgba(234, 88, 12, 30%);
+}
+
+.mobile-sidebar .v-navigation-drawer__content::-webkit-scrollbar-thumb:hover {
+  background: rgba(234, 88, 12, 50%);
 }
 </style>

@@ -2,7 +2,7 @@
   <Header />
 
   <!-- Hero Section -->
-  <div class="app-container heroContainer py-sm-6 py-3">
+  <div class="app-container heroContainer py-sm-6 py-3 fade-up-animation">
     <div v-show="getThumbnailLoading">
       <div class="skeleton hero-swiper" style="border-radius: 16px"></div>
     </div>
@@ -31,7 +31,9 @@
   </div>
 
   <!-- Categories Section -->
-  <CategoriesSection />
+  <div class="fade-up-animation fade-up-delay-1">
+    <CategoriesSection />
+  </div>
 
   <!-- New Arrivals -->
   <div v-show="!getNewProductsLoading && newProducts.length > 0">
@@ -388,13 +390,13 @@ definePage({
   background: #ea580c !important;
   background-size: contain !important;
   block-size: 0% !important;
+  box-shadow: 0 0 5px 5px #ea580c !important;
   content: "" !important;
   font-weight: 800 !important;
   inline-size: 100% !important;
   inset-block-end: 0 !important;
   inset-inline-start: 0% !important;
   opacity: 0.4 !important;
-  box-shadow: 0 0 5px 5px #ea580c !important;
 }
 
 .brand-logo-container {
@@ -429,5 +431,43 @@ definePage({
 .brand-logo.dark:hover {
   filter: grayscale(100%) invert(1) brightness(1.2);
   opacity: 0.7;
+}
+
+/* Fade up animations */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-up-animation {
+  animation: fade-up 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+.fade-up-delay-1 {
+  animation-delay: 0.2s;
+}
+
+.fade-up-delay-2 {
+  animation-delay: 0.4s;
+}
+
+.fade-up-delay-3 {
+  animation-delay: 0.6s;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .fade-up-animation {
+    animation: none;
+    opacity: 1;
+  }
 }
 </style>

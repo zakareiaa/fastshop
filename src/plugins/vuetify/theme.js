@@ -25,6 +25,7 @@ export const themes = {
       // background: '#fff8f0',  
       // background: '#fffef9',
       background: '#fffbf6',
+      // background: '#faf6f8',
       'on-background': '#1A1A1A',
       surface: '#FFFFFF',
       'on-surface': '#1A1A1A',
@@ -149,4 +150,9 @@ export const themes = {
     },
   },
 }
+
+// Static color exports for use in TheCustomizer component
+export const staticPrimaryColor = '#ea580c'
+export const staticPrimaryDarkenColor = '#d1470a'
+
 export default themes

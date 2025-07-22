@@ -4,7 +4,7 @@
   <div class="about-page-wrapper">
     <!-- Hero Section -->
     <div class="hero-section app-container">
-      <VCard class="pa-6 px-3 px-sm-6">
+      <VCard variant="outlined" class="pa-6 px-3 px-md-6 b-radius-0">
         <VRow>
           <VCol cols="12" md="6" class="d-flex flex-column justify-center">
             <h1 class="text-h2 font-weight-bold mb-4 ps-0">
@@ -26,7 +26,7 @@
                 color="primary"
                 size="large"
                 variant="elevated"
-                class="shop-now-button"
+                class="shop-now-button b-radius-0"
                 @click="$router.push('/shop')"
               >
                 <VIcon start icon="tabler-shopping-cart" class="me-2"></VIcon>
@@ -36,7 +36,7 @@
                 variant="outlined"
                 size="large"
                 href="tel:+213557097634"
-                class="contact-us-button"
+                class="contact-us-button b-radius-0"
               >
                 <VIcon start icon="tabler-phone" class="me-2"></VIcon>
                 {{ $t("about.contact_us") }}
@@ -45,23 +45,31 @@
           </VCol>
           <VCol cols="12" md="6" class="d-flex justify-center align-center">
             <img
-              src="@/assets/images/about1.png"
+              src="@/assets/images/thumbnails.webp"
               alt="About Us Hero Image"
-              class="hero-image rounded"
-              cover
+              class="hero-image b-radius-0"
+              style="
+                max-block-size: 425px;
+                max-inline-size: 100%;
+                object-fit: cover;
+              "
             />
           </VCol>
         </VRow>
       </VCard>
       <!-- Our Mission Section -->
-      <VCard class="mt-8 pa-6 px-3 px-sm-6 mb-3">
+      <VCard variant="outlined" class="mt-8 pa-6 mb-3 px-3 px-md-6 b-radius-0">
         <VRow>
           <VCol cols="12" md="6" class="d-flex justify-center align-center">
             <img
-              src="@/assets/images/about2.jpg"
+              src="@/assets/images/about-2.webp"
               alt="Our Mission Image"
-              class="hero-image rounded"
-              cover
+              class="hero-image b-radius-0"
+              style="
+                max-block-size: 400px;
+                max-inline-size: 100%;
+                object-fit: cover;
+              "
             />
           </VCol>
           <VCol cols="12" md="6" class="d-flex flex-column justify-center">
@@ -95,9 +103,9 @@
                   >{{ $t("about.contact_email") }}
                   <span
                     class="pa-0 text-primary cursor-pointer"
-                    @click="openEmail('contact@hichem-technology.com')"
+                    @click="openEmail('contact@modiasn.com')"
                   >
-                    contact@hichem-technology.com
+                    contact@modiasn.com
                   </span>
                 </span>
               </div>

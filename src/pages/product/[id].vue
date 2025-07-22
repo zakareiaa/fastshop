@@ -1,91 +1,71 @@
 <template>
   <Header />
 
-  <div class="app-container py-10">
-    <div class="d-flex align-center justify-space-between mb-6">
-      <div class="position-relative mb-1 me-2">
-        <div class="section-title">
-          {{ $t("product_detail.product_details") }}
-        </div>
-      </div>
-
-      <!-- Breadcrumb
-      <div class="d-flex align-center ms-6">
-        <VIcon
-          icon="tabler-home"
-          size="small"
-          class="me-2"
-          @click="$router.push('/')"
-        />
-        <router-link to="/" class="text-decoration-none text-secondary"
-          >Home</router-link
-        >
-        <VIcon icon="tabler-chevron-right" size="small" class="mx-2" />
-        <router-link to="/shop" class="text-decoration-none text-secondary"
-          >Shop</router-link
-        >
-        <VIcon icon="tabler-chevron-right" size="small" class="mx-2" />
-        <span class="text-primary">Product Details</span>
-      </div> -->
-    </div>
-
-    <VCard>
-      <VCardText class="pa-3 pa-sm-6">
+  <div class="app-container py-7 product-page-container">
+    <VCard
+      variant="flat"
+      class="product-card-container"
+      style="background-color: rgb(var(--v-theme-background))"
+    >
+      <VCardText class="pa-0 product-content">
         <!-- Skeleton Loader State -->
         <VRow v-if="getProductByIdLoading">
-          <VCol cols="12" md="6">
-            <div class="skeleton skeleton-image"></div>
+          <VCol cols="12" md="7">
+            <div class="skeleton b-radius-0 skeleton-image"></div>
             <VRow>
               <VCol v-for="i in 4" :key="`sk-thumb-${i}`" cols="3">
-                <div class="skeleton skeleton-thumbnail"></div>
+                <div class="skeleton b-radius-0 skeleton-thumbnail"></div>
               </VCol>
             </VRow>
           </VCol>
-          <VCol cols="12" md="6">
-            <div class="skeleton skeleton-heading"></div>
-            <div class="skeleton skeleton-text-short"></div>
+          <VCol cols="12" md="5">
+            <div class="skeleton b-radius-0 skeleton-heading"></div>
+            <div class="skeleton b-radius-0 skeleton-text-short"></div>
             <!-- Rating + reviews count -->
-            <div class="skeleton skeleton-text-medium"></div>
+            <div class="skeleton b-radius-0 skeleton-text-medium"></div>
             <!-- Price -->
-            <div class="skeleton skeleton-paragraph-line"></div>
+            <div class="skeleton b-radius-0 skeleton-paragraph-line"></div>
             <!-- Short description -->
             <div
-              class="skeleton skeleton-paragraph-line"
+              class="skeleton b-radius-0 skeleton-paragraph-line"
               style="inline-size: 80%"
             ></div>
             <div
-              class="skeleton skeleton-paragraph-line"
+              class="skeleton b-radius-0 skeleton-paragraph-line"
               style="inline-size: 90%; margin-block-end: 1.5rem"
             ></div>
             <div class="d-flex flex-wrap ga-2 mb-4">
               <!-- Categories -->
-              <div class="skeleton skeleton-chip"></div>
-              <div class="skeleton skeleton-chip"></div>
-              <div class="skeleton skeleton-chip"></div>
+              <div class="skeleton b-radius-0 skeleton-chip"></div>
+              <div class="skeleton b-radius-0 skeleton-chip"></div>
+              <div class="skeleton b-radius-0 skeleton-chip"></div>
             </div>
-            <div class="skeleton skeleton-divider"></div>
+            <div class="skeleton b-radius-0 skeleton-divider"></div>
             <div class="d-flex align-center mb-6 mt-6">
-              <div class="skeleton skeleton-quantity-selector"></div>
+              <div class="skeleton b-radius-0 skeleton-quantity-selector"></div>
             </div>
-            <div class="skeleton skeleton-button"></div>
-            <div class="skeleton skeleton-button"></div>
+            <div class="skeleton b-radius-0 skeleton-button"></div>
+            <div class="skeleton b-radius-0 skeleton-button"></div>
             <div
-              class="skeleton skeleton-text-short"
+              class="skeleton b-radius-0 skeleton-text-short"
               style="margin-block-start: 1.5rem"
             ></div>
             <!-- Shipping -->
-            <div class="skeleton skeleton-text-medium"></div>
+            <div class="skeleton b-radius-0 skeleton-text-medium"></div>
             <!-- EMI -->
           </VCol>
         </VRow>
 
         <!-- Actual Product Content -->
-        <VRow v-else-if="!getProductByIdLoading && product.id">
+        <VRow
+          v-else-if="!getProductByIdLoading && product.id"
+          class="position-relative"
+        >
           <!-- Product Image -->
-          <VCol cols="12" md="6" class="product-image-col">
+          <VCol cols="12" md="7" class="product-image-sticky-col">
             <div class="swiper-container-wrapper">
               <swiper-container
-                class="mySwiper mb-4"
+                class="mySwiper mb-4 swiper-container-product-detail"
                 thumbs-swiper=".mySwiper2"
                 loop="true"
                 space-between="10"
@@ -98,13 +78,23 @@
                     :src="image.image_url"
                     class="product-detail-image"
                     alt="Product image"
-                    style="
-                      border-radius: 8px;
-                      block-size: 650px;
-                      object-fit: contain;
-                    "
+                    style="inline-size: 100%; object-fit: cover"
                     @click="openImagePreview(image.image_url)"
                   />
+
+                  <div class="zoom-wishlist-icons">
+                    <VBtn
+                      icon="tabler-zoom-in"
+                      @click="openImagePreview(image.image_url)"
+                    ></VBtn>
+                    <VBtn
+                      :icon="
+                        isInWishlist ? 'tabler-heart-filled' : 'tabler-heart'
+                      "
+                      @click.stop="toggleWishlist()"
+                    >
+                    </VBtn>
+                  </div>
                 </swiper-slide>
               </swiper-container>
 
@@ -136,15 +126,13 @@
           </VCol>
 
           <!-- Product Details -->
-          <VCol
-            cols="12"
-            md="6"
-            class="d-flex flex-column justify-space-between"
-          >
+          <VCol cols="12" md="5" class="d-flex flex-column">
             <div>
               <div class="d-flex align-center mb-2">
-                <h1 class="text-h4 font-weight-bold">{{ product.name }}</h1>
-                <div class="ms-4">
+                <h1 class="text-h2 text-md-h2 text-h3 font-weight-normal">
+                  {{ product.name }}
+                </h1>
+                <!-- <div class="ms-4">
                   <VChip
                     color="success"
                     class="text-white"
@@ -156,10 +144,10 @@
                   <VChip color="warning" class="text-white" size="small" v-else>
                     <span>{{ $t("product_detail.out_of_stock") }}</span>
                   </VChip>
-                </div>
+                </div> -->
               </div>
 
-              <div class="d-flex align-center mb-4">
+              <!-- <div class="d-flex align-center mb-4">
                 <VRating
                   :model-value="product.average_rating"
                   readonly
@@ -171,111 +159,62 @@
                   >({{ product.reviews_count }}
                   {{ $t("reviews.reviews") }})</span
                 >
-              </div>
-              <div class="d-flex align-center mb-4">
-                <h2 class="text-h5 text-primary font-weight-bold me-3">
+              </div> -->
+              <div class="d-flex align-end mb-4">
+                <h2 class="text-h4 text-primary font-weight-normal me-3">
                   {{ product.price }} DA
                 </h2>
                 <span
                   v-if="product.old_price"
-                  class="text-decoration-line-through text-disabled"
+                  class="text-h5 text-decoration-line-through text-disabled"
                 >
                   {{ product.old_price }} DA
                 </span>
               </div>
 
-              <p class="text-body-1 mb-6">{{ product.short_description }}</p>
+              <!-- <p class="text-body-1 mb-6">{{ product.short_description }}</p> -->
             </div>
 
             <div>
-              <!-- Category Chips -->
-              <!-- <div
-                v-if="product.categories && product.categories.length > 0"
-                class="d-flex flex-wrap ga-2 mb-4"
-              >
-                <span class="text-body-1 font-weight-medium">Categories:</span>
-                <VChip
-                  v-for="category in product.categories"
-                  :key="category.id"
-                  size="small"
-                  color="primary"
-                  variant="tonal"
-                  label
-                >
-                  {{ category.name }}
-                </VChip>
-              </div> -->
-
               <!-- Product Options -->
               <div
                 v-if="
                   product.product_options && product.product_options.length > 0
                 "
               >
-                <div class="d-flex align-center mb-4">
-                  <span class="text-body-1 font-weight-medium">{{
-                    $t("product_detail.options")
-                  }}</span>
-                </div>
-
-                <VSelect
+                <div
                   v-for="option in product.product_options"
                   :key="option.name"
-                  v-model="selectedOptions[option.name]"
-                  :items="option.items"
-                  :label="option.name"
-                  item-title="name"
-                  item-value="name"
-                  return-object
-                  clearable
-                  variant="outlined"
                   class="mb-4"
                 >
-                  <template v-slot:selection="{ item }">
-                    <div
-                      class="d-flex align-center justify-space-between w-100"
-                    >
-                      <span class="text-capitalize me-4">
-                        {{ item.raw.name }}
-                      </span>
-                      <VChip
-                        v-if="item.raw.price_added > 0"
-                        color="success"
-                        class="ms-auto"
-                        size="small"
-                      >
-                        +{{ item.raw.price_added }} DA
-                      </VChip>
-                    </div>
-                  </template>
-                  <template v-slot:item="{ item, props }">
-                    <VListItem v-bind="props">
-                      <template v-slot:title>
-                        <div class="d-flex align-center">
-                          <span class="text-capitalize">
-                            {{ item.raw.name }}
-                          </span>
-                          <VChip
-                            color="success"
-                            v-if="item.raw.price_added > 0"
-                            class="ms-auto"
-                            size="small"
-                          >
-                            +{{ item.raw.price_added }} DA
-                          </VChip>
-                        </div>
-                      </template>
-                    </VListItem>
-                  </template>
-                </VSelect>
-
-                <div class="d-flex justify-end align-center my-4">
-                  <span class="text-body-1 font-weight-medium me-2"
-                    >{{ $t("cart.total") }}:</span
+                  <p class="text-body-1 font-weight-medium mb-1">
+                    {{ option.name }}
+                  </p>
+                  <VChipGroup
+                    :model-value="selectedOptions[option.name]"
+                    @update:model-value="
+                      updateSelectedOption(option.name, $event)
+                    "
+                    mandatory
+                    active-class="selected-chip"
                   >
-                  <h3 class="text-h6 text-primary font-weight-bold">
-                    {{ totalPrice }} DA
-                  </h3>
+                    <VChip
+                      v-for="item in option.items"
+                      :key="item.name"
+                      :value="item"
+                      label
+                      class="select-item-ship"
+                    >
+                      {{ item.name }}
+                      <VBadge
+                        v-if="item.price_added > 0"
+                        color="success"
+                        :content="`+${item.price_added} DA`"
+                        inline
+                        class="ms-2"
+                      />
+                    </VChip>
+                  </VChipGroup>
                 </div>
               </div>
 
@@ -286,10 +225,19 @@
                 <span class="text-body-1 font-weight-medium me-4"
                   >{{ $t("product_detail.quantity") }}:</span
                 >
-                <div class="quantity-selector d-flex align-center">
+                <div
+                  class="quantity-selector d-flex align-center"
+                  :style="{
+                    border: `1px solid ${
+                      $vuetify.theme.current.dark
+                        ? 'rgba(255,255,255,0.12)'
+                        : 'rgba(0,0,0,0.12)'
+                    }`,
+                  }"
+                >
                   <VBtn
                     icon="tabler-minus"
-                    variant="tonal"
+                    variant="text"
                     size="small"
                     @click="decrementQuantity"
                     :disabled="quantity <= 1"
@@ -297,11 +245,23 @@
                   <span class="mx-4 text-body-1">{{ quantity }}</span>
                   <VBtn
                     icon="tabler-plus"
-                    variant="tonal"
+                    variant="text"
                     size="small"
                     @click="incrementQuantity"
                   />
                 </div>
+              </div>
+
+              <div
+                class="d-flex justify-end align-center my-4"
+                v-if="quantity > 1 || product.product_options.length > 0"
+              >
+                <span class="text-body-1 font-weight-medium me-2"
+                  >{{ $t("cart.total") }}:</span
+                >
+                <h3 class="text-h6 text-primary font-weight-bold">
+                  {{ totalPrice }} DA
+                </h3>
               </div>
 
               <!-- Action Buttons -->
@@ -311,13 +271,13 @@
                   variant="tonal"
                   prepend-icon="tabler-shopping-bag"
                   @click="proceedToCheckout"
-                  class="w-100 mb-3"
+                  class="w-100 mb-3 b-radius-0"
                 >
                   {{ $t("build_pc.proceed_to_checkout") }}
                 </VBtn>
                 <VBtn
                   color="primary"
-                  class="w-100"
+                  class="w-100 b-radius-0"
                   prepend-icon="tabler-shopping-cart"
                   @click="addToCart"
                 >
@@ -325,7 +285,6 @@
                 </VBtn>
               </div>
 
-              <!-- Free Shipping -->
               <div class="mt-6 d-flex align-center">
                 <VIcon icon="tabler-truck-delivery" class="me-2" />
                 <span class="text-body-2">{{
@@ -333,13 +292,16 @@
                 }}</span>
               </div>
 
-              <!-- EMI options -->
               <div class="mt-2 d-flex align-center">
                 <VIcon icon="tabler-credit-card" class="me-2" />
                 <span class="text-body-2 text-xs">{{
                   $t("product_detail.emi_info")
                 }}</span>
               </div>
+
+              <VDivider class="mt-3"></VDivider>
+
+              <div v-html="product.description" class="mt-6"></div>
             </div>
           </VCol>
         </VRow>
@@ -357,53 +319,39 @@
             <p class="text-body-1">
               {{ $t("shop.no_products_message") }}
             </p>
-            <VBtn color="primary" @click="$router.push('/shop')">
+            <VBtn
+              color="primary"
+              @click="$router.push('/shop')"
+              class="b-radius-0"
+            >
               {{ $t("header.shop") }}
             </VBtn>
           </VCol>
         </VRow>
       </VCardText>
     </VCard>
-
-    <!-- Product Description Tabs -->
-    <VCard class="mt-10">
-      <VTabs v-model="activeTab" color="primary" grow class="v-tabs-pill">
-        <VTab value="description">
-          <VIcon icon="tabler-file-text" class="me-2" />
-          {{ $t("product_detail.description") }}</VTab
-        >
-        <VTab value="reviews">
-          <VIcon icon="tabler-star" class="me-2" />
-          {{ $t("product_detail.specifications") }}</VTab
-        >
-      </VTabs>
-
-      <VDivider />
-
-      <VWindow v-model="activeTab" class="pa-2 pb-6 pa-sm-6">
-        <VWindowItem value="description">
-          <div v-html="product.description"></div>
-        </VWindowItem>
-
-        <VWindowItem value="reviews">
-          <ProductReviews
-            v-if="product"
-            :productId="product.id"
-            :productName="product.name"
-          />
-        </VWindowItem>
-      </VWindow>
-    </VCard>
   </div>
 
   <!-- Related Products -->
-  <div class="mb-10">
+  <div>
     <CategoryProductsSection
       :title="$t('product_detail.related_products')"
       :products="relatedProducts"
       :productsLoading="getRelatedProductsLoading"
     />
   </div>
+
+  <VCard
+    variant="flat"
+    class="app-container product-card-container mt-3 pb-12"
+    style="background-color: rgb(var(--v-theme-background)) !important"
+  >
+    <ProductReviews
+      v-if="product && product.id"
+      :productId="product.id"
+      :productName="product.name"
+    />
+  </VCard>
 
   <!-- Snackbar -->
   <VSnackbar
@@ -434,7 +382,6 @@
         <VBtn
           icon="tabler-x"
           variant="elevated"
-          color="white"
           class="position-absolute close-btn"
           style="z-index: 10; inset-block-start: 16px; inset-inline-end: 16px"
           @click="imagePreviewDialog = false"
@@ -454,8 +401,8 @@
 
 <script>
 import { useCartStore } from "@/stores/useCartStore";
+import { useWishlistStore } from "@/stores/useWishlistStore";
 import axios from "axios";
-
 import { register } from "swiper/element/bundle";
 register();
 
@@ -464,7 +411,6 @@ import Footer from "@/components/costumComponents/Footer.vue";
 import Header from "@/components/costumComponents/Header.vue";
 import ProductCard from "@/components/costumComponents/ProductCard.vue";
 import ProductReviews from "@/components/costumComponents/ProductReviews.vue";
-
 export default {
   components: {
     Header,
@@ -500,6 +446,7 @@ export default {
       api_url: import.meta.env.VITE_API_URL,
 
       cartStore: useCartStore(),
+      wishlistStore: useWishlistStore(),
     };
   },
 
@@ -527,6 +474,12 @@ export default {
     },
     totalPrice() {
       return this.totalPricePerUnit * this.quantity;
+    },
+
+    isInWishlist() {
+      return (
+        this.product.id && this.wishlistStore.isInWishlist(this.product.id)
+      );
     },
   },
 
@@ -579,6 +532,9 @@ export default {
           // Set to empty array if product_options doesn't exist
           this.product.product_options = [];
         }
+
+        // Initialize selected options after product is loaded
+        this.initializeSelectedOptions();
       } catch (error) {
         console.error("Error fetching product:", error);
         this.showSnackbar(this.$t("common.failed_to_load_product"), "error");
@@ -635,13 +591,26 @@ export default {
     },
 
     addToCart() {
+      console.log(
+        "Adding to cart - Product:",
+        this.product.id,
+        "Options:",
+        this.selectedOptions
+      );
+
+      // Create a deep copy of selectedOptions to avoid reference issues
+      const selectedOptionsCopy = JSON.parse(
+        JSON.stringify(this.selectedOptions)
+      );
+
       const productToAdd = {
         ...this.product,
-        selectedOptions: this.selectedOptions,
+        selectedOptions: selectedOptionsCopy,
+        quantity: this.quantity,
       };
-      for (let index = 0; index < this.quantity; index++) {
-        this.cartStore.addItem(productToAdd);
-      }
+
+      this.cartStore.addItem(productToAdd);
+
       this.showSnackbar(
         `Added ${this.quantity} ${this.product.name} to cart`,
         "success"
@@ -654,13 +623,15 @@ export default {
     },
 
     toggleWishlist() {
-      this.product.inWishlist = !this.product.inWishlist;
-      console.log(
-        `${this.product.inWishlist ? "Added to" : "Removed from"} wishlist: ${
-          this.product.name
-        }`
-      );
-      // Here you would implement the actual wishlist functionality
+      if (this.product.id) {
+        const wasAdded = this.wishlistStore.toggleItem(this.product);
+        this.showSnackbar(
+          wasAdded
+            ? "Product added to wishlist!"
+            : "Product removed from wishlist!",
+          "success"
+        );
+      }
     },
 
     thumbClick(index) {
@@ -671,9 +642,48 @@ export default {
       this.previewImageUrl = imageUrl;
       this.imagePreviewDialog = true;
     },
+
+    updateSelectedOption(optionName, selectedValue) {
+      console.log("Option changed:", optionName, "→", selectedValue.name);
+      this.selectedOptions[optionName] = selectedValue;
+    },
+
+    initializeSelectedOptions() {
+      console.log("Initializing options for product:", this.product.id);
+      // Create a completely new reactive object
+      const newSelectedOptions = {};
+
+      if (
+        this.product.product_options &&
+        this.product.product_options.length > 0
+      ) {
+        // Initialize with first option for each product option type
+        this.product.product_options.forEach((option) => {
+          if (option.items && option.items.length > 0) {
+            // Always select the first option by default
+            newSelectedOptions[option.name] = option.items[0];
+          }
+        });
+      }
+
+      // Replace the entire selectedOptions object to ensure reactivity
+      this.selectedOptions = newSelectedOptions;
+      console.log("Options initialized:", Object.keys(this.selectedOptions));
+    },
   },
 
   watch: {
+    // Watch for product changes to reset selectedOptions
+    "product.id": {
+      handler(newId, oldId) {
+        if (newId && newId !== oldId) {
+          console.log("Product ID changed, reinitializing options");
+          this.initializeSelectedOptions();
+        }
+      },
+      immediate: false,
+    },
+
     "$route.params.id": {
       async handler(newId, oldId) {
         if (newId && newId !== oldId) {
@@ -682,6 +692,15 @@ export default {
           await this.getRelatedProducts();
         }
       },
+    },
+    product: {
+      handler(newVal, oldVal) {
+        if (newVal && newVal.id && (!oldVal || newVal.id !== oldVal.id)) {
+          console.log("Product changed, reinitializing options");
+          this.initializeSelectedOptions();
+        }
+      },
+      immediate: false, // Don't run on component mount since we call it in getProductById
     },
   },
 };
@@ -701,25 +720,43 @@ definePage({
 <style lang="scss">
 @use "@core/scss/template/pages/page-auth";
 
-.section-title {
-  font-size: 24px;
-  font-weight: 800;
-  line-height: 36px;
+// Ensure parent containers don't interfere with sticky positioning
+.product-page-container {
+  overflow: visible !important;
 }
 
-.section-title::after {
-  position: absolute !important;
-  z-index: 1 !important;
-  background: #ea580c !important;
-  background-size: contain !important;
-  block-size: 0% !important;
-  content: "" !important;
-  font-weight: 800 !important;
-  inline-size: 100% !important;
-  inset-block-end: 0 !important;
-  inset-inline-start: 0% !important;
-  opacity: 0.4 !important;
-  box-shadow: 0 0 5px 5px #ea580c !important;
+.product-card-container {
+  overflow: visible !important;
+}
+
+.product-content {
+  overflow: visible !important;
+}
+
+// Apply sticky positioning with higher specificity
+.product-image-sticky-col {
+  position: sticky !important;
+  z-index: 10 !important;
+  align-self: start !important;
+  inset-block-start: 10px !important;
+}
+
+// Mobile responsive - disable sticky on mobile
+@media (max-width: 960px) {
+  .product-image-sticky-col {
+    position: static !important;
+  }
+}
+
+.v-chip--selected {
+  background: rgb(var(--v-theme-on-background)) !important;
+  color: rgb(var(--v-theme-background)) !important;
+}
+
+.section-title {
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 36px;
 }
 
 .swiper-container {
@@ -728,7 +765,6 @@ definePage({
 
 .mySwiper {
   overflow: hidden;
-  border-radius: 8px;
   cursor: pointer;
 }
 
@@ -739,7 +775,6 @@ definePage({
 .mySwiper2 .swiper-slide {
   overflow: hidden;
   border: 5px solid black;
-  border-radius: 4px;
   block-size: 100%;
   cursor: pointer;
   opacity: 0.4;
@@ -751,11 +786,16 @@ definePage({
 }
 
 .product-detail-image {
-  max-block-size: 400px;
-  max-inline-size: 100%;
-  min-inline-size: 100%;
-  object-fit: contain;
+  inline-size: 100%;
+  max-block-size: 600px;
+  object-fit: cover;
   transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@media (max-width: 450px) {
+  .product-detail-image {
+    max-block-size: 400px;
+  }
 }
 
 .mySwiper:hover .product-detail-image {
@@ -768,7 +808,7 @@ definePage({
 }
 
 .thumbnail-image {
-  border-radius: 8px;
+  inline-size: 100%;
 
   // max-block-size: 120px;
   max-inline-size: 100%;
@@ -782,7 +822,6 @@ definePage({
   justify-content: center;
   padding: 4px;
   border: 2px solid transparent;
-  border-radius: 6px;
   block-size: 100%;
   cursor: pointer;
   transition: all 0.2s;
@@ -810,8 +849,7 @@ definePage({
 }
 
 .quantity-selector {
-  border: 1px solid rgba(0, 0, 0, 12%);
-  border-radius: 4px;
+  border-radius: 0;
   padding-block: 4px;
   padding-inline: 8px;
 }
@@ -849,7 +887,7 @@ td {
 }
 
 .skeleton-chip {
-  border-radius: 16px;
+  border-radius: 0;
   block-size: 32px;
   inline-size: 80px;
   margin-inline-end: 8px;
@@ -862,13 +900,13 @@ td {
 }
 
 .skeleton-quantity-selector {
-  border-radius: 4px;
+  border-radius: 0;
   block-size: 42px;
   inline-size: 120px;
 }
 
 .skeleton-button {
-  border-radius: 6px;
+  border-radius: 0;
   block-size: 44px;
   inline-size: 100%;
   margin-block-end: 12px;
@@ -880,8 +918,7 @@ td {
 }
 
 .preview-image {
-  border-radius: 8px;
-  cursor: zoom-out;
+  border-radius: 0;
 }
 
 .close-btn {
@@ -891,5 +928,23 @@ td {
 
 .close-btn:hover {
   opacity: 1;
+}
+
+.zoom-wishlist-icons {
+  position: absolute;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  inset-block-start: 10px;
+  inset-inline-end: 10px;
+}
+
+.select-item-ship {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  min-inline-size: 60px;
 }
 </style>

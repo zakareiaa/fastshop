@@ -1,9 +1,14 @@
 <template>
-  <div
+  <!-- <div
     class="py-8"
     :class="{
       'bg-white': !$vuetify.theme.current.dark,
       'bg-dark': $vuetify.theme.current.dark,
+    }"
+    :style="{
+      background: !$vuetify.theme.current.dark
+        ? 'rgb(var(--v-theme-on-background)) !important'
+        : '',
     }"
   >
     <div class="app-container" id="features">
@@ -15,12 +20,26 @@
             class="d-flex text-h4 mb-1 align-center flex-wrap justify-center"
           >
             <div class="position-relative me-2">
-              <div class="section-title text-center">
+              <div
+                class="section-title text-center"
+                :style="{
+                  color: !$vuetify.theme.current.dark
+                    ? 'rgb(var(--v-theme-background)) !important'
+                    : '',
+                }"
+              >
                 {{ $t("footer.why_buy_from_us") }}
               </div>
             </div>
           </div>
-          <p class="text-body-1 mb-0 text-center mt-2 px-4">
+          <p
+            class="text-body-1 mb-0 text-center mt-2 px-4"
+            :style="{
+              color: !$vuetify.theme.current.dark
+                ? 'rgba(var(--v-theme-background), var(--v-medium-emphasis-opacity)) !important'
+                : '',
+            }"
+          >
             {{ $t("footer.company_description") }}
           </p>
         </div>
@@ -35,12 +54,35 @@
             <div
               class="d-flex flex-column align-center justify-center gap-4 mx-auto px-4"
             >
-              <VIcon :icon="data.icon" size="64" color="primary" />
+              <VIcon
+                :icon="data.icon"
+                size="64"
+                :color="
+                  !$vuetify.theme.current.dark
+                    ? 'rgb(var(--v-theme-background) !important'
+                    : 'primary'
+                "
+              />
               <div class="text-center">
-                <h5 class="text-h5 mb-2">
+                <h5
+                  class="text-h5 mb-2"
+                  :style="{
+                    color: !$vuetify.theme.current.dark
+                      ? 'rgb(var(--v-theme-background) !important'
+                      : '',
+                  }"
+                >
                   {{ $t("footer." + data.title_key) }}
                 </h5>
-                <p class="text-body-1 mb-6" style="max-inline-size: 310px">
+                <p
+                  class="text-body-1 mb-6"
+                  style="max-inline-size: 310px"
+                  :style="{
+                    color: !$vuetify.theme.current.dark
+                      ? 'rgba(var(--v-theme-background), var(--v-medium-emphasis-opacity)) !important'
+                      : '',
+                  }"
+                >
                   {{ $t("footer." + data.desc_key) }}
                 </p>
               </div>
@@ -49,119 +91,336 @@
         </VRow>
       </div>
     </div>
-  </div>
+  </div> -->
 
-  <div class="footer text-center pt-6">
-    <div class="d-flex justify-center mb-4">
-      <div
-        class="d-flex gap-x-4 align-center justify-center text-primary pb-3 border-b flex-wrap"
-      >
-        <h6 class="text-h6 mb-sm-0">{{ $t("footer.about_us") }}</h6>
-
-        <a href="#" class="text-subtitle-2" target="noopener noreferrer">{{
-          $t("footer.privacy_policy")
-        }}</a>
-        <a href="#" class="text-subtitle-2" target="noopener noreferrer">{{
-          $t("footer.terms_of_use")
-        }}</a>
-        <a href="#" target="noopener noreferrer" class="text-subtitle-2">{{
-          $t("footer.terms_of_sale")
-        }}</a>
-      </div>
-    </div>
-    <!-- 👉 Footer Line -->
-    <div class="footer-line w-100 pt-2 pb-4">
-      <div class="app-container">
-        <!-- Desktop Layout -->
-        <div class="d-none d-md-flex justify-space-between align-center">
-          <div>{{ $t("footer.all_rights_reserved") }}</div>
-          <div class="d-flex align-center gap-x-1">
-            <span>{{ $t("footer.developed_by") }}</span>
-            <a href="https://zakariadjeddai.com" target="noopener noreferrer"
-              >Zakaria Djeddai</a
-            >
+  <!-- Questions & Answers Section -->
+  <div
+    class="pt-12 pb-0 mt-10"
+    :class="{
+      'bg-white': !$vuetify.theme.current.dark,
+      'bg-dark': $vuetify.theme.current.dark,
+    }"
+    :style="{
+      background: !$vuetify.theme.current.dark
+        ? 'rgb(var(--v-theme-on-background)) !important'
+        : '',
+    }"
+  >
+    <div class="app-container" id="questions-answers">
+      <div class="qa-section">
+        <div
+          class="headers d-flex justify-center flex-column align-center mb-8"
+        >
+          <div
+            class="d-flex text-h4 mb-1 align-center flex-wrap justify-center"
+          >
+            <div class="position-relative me-2">
+              <div
+                class="section-title text-center"
+                :style="{
+                  color: !$vuetify.theme.current.dark
+                    ? 'rgb(var(--v-theme-background)) !important'
+                    : '',
+                }"
+              >
+                {{ $t("footer.questions_answers") }}
+              </div>
+            </div>
           </div>
-            <div class="d-flex align-center gap-x-4">
-            <h6 class="text-h6">{{ $t("footer.follow_us") }}</h6>
-            <div class="d-flex gap-x-0">
-              <VBtn
-              icon="tabler-brand-facebook"
-              color="#1877F2"
-              size="small"
-              variant="text"
-              @click="
-                openLink(
-                'https://www.facebook.com/Hichem.techno?_rdc=1&_rdr#'
-                )
-              "
-              />
-              <VBtn
-              icon="tabler-brand-instagram"
-              color="#E4405F"
-              size="small"
-              variant="text"
-              @click="
-                openLink('https://www.instagram.com/hichem_technology/')
-              "
-              />
-              <VBtn
-              icon="tabler-brand-tiktok"
-              :color="!$vuetify.theme.current.dark ? '#000000' : '#FFFFFF'"
-              size="small"
-              variant="text"
-              @click="openLink('https://www.tiktok.com/@hichem_technology')"
-              />
-            </div>
-            </div>
         </div>
 
-        <!-- Mobile Layout -->
-        <div class="d-md-none d-flex flex-column gap-4 text-center">
-          <!-- Social Media -->
-          <div class="d-flex align-center justify-center gap-x-2">
-            <h6 class="text-h6 me-2">{{ $t("footer.follow_us") }}</h6>
-            <div class="d-flex gap-x-0">
+        <VRow>
+          <VCol cols="12" md="6">
+            <VExpansionPanels multiple>
+              <VExpansionPanel
+                v-for="(qa, index) in questionsAnswers"
+                :key="index"
+                style="border-radius: 0 !important; background-color: #fff"
+              >
+                <VExpansionPanelTitle
+                  :style="{
+                    color: !$vuetify.theme.current.dark
+                      ? 'rgb(var(--v-theme-on-background)) !important'
+                      : 'rgb(var(--v-theme-background)) !important',
+                  }"
+                >
+                  <VIcon
+                    :icon="qa.icon"
+                    class="me-3"
+                    :color="
+                      !$vuetify.theme.current.dark
+                        ? 'rgb(var(--v-theme-on-background)) '
+                        : 'rgb(var(--v-theme-background))'
+                    "
+                  />
+                  {{ $t("footer." + qa.question_key) }}
+                </VExpansionPanelTitle>
+                <VExpansionPanelText
+                  :style="{
+                    color: !$vuetify.theme.current.dark
+                      ? 'rgba(var(--v-theme-on-background), var(--v-medium-emphasis-opacity)) !important'
+                      : 'rgba(var(--v-theme-background), var(--v-medium-emphasis-opacity)) !important',
+                  }"
+                >
+                  {{ $t("footer." + qa.answer_key) }}
+                </VExpansionPanelText>
+              </VExpansionPanel>
+            </VExpansionPanels>
+          </VCol>
+          <VCol cols="12" md="6" class="d-flex align-center justify-center">
+            <div class="qa-image-container">
+              <img
+                src="/src/assets/images/thumbnails2.webp"
+                alt="Questions & Answers"
+                class="qa-image"
+                style="block-size: auto; max-inline-size: 100%"
+              />
+            </div>
+          </VCol>
+        </VRow>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="footer text-center pt-6"
+    :style="{
+      background: !$vuetify.theme.current.dark
+        ? 'rgb(var(--v-theme-on-background)) !important'
+        : '',
+    }"
+  >
+    <div class="app-container">
+      <VRow class="py-12">
+        <!-- 👉 Modiasn -->
+        <VCol cols="12" md="4">
+          <div class="text-center text-sm-start">
+            <h3
+              class="text-h4 font-weight-bold mb-4"
+              :style="{
+                color: !$vuetify.theme.current.dark
+                  ? 'rgb(var(--v-theme-background)) !important'
+                  : '',
+              }"
+            >
+              MODIASN
+            </h3>
+            <p
+              class="text-body-1"
+              :style="{
+                color: !$vuetify.theme.current.dark
+                  ? 'rgba(var(--v-theme-background), var(--v-medium-emphasis-opacity)) !important'
+                  : '',
+              }"
+            >
+              {{ $t("footer.tagline") }}
+            </p>
+          </div>
+        </VCol>
+
+        <!-- 👉 Contact us -->
+        <VCol cols="12" md="3">
+          <div class="text-center text-sm-start">
+            <h3
+              class="text-h4 font-weight-bold mb-4"
+              :style="{
+                color: !$vuetify.theme.current.dark
+                  ? 'rgb(var(--v-theme-background)) !important'
+                  : '',
+              }"
+            >
+              {{ $t("footer.contact_us") }}
+            </h3>
+            <p
+              class="text-body-1"
+              :style="{
+                color: !$vuetify.theme.current.dark
+                  ? 'rgba(var(--v-theme-background), var(--v-medium-emphasis-opacity)) !important'
+                  : '',
+              }"
+            >
+              0675131178 | 0669999143
+            </p>
+            <p
+              class="text-body-1"
+              :style="{
+                color: !$vuetify.theme.current.dark
+                  ? 'rgba(var(--v-theme-background), var(--v-medium-emphasis-opacity)) !important'
+                  : '',
+              }"
+            >
+              officialmodiasn@gmail.com
+            </p>
+            <div class="d-flex gap-x-2 justify-center justify-sm-start">
+              <VBtn
+                icon="tabler-phone"
+                variant="text"
+                :color="!$vuetify.theme.current.dark ? '#ffffff' : '#4CAF50'"
+                @click="callNumber('tel:0669999143')"
+              />
+              <VBtn
+                icon="tabler-brand-instagram"
+                variant="text"
+                :color="!$vuetify.theme.current.dark ? '#ffffff' : '#E4405F'"
+                @click="openLink('https://www.instagram.com/modiasn/')"
+              />
+              <VBtn
+                icon="tabler-brand-tiktok"
+                variant="text"
+                :color="!$vuetify.theme.current.dark ? '#ffffff' : '#FFFFFF'"
+                @click="openLink('https://www.tiktok.com/@modiasn')"
+              />
+            </div>
+          </div>
+        </VCol>
+
+        <!-- 👉 Menu -->
+        <VCol cols="12" md="2">
+          <div class="text-center text-sm-start">
+            <h3
+              class="text-h4 font-weight-bold mb-4"
+              :style="{
+                color: !$vuetify.theme.current.dark
+                  ? 'rgb(var(--v-theme-background)) !important'
+                  : '',
+              }"
+            >
+              {{ $t("footer.menu") }}
+            </h3>
+            <p @click="$router.push('/')">
+              <a
+                class="text-body-1 cursor-pointer"
+                :style="{
+                  color: !$vuetify.theme.current.dark
+                    ? 'rgba(var(--v-theme-background), var(--v-medium-emphasis-opacity)) !important'
+                    : '',
+                }"
+                >{{ $t("footer.home") }}</a
+              >
+            </p>
+            <p @click="$router.push('/shop')">
+              <a
+                class="text-body-1 cursor-pointer"
+                :style="{
+                  color: !$vuetify.theme.current.dark
+                    ? 'rgba(var(--v-theme-background), var(--v-medium-emphasis-opacity)) !important'
+                    : '',
+                }"
+                >{{ $t("footer.shop") }}</a
+              >
+            </p>
+            <p @click="$router.push('about')">
+              <a
+                class="text-body-1 cursor-pointer"
+                :style="{
+                  color: !$vuetify.theme.current.dark
+                    ? 'rgba(var(--v-theme-background), var(--v-medium-emphasis-opacity)) !important'
+                    : '',
+                }"
+                >{{ $t("footer.about") }}</a
+              >
+            </p>
+          </div>
+        </VCol>
+
+        <!-- 👉 Developed by -->
+        <VCol cols="12" md="3">
+          <div class="text-center text-sm-start">
+            <h3
+              class="text-h4 font-weight-bold mb-4"
+              :style="{
+                color: !$vuetify.theme.current.dark
+                  ? 'rgb(var(--v-theme-background)) !important'
+                  : '',
+              }"
+            >
+              {{ $t("footer.developed_by") }}
+            </h3>
+            <p
+              class="text-body-1"
+              :style="{
+                color: !$vuetify.theme.current.dark
+                  ? 'rgba(var(--v-theme-background), var(--v-medium-emphasis-opacity)) !important'
+                  : '',
+              }"
+            >
+              <a
+                href="https://zakariadjeddai.com"
+                target="_blank"
+                class="text-decoration-none"
+                :style="{
+                  color: !$vuetify.theme.current.dark
+                    ? 'rgba(var(--v-theme-background), var(--v-medium-emphasis-opacity)) !important'
+                    : '',
+                }"
+              >
+                Zakaria Djeddai</a
+              >
+            </p>
+            <p>
+              <a
+                href="https://zakariadjeddai.com/portfolio"
+                target="_blank"
+                class="text-body-1 text-decoration-none"
+                :style="{
+                  color: !$vuetify.theme.current.dark
+                    ? 'rgba(var(--v-theme-background), var(--v-medium-emphasis-opacity)) !important'
+                    : '',
+                }"
+              >
+                {{ $t("footer.see_my_work") }} →
+              </a>
+            </p>
+            <div class="d-flex gap-x-2 justify-center justify-sm-start">
+              <VBtn
+                icon="tabler-phone"
+                variant="text"
+                :color="!$vuetify.theme.current.dark ? '#ffffff' : '#4CAF50'"
+                @click="callNumber('tel:0669966723')"
+              />
               <VBtn
                 icon="tabler-brand-facebook"
-                color="#1877F2"
-                size="small"
                 variant="text"
+                :color="!$vuetify.theme.current.dark ? '#ffffff' : '#1877F2'"
                 @click="
-                  openLink(
-                    'https://www.facebook.com/Hichem.techno?_rdc=1&_rdr#'
-                  )
+                  openLink('https://www.facebook.com/djeddai.zakaria.98/')
                 "
               />
               <VBtn
                 icon="tabler-brand-instagram"
-                color="#E4405F"
-                size="small"
                 variant="text"
-                @click="
-                  openLink('https://www.instagram.com/hichem_technology/')
-                "
-              />
-              <VBtn
-                icon="tabler-brand-tiktok"
-                :color="!$vuetify.theme.current.dark ? '#000000' : '#FFFFFF'"
-                size="small"
-                variant="text"
-                @click="openLink('https://www.tiktok.com/@hichem_technology')"
+                :color="!$vuetify.theme.current.dark ? '#ffffff' : '#E4405F'"
+                @click="openLink('https://www.instagram.com/zaakareia/')"
               />
             </div>
           </div>
+        </VCol>
+      </VRow>
+    </div>
 
-          <!-- Developer Info -->
-          <div class="d-flex align-center justify-center gap-x-1 text-sm">
-            <span>{{ $t("footer.developed_by") }}</span>
-            <a href="https://zakariadjeddai.com" target="noopener noreferrer"
-              >Zakaria Djeddai</a
-            >
-          </div>
-
-          <!-- Copyright -->
-          <div class="text-sm">{{ $t("footer.all_rights_reserved") }}</div>
-        </div>
+    <!-- 👉 Footer Line -->
+    <div class="app-container footer-line w-100">
+      <div class="d-flex justify-space-between align-center py-4">
+        <span
+          class="text-body-2"
+          :style="{
+            color: !$vuetify.theme.current.dark
+              ? 'rgba(var(--v-theme-background), var(--v-medium-emphasis-opacity)) !important'
+              : '',
+          }"
+        >
+          &copy; {{ new Date().getFullYear() }}, Modiasn
+        </span>
+        <div
+        @click="$router.push('/refund-policy')"
+          class="text-body-2 cursor-pointer"
+          :style="{
+            color: !$vuetify.theme.current.dark
+              ? 'rgba(var(--v-theme-background), var(--v-medium-emphasis-opacity)) !important'
+              : '',
+          }"
+          >{{ $t("footer.returns_policy") }}</div
+        >
       </div>
     </div>
   </div>
@@ -170,9 +429,9 @@
 <script setup>
 const featuresData = [
   {
-    title_key: "competitive_prices",
-    desc_key: "competitive_prices_desc",
-    icon: "tabler-tag",
+    title_key: "unique_styles",
+    desc_key: "unique_styles_desc",
+    icon: "tabler-hanger",
   },
   {
     title_key: "fast_delivery",
@@ -180,16 +439,43 @@ const featuresData = [
     icon: "tabler-truck-delivery",
   },
   {
-    title_key: "customer_service",
-    desc_key: "customer_service_desc",
-    icon: "tabler-phone",
+    title_key: "easy_returns",
+    desc_key: "easy_returns_desc",
+    icon: "tabler-refresh",
   },
   {
-    title_key: "real_warranty",
-    desc_key: "real_warranty_desc",
-    icon: "tabler-shield",
+    title_key: "pay_on_delivery",
+    desc_key: "pay_on_delivery_desc",
+    icon: "tabler-cash",
   },
 ];
+
+const questionsAnswers = [
+  {
+    question_key: "delivery_time_question",
+    answer_key: "delivery_time_answer",
+    icon: "tabler-truck",
+  },
+  {
+    question_key: "payment_method_question",
+    answer_key: "payment_method_answer",
+    icon: "tabler-credit-card",
+  },
+  {
+    question_key: "order_tracking_question",
+    answer_key: "order_tracking_answer",
+    icon: "tabler-map-pin",
+  },
+  {
+    question_key: "shipping_cost_question",
+    answer_key: "shipping_cost_answer",
+    icon: "tabler-calculator",
+  },
+];
+
+const callNumber = (number) => {
+  window.open(number, "_self");
+};
 
 const openLink = (url) => {
   window.open(url, "_blank");
@@ -197,23 +483,8 @@ const openLink = (url) => {
 </script>
 
 <style lang="scss" scoped>
-.section-title::after {
-  position: absolute !important;
-  z-index: 1 !important;
-  background: #ea580c !important;
-  background-size: contain !important;
-  block-size: 0% !important;
-  content: "" !important;
-  font-weight: 800 !important;
-  inline-size: 100% !important;
-  inset-block-end: 0 !important;
-  inset-inline-start: 0% !important;
-  opacity: 0.4 !important;
-  box-shadow: 0 0 5px 5px #ea580c !important;
-}
-
 .section-title {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 800;
   line-height: 36px;
 }
@@ -258,5 +529,9 @@ const openLink = (url) => {
   .text-subtitle-2 {
     font-size: 0.75rem !important;
   }
+}
+
+.footer-line {
+  border-block-start: 1px solid rgb(255 255 255 / 12%);
 }
 </style>

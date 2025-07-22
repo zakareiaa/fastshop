@@ -7,7 +7,7 @@
   >
     <div class="app-container position-relative alert-container">
       <transition name="fade" mode="out-in">
-        <div :key="currentMessageIndex" class="alert-message py-1">
+        <div :key="currentMessageIndex" class="alert-message">
           {{
             alertMessages[currentMessageIndex] &&
             (alertMessages[currentMessageIndex][`text_${currentLanguage}`] ||
@@ -28,10 +28,11 @@
       <VBtn
         icon
         variant="text"
-        class="d-lg-none mobile-menu-btn me-8"
+        size="large"
+        class="d-md-none mobile-menu-btn me-11"
         @click="mobileDrawer = true"
       >
-        <VIcon :color="$vuetify.theme.current.dark ? 'white' : 'secondary'">
+        <VIcon :color="$vuetify.theme.current.dark ? 'white' : '#000'">
           tabler-menu-2
         </VIcon>
       </VBtn>
@@ -41,20 +42,80 @@
         @click="$router.push('/')"
       >
         <img
-          v-if="$vuetify.theme.current.dark"
-          class="headerLogo w-100"
-          src="@/assets/images/logo-dark.png"
+          class="headerLogo"
+          src="@/assets/images/logo-light.avif"
           alt="Logo"
-        />
-        <img
-          v-else
-          class="headerLogo w-100"
-          src="@/assets/images/logo-light.png"
-          alt="Logo"
+          :style="$vuetify.theme.current.dark ? 'filter: invert(1);' : ''"
         />
       </div>
 
-      <div class="headerSearchContainer d-none d-lg-flex">
+      <div class="linksContainer d-none d-md-flex">
+        <div>
+          <VBtn
+            variant="text"
+            :color="
+              this.$vuetify.theme.current.dark
+                ? 'white'
+                : 'rgb(var(--v-theme-on-background))'
+            "
+            class="b-radius-0"
+            @click="$router.push('/shop')"
+          >
+            <!-- <VIcon icon="tabler-building-store" class="mr-2" /> -->
+            {{ $t("header.shop") }}
+          </VBtn>
+
+          <VMenu transition="scale-transition" offset-y>
+            <template #activator="{ props }">
+              <VBtn
+                v-bind="props"
+                color="primary"
+                variant="text"
+                class="b-radius-0"
+              >
+                {{ $t("header.categories") }}
+                <VIcon icon="tabler-chevron-down" class="ml-2" />
+              </VBtn>
+            </template>
+            <VList
+              class="simple-category-list b-radius-0"
+              min-width="250"
+              density="compact"
+              bg-color="surface"
+              rounded="lg"
+              elevation="8"
+            >
+              <VListItem
+                v-for="category in categories"
+                :key="category.id"
+                @click="handleCategoryClick(category)"
+                class="simple-category-item"
+                style="border-radius: 0 !important"
+              >
+                <VListItemTitle style="border-radius: 0 !important">{{
+                  category[`name_${currentLanguage}`] || category.name
+                }}</VListItemTitle>
+              </VListItem>
+            </VList>
+          </VMenu>
+
+          <VBtn
+            variant="text"
+            :color="
+              this.$vuetify.theme.current.dark
+                ? 'white'
+                : 'rgb(var(--v-theme-on-background))'
+            "
+            class="b-radius-0"
+            @click="$router.push('/about')"
+          >
+            <!-- <VIcon icon="tabler-info-circle" class="mr-2" /> -->
+            <span>{{ $t("header.about") }}</span>
+          </VBtn>
+        </div>
+      </div>
+
+      <!-- <div class="headerSearchContainer d-none d-lg-flex">
         <VTextField
           v-model="searchQuery"
           :placeholder="$t('header.search_placeholder')"
@@ -68,22 +129,30 @@
             </VBtn>
           </template>
         </VTextField>
-      </div>
+      </div> -->
 
-      <div class="headerIconsContainer d-none d-lg-flex">
+      <div class="headerIconsContainer d-none d-md-flex">
+        <!-- Search Icon -->
+        <VBtn icon variant="text" @click="toggleSearchDropdown">
+          <VIcon
+            :color="$vuetify.theme.current.dark ? 'white' : '#000'"
+            style="font-weight: 700"
+          >
+            tabler-search
+          </VIcon>
+        </VBtn>
+
         <!-- Language Toggle Menu -->
         <VMenu>
           <template #activator="{ props }">
             <VBtn icon variant="text" v-bind="props">
               <VIcon
-                :color="
-                  this.$vuetify.theme.current.dark ? 'white' : 'secondary'
-                "
+                :color="this.$vuetify.theme.current.dark ? 'white' : '#000'"
                 >tabler-language</VIcon
               >
             </VBtn>
           </template>
-          <VList>
+          <VList class="b-radius-0">
             <VListItem
               v-for="language in languages"
               :key="language.code"
@@ -91,18 +160,21 @@
               :class="{
                 'v-list-item--active': currentLanguage === language.code,
               }"
+              style="border-radius: 0 !important"
             >
               <template #prepend>
-                <span class="text-h6 me-3">{{ language.flag }}</span>
+                <span class="text-h6 me-3 b-radius-0">{{ language.flag }}</span>
               </template>
-              <VListItemTitle>{{ language.name }}</VListItemTitle>
+              <VListItemTitle class="b-radius-0">{{
+                language.name
+              }}</VListItemTitle>
             </VListItem>
           </VList>
         </VMenu>
 
         <!-- Theme Toggle Button -->
         <VBtn icon variant="text" @click="toggleTheme">
-          <VIcon :color="$vuetify.theme.current.dark ? 'white' : 'secondary'">
+          <VIcon :color="$vuetify.theme.current.dark ? 'white' : '#000'">
             {{ $vuetify.theme.current.dark ? "tabler-sun" : "tabler-moon" }}
           </VIcon>
         </VBtn>
@@ -113,20 +185,18 @@
       </div>
 
       <!-- Mobile Icons (just cart and wishlist) -->
-      <div class="d-flex d-lg-none mobile-icons">
+      <div class="d-flex d-md-none mobile-icons">
         <!-- Language Toggle Menu -->
         <VMenu>
           <template #activator="{ props }">
             <VBtn icon variant="text" v-bind="props">
               <VIcon
-                :color="
-                  this.$vuetify.theme.current.dark ? 'white' : 'secondary'
-                "
+                :color="this.$vuetify.theme.current.dark ? 'white' : '#000'"
                 >tabler-language</VIcon
               >
             </VBtn>
           </template>
-          <VList>
+          <VList class="b-radius-0">
             <VListItem
               v-for="language in languages"
               :key="language.code"
@@ -134,6 +204,7 @@
               :class="{
                 'v-list-item--active': currentLanguage === language.code,
               }"
+              style="border-radius: 0 !important"
             >
               <template #prepend>
                 <span class="text-h6 me-3">{{ language.flag }}</span>
@@ -148,149 +219,57 @@
     </div>
   </div>
 
-  <div class="linkContainer d-none d-lg-block">
-    <div class="app-container linksContainer">
-      <VMenu transition="scale-transition" offset-y>
-        <template #activator="{ props }">
-          <VBtn v-bind="props" size="large" color="primary" variant="flat">
-            <VIcon icon="tabler-category" class="mr-2" />
-            {{ $t("header.categories") }}
-            <VIcon icon="tabler-chevron-down" class="ml-2" />
-          </VBtn>
-        </template>
-        <div
-          class="d-flex bg-surface category-menu-container"
-          @mouseleave="hoveredParentCategory = null"
-          style="border-radius: 8px"
-        >
-          <VList class="parent-category-list" min-width="250" density="compact">
-            <VListItem
-              v-for="parent in parentCategories"
-              :key="parent.id"
-              :value="parent"
-              @mouseover="hoveredParentCategory = parent"
-              class="parent-category-item"
-              :class="{
-                'v-list-item--active':
-                  hoveredParentCategory &&
-                  hoveredParentCategory.id === parent.id,
-              }"
-            >
-              <VListItemTitle>{{
-                parent[`name_${currentLanguage}`] || parent.name
-              }}</VListItemTitle>
-              <template #append>
-                <VIcon size="small" icon="tabler-chevron-right" />
-              </template>
-            </VListItem>
-          </VList>
-          <VDivider vertical />
-          <VList
-            v-if="
-              hoveredParentCategory && hoveredParentCategory.categories.length
-            "
-            class="subcategory-list"
-            min-width="250"
-            density="compact"
-            @mouseleave="hoveredChildCategory = null"
+  <!-- Search Dropdown with Overlay -->
+  <div
+    v-show="showSearchDropdown"
+    class="search-overlay"
+    :class="{ 'search-overlay-open': showSearchDropdown }"
+    @click="closeSearchDropdown"
+  >
+    <div
+      class="search-dropdown"
+      :class="{
+        'search-dropdown-open': showSearchDropdown,
+        'bg-white': !$vuetify.theme.current.dark,
+      }"
+      style="background-color: rgb(var(--v-theme-background))"
+      @click.stop
+    >
+      <div class="app-container">
+        <div class="search-dropdown-content">
+          <VTextField
+            ref="searchInput"
+            v-model="searchQuery"
+            :placeholder="$t('header.search_placeholder')"
+            class="search-input"
+            density="default"
+            variant="outlined"
+            hide-details
+            @keyup.enter="handleDropdownSearch"
+            @keyup.escape="closeSearchDropdown"
           >
-            <VListItem
-              v-for="category in hoveredParentCategory.categories"
-              :key="category.id"
-              @click="handleCategoryClick(category)"
-              @mouseover="hoveredChildCategory = category"
-              class="subcategory-item"
-              :class="{
-                'v-list-item--active':
-                  hoveredChildCategory &&
-                  hoveredChildCategory.id === category.id,
-              }"
-            >
-              <VListItemTitle>{{
-                category[`name_${currentLanguage}`] || category.name
-              }}</VListItemTitle>
-            </VListItem>
-          </VList>
-          <div
-            v-else
-            class="d-flex align-center justify-center text-grey-lighten-1"
-            style="min-inline-size: 250px"
-          >
-            <span>{{ $t("header.hover_category") }}</span>
-          </div>
-        </div>
-      </VMenu>
-
-      <div class="linksContainer">
-        <div>
-          <VBtn
-            variant="text"
-            size="large"
-            :color="
-              this.$vuetify.theme.current.dark
-                ? 'white'
-                : 'rgb(var(--v-theme-on-background))'
-            "
-            @click="$router.push('/shop')"
-          >
-            <VIcon icon="tabler-building-store" class="mr-2" />
-            {{ $t("header.shop") }}
-          </VBtn>
-
-          <VBtn
-            variant="text"
-            size="large"
-            :color="
-              this.$vuetify.theme.current.dark
-                ? 'white'
-                : 'rgb(var(--v-theme-on-background))'
-            "
-            @click="$router.push('/build-pc')"
-          >
-            <VIcon icon="tabler-cpu" class="mr-2" />
-            <span>{{ $t("header.build_pc") }}</span>
-          </VBtn>
-
-          <VBtn
-            variant="text"
-            size="large"
-            :color="
-              this.$vuetify.theme.current.dark
-                ? 'white'
-                : 'rgb(var(--v-theme-on-background))'
-            "
-            @click="$router.push('/about')"
-          >
-            <VIcon icon="tabler-info-circle" class="mr-2" />
-            <span>{{ $t("header.about") }}</span>
-          </VBtn>
-        </div>
-
-        <div>
-          <VBtn
-            variant="text"
-            size="large"
-            color="secondary"
-            @click="callPhoneNumber('0557097634')"
-          >
-            <VIcon
-              icon="tabler-phone"
-              class="mr-3"
-              size="x-large"
-              color="primary"
-            />
-            <div class="contactUsContainer">
-              <span class="contactUsNumber">+213 557 09 76 34 </span>
-              <span
-                class="text-start text-sm"
-                :style="{
-                  color: this.$vuetify.theme.current.dark
-                    ? 'white'
-                    : 'rgb(var(--v-theme-on-background))',
-                }"
-                >{{ $t("header.contact_us") }}</span
+            <template #append-inner>
+              <VBtn
+                icon
+                color="primary"
+                @click="handleDropdownSearch"
+                variant="text"
+                size="small"
               >
-            </div>
+                <VIcon>tabler-search</VIcon>
+              </VBtn>
+            </template>
+          </VTextField>
+
+          <VBtn
+            icon
+            variant="text"
+            @click="closeSearchDropdown"
+            class="close-search-btn"
+          >
+            <VIcon :color="$vuetify.theme.current.dark ? 'white' : '#666'">
+              tabler-x
+            </VIcon>
           </VBtn>
         </div>
       </div>
@@ -334,16 +313,17 @@
           class="sidebar-header px-6 py-4 pt-5 d-flex align-center justify-space-between"
         >
           <img
-            v-if="$vuetify.theme.current.dark"
+            v-if="!$vuetify.theme.current.dark"
             class="sidebar-logo"
-            src="@/assets/images/logo-dark.png"
+            src="@/assets/images/logo-light.avif"
             alt="Logo"
             @click="closeSidebarAndNavigate('/')"
+            :style="$vuetify.theme.current.dark ? 'filter: invert(1);' : ''"
           />
           <img
             v-else
             class="sidebar-logo"
-            src="@/assets/images/logo-light.png"
+            src="@/assets/images/logo-dark.png"
             alt="Logo"
             @click="closeSidebarAndNavigate('/')"
           />
@@ -369,6 +349,7 @@
             hide-details
             rounded="lg"
             @keyup.enter="handleMobileSearch"
+            class="search-input-mobile"
           >
             <template #append-inner>
               <VBtn
@@ -387,9 +368,7 @@
 
         <!-- Controls (Language, Theme, Wishlist, Cart) -->
         <div class="px-6 py-2">
-          <div
-            class="d-flex flex-wrap align-center justify-space-between control-grid"
-          >
+          <div class="d-flex flex-wrap align-center justify-center gap-16px">
             <!-- Language Toggle -->
             <VMenu>
               <template #activator="{ props }">
@@ -398,12 +377,12 @@
                   variant="text"
                   v-bind="props"
                   size="large"
-                  :color="$vuetify.theme.current.dark ? 'white' : 'secondary'"
+                  :color="$vuetify.theme.current.dark ? 'white' : '#000'"
                 >
                   <VIcon size="24">tabler-language</VIcon>
                 </VBtn>
               </template>
-              <VList>
+              <VList class="b-radius-0">
                 <VListItem
                   v-for="language in languages"
                   :key="language.code"
@@ -411,6 +390,7 @@
                   :class="{
                     'v-list-item--active': currentLanguage === language.code,
                   }"
+                  style="border-radius: 0 !important"
                 >
                   <template #prepend>
                     <span class="text-h6 me-3">{{ language.flag }}</span>
@@ -426,7 +406,7 @@
               variant="text"
               @click="toggleTheme"
               size="large"
-              :color="$vuetify.theme.current.dark ? 'white' : 'secondary'"
+              :color="$vuetify.theme.current.dark ? 'white' : '#000'"
             >
               <VIcon size="24">
                 {{ $vuetify.theme.current.dark ? "tabler-sun" : "tabler-moon" }}
@@ -472,63 +452,18 @@
                 </VExpansionPanelTitle>
                 <VExpansionPanelText class="categories-content">
                   <div class="categories-list">
-                    <div
-                      v-for="parent in parentCategories"
-                      :key="parent.id"
-                      class="category-group"
+                    <VBtn
+                      v-for="category in categories"
+                      :key="category.id"
+                      @click="handleCategoryClick(category)"
+                      variant="text"
+                      class="category-btn w-100 justify-start"
+                      color="default"
                     >
-                      <VBtn
-                        v-if="
-                          !parent.categories || parent.categories.length === 0
-                        "
-                        @click="handleCategoryClick(parent)"
-                        variant="text"
-                        class="category-btn w-100 justify-start"
-                        color="default"
-                      >
-                        <VListItemTitle class="text-start">{{
-                          parent[`name_${currentLanguage}`] || parent.name
-                        }}</VListItemTitle>
-                      </VBtn>
-
-                      <VExpansionPanels
-                        v-else
-                        variant="accordion"
-                        class="subcategory-expansion"
-                        bg-color="transparent"
-                      >
-                        <VExpansionPanel
-                          elevation="0"
-                          class="subcategory-panel"
-                        >
-                          <VExpansionPanelTitle class="subcategory-title">
-                            <span class="text-sm font-weight-medium">
-                              {{
-                                parent[`name_${currentLanguage}`] || parent.name
-                              }}
-                            </span>
-                          </VExpansionPanelTitle>
-                          <VExpansionPanelText class="subcategory-content">
-                            <div class="subcategory-list">
-                              <VBtn
-                                v-for="category in parent.categories"
-                                :key="category.id"
-                                @click="handleCategoryClick(category)"
-                                variant="text"
-                                size="small"
-                                class="subcategory-btn w-100 justify-start"
-                                color="default"
-                              >
-                                <span class="text-sm">{{
-                                  category[`name_${currentLanguage}`] ||
-                                  category.name
-                                }}</span>
-                              </VBtn>
-                            </div>
-                          </VExpansionPanelText>
-                        </VExpansionPanel>
-                      </VExpansionPanels>
-                    </div>
+                      <VListItemTitle class="text-start">{{
+                        category[`name_${currentLanguage}`] || category.name
+                      }}</VListItemTitle>
+                    </VBtn>
                   </div>
                 </VExpansionPanelText>
               </VExpansionPanel>
@@ -543,7 +478,7 @@
               @click="closeSidebarAndNavigate('/shop')"
               variant="outlined"
               size="large"
-              class="w-100 justify-start"
+              class="w-100 justify-start b-radius-0"
               color="default"
             >
               <VIcon class="mr-3" size="20" color="primary"
@@ -553,23 +488,10 @@
             </VBtn>
 
             <VBtn
-              @click="closeSidebarAndNavigate('/build-pc')"
-              variant="outlined"
-              size="large"
-              class="w-100 justify-start"
-              color="default"
-            >
-              <VIcon class="mr-3" size="20" color="primary">tabler-cpu</VIcon>
-              <span class="font-weight-medium">{{
-                $t("header.build_pc")
-              }}</span>
-            </VBtn>
-
-            <VBtn
               @click="closeSidebarAndNavigate('/about')"
               variant="outlined"
               size="large"
-              class="w-100 justify-start"
+              class="w-100 justify-start b-radius-0"
               color="default"
             >
               <VIcon class="mr-3" size="20" color="primary"
@@ -587,14 +509,24 @@
             color="primary"
             rounded="xl"
             class="contact-card"
-            @click="callPhoneNumber('0557097634')"
+            @click="callPhoneNumber('0675131178')"
           >
             <VCardText class="pa-4">
               <div class="d-flex align-center">
-                <VIcon class="mr-3" size="24" color="white">tabler-phone</VIcon>
+                <VIcon class="mr-3" size="24">tabler-phone</VIcon>
                 <div class="contact-info">
-                  <div class="phone-number">0557 09 76 34</div>
-                  <div class="contact-label">{{ $t("header.contact_us") }}</div>
+                  <div
+                    class="phone-number"
+                    style="color: rgb(var(--v-theme-on-primary))"
+                  >
+                    0675131178
+                  </div>
+                  <div
+                    class="contact-label"
+                    style="color: rgb(var(--v-theme-on-primary))"
+                  >
+                    {{ $t("header.contact_us") }}
+                  </div>
                 </div>
               </div>
             </VCardText>
@@ -622,14 +554,47 @@ export default {
       // Mobile sidebar
       mobileDrawer: false,
 
+      // Search dropdown
+      showSearchDropdown: false,
+
       // Alert banner messages
-      alertMessages: [],
+      alertMessages: [
+        {
+          id: 1,
+          text: "Welcome !",
+          text_ar: "! مرحبا بيك",
+          text_fr: "Bienvenue !",
+          is_active: true,
+          position: 1,
+          created_at: "2025-07-09T00:26:18.000000Z",
+          updated_at: "2025-07-09T00:26:18.000000Z",
+        },
+        {
+          id: 2,
+          text: "Cash on Delivery 📦 💵",
+          text_ar: "📦 💵 الدفع عند الإستلام",
+          text_fr: "Paiement à la livraison 📦 💵",
+          is_active: true,
+          position: 2,
+          created_at: "2025-07-09T00:28:17.000000Z",
+          updated_at: "2025-07-09T00:28:17.000000Z",
+        },
+        {
+          id: 3,
+          text: "Shipping available to all 58 provinces 🚚 📦",
+          text_ar: "🚚 📦 التوصيل متوفر لـ 58 ولاية",
+          text_fr: "Livraison disponible dans les 58 wilayas 🚚 📦",
+          is_active: true,
+          position: 3,
+          created_at: "2025-07-09T00:28:58.000000Z",
+          updated_at: "2025-07-09T00:28:58.000000Z",
+        },
+      ],
       currentMessageIndex: 0,
       intervalId: null,
 
       // Categories
-      parentCategories: [],
-      hoveredParentCategory: null,
+      categories: [],
 
       // Snackbar
       snackbarText: "",
@@ -638,9 +603,6 @@ export default {
 
       // Search
       searchQuery: "",
-
-      // Subcategories
-      hoveredChildCategory: null,
 
       // Language options
       languages: [
@@ -705,14 +667,14 @@ export default {
     async getCategories() {
       try {
         const response = await axios.get(
-          import.meta.env.VITE_API_URL + "/parent-categories",
+          import.meta.env.VITE_API_URL + "/categories",
           {
             headers: {
               Accept: "application/json",
             },
           }
         );
-        this.parentCategories = response.data.data;
+        this.categories = response.data.data;
       } catch (error) {
         this.showSnackbar(
           "Something went wrong while fetching categories",
@@ -756,6 +718,28 @@ export default {
       this.mobileDrawer = false; // Close sidebar after search
     },
 
+    toggleSearchDropdown() {
+      this.showSearchDropdown = !this.showSearchDropdown;
+      if (this.showSearchDropdown) {
+        this.$nextTick(() => {
+          if (this.$refs.searchInput) {
+            this.$refs.searchInput.focus();
+          }
+          setTimeout(() => {}, 350); // Wait for animation to complete (128px takes a bit longer)
+        });
+      }
+    },
+
+    closeSearchDropdown() {
+      this.showSearchDropdown = false;
+      this.searchQuery = "";
+    },
+
+    handleDropdownSearch() {
+      this.goToSearch();
+      this.closeSearchDropdown();
+    },
+
     closeSidebarAndNavigate(path) {
       this.$router.push(path);
       this.mobileDrawer = false;
@@ -786,14 +770,32 @@ export default {
   padding-block: 8px;
 }
 
+@media screen and (max-width: 768px) {
+  .header {
+    position: sticky;
+    z-index: 99;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 10%);
+    inset-block-start: 38px;
+  }
+
+  .alert-banner {
+    position: sticky;
+    z-index: 99;
+    overflow: hidden;
+    font-weight: 600;
+    inset-block-start: 0;
+    padding-block: 8px;
+  }
+}
+
 .alert-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-block-size: 24px;
 }
 
 .alert-message {
+  font-size: 14px !important;
   inline-size: 100%;
   text-align: center;
 }
@@ -814,18 +816,23 @@ export default {
   transform: translateY(-10px);
 }
 
-.parent-category-item.v-list-item--active {
-  background-color: rgb(var(--v-theme-primary));
-  color: rgb(var(--v-theme-on-primary));
+/* Simple category menu styles */
+.simple-category-list {
+  border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+  box-shadow: 0 4px 16px rgb(0 0 0 / 10%);
 }
 
-.parent-category-item.v-list-item--active .v-list-item-title,
-.parent-category-item.v-list-item--active .v-icon {
-  color: rgb(var(--v-theme-on-primary));
+.simple-category-item {
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.subcategory-item.v-list-item--active .v-list-item-title {
-  color: rgb(var(--v-theme-primary));
+.simple-category-item:hover {
+  background-color: rgba(var(--v-theme-primary), 0.08) !important;
+}
+
+.simple-category-item .v-list-item-title {
+  font-weight: 500;
 }
 
 /* Mobile responsive styles */
@@ -845,8 +852,7 @@ export default {
 }
 
 .headerLogo {
-  block-size: 62px;
-  inline-size: auto;
+  block-size: 40px;
 }
 
 .headerSearchContainer {
@@ -857,7 +863,7 @@ export default {
   display: flex;
   flex: 0 0 auto;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.3rem;
 }
 
 .mobile-icons {
@@ -891,7 +897,7 @@ export default {
   }
 
   &::-webkit-scrollbar-thumb {
-    border-radius: 3px;
+    border-radius: 0;
     background: rgba(var(--v-theme-primary), 0.3);
   }
 
@@ -927,15 +933,14 @@ export default {
 }
 
 /* Control grid */
-.control-grid {
-  display: grid;
-  gap: 12px;
-  grid-template-columns: repeat(4, 1fr);
+.gap-16px {
+  gap: 16px;
 }
 
 /* Categories */
 .categories-card {
   border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+  border-radius: 0 !important;
   box-shadow: 0 2px 8px rgb(0 0 0 / 4%);
   padding-inline: 0.5rem !important;
 }
@@ -959,7 +964,7 @@ export default {
 }
 
 .category-btn {
-  border-radius: 8px !important;
+  border-radius: 0 !important;
   margin-block-end: 4px;
   padding-block: 12px !important;
   padding-inline: 16px !important;
@@ -970,63 +975,12 @@ export default {
   background: rgba(var(--v-theme-primary), 0.08) !important;
 }
 
-.subcategory-expansion {
-  box-shadow: none !important;
-  margin-inline-start: 16px;
-}
-
-.subcategory-panel {
-  background: transparent !important;
-}
-
-.subcategory-title {
-  min-block-size: auto !important;
-  padding-block: 8px !important;
-  padding-inline: 12px !important;
-}
-
-.subcategory-content {
-  padding-block: 0 8px !important;
-  padding-inline: 12px !important;
-}
-
-.subcategory-list {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.subcategory-btn {
-  border-radius: 6px !important;
-  padding-block: 8px !important;
-  padding-inline: 12px !important;
-  transition: all 0.2s ease;
-}
-
-.subcategory-btn:hover {
-  background: rgba(var(--v-theme-primary), 0.06) !important;
-}
-
 /* Navigation links */
 .nav-links {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
-
-/* .nav-btn {
-  border: 1px solid rgba(var(--v-border-color), 0.08);
-  border-radius: 12px !important;
-  padding-block: 16px !important;
-  padding-inline: 20px !important;
-  transition: all 0.2s ease;
-}
-
-.nav-btn:hover {
-  border-color: rgba(var(--v-theme-primary), 0.2);
-  background: rgba(var(--v-theme-primary), 0.06) !important;
-  transform: translateX(4px);
-} */
 
 /* Contact card */
 .contact-card {
@@ -1056,50 +1010,67 @@ export default {
   opacity: 0.9;
 }
 
-/* Responsive breakpoints */
-@media (max-width: 1279px) {
-  .headerContainer {
-    justify-content: space-between;
-  }
-
-  .headerLogoContainer {
-    display: flex;
-    flex: 1;
-    justify-content: center;
-  }
-}
-
-@media (max-width: 768px) {
-  .headerLogo {
-    block-size: 35px;
-  }
-
-  .headerContainer {
-    padding-block: 0.75rem;
-  }
-
-  .header {
-    position: sticky;
-    z-index: 1000;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 10%);
-    inset-block-start: 0;
-  }
-}
-
-/* @media (max-width: 480px) {
-  .headerLogo {
-    block-size: 30px;
-  }
-
-  .headerContainer {
-    gap: 0.5rem;
-    padding-block: 0.5rem;
-  }
-} */
-
 .fs-17 {
   font-size: 17px;
 }
+
+/* Search dropdown styles */
+.search-overlay {
+  position: fixed;
+  z-index: 2000;
+  backdrop-filter: blur(2px);
+  background: rgba(0, 0, 0, 0%);
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.search-overlay-open {
+  background: rgba(0, 0, 0, 52%);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.search-dropdown {
+  position: absolute;
+  z-index: 2001;
+  backdrop-filter: blur(10px);
+  border-block-end: 1px solid
+    rgba(var(--v-border-color), var(--v-border-opacity));
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 10%);
+  inset-block-start: -128px;
+  inset-inline: 0;
+  transform: translateY(0);
+  transition: transform 0.3s ease;
+}
+
+.search-dropdown-open {
+  transform: translateY(128px);
+}
+
+.search-dropdown-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-block: 16px;
+  padding-inline: 0;
+}
+
+.search-input {
+  flex: 1;
+}
+
+.close-search-btn {
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.close-search-btn:hover {
+  opacity: 1;
+}
+
+/* Header position relative for dropdown positioning */
 </style>
 
 <style>
@@ -1120,11 +1091,15 @@ export default {
 }
 
 .mobile-sidebar .v-navigation-drawer__content::-webkit-scrollbar-thumb {
-  border-radius: 3px;
+  border-radius: 0;
   background: rgba(234, 88, 12, 30%);
 }
 
 .mobile-sidebar .v-navigation-drawer__content::-webkit-scrollbar-thumb:hover {
   background: rgba(234, 88, 12, 50%);
+}
+
+.search-input-mobile .v-field {
+  border-radius: 0 !important;
 }
 </style>

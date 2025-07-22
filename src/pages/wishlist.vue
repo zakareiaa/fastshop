@@ -13,7 +13,7 @@
         <VBtn
           color="primary"
           variant="tonal"
-          class="me-2 add-all-to-cart-button"
+          class="me-2 add-all-to-cart-button b-radius-0"
           prepend-icon="tabler-shopping-cart"
           @click="addAllToCart"
         >
@@ -23,7 +23,7 @@
           color="error"
           variant="tonal"
           prepend-icon="tabler-trash"
-          class="clear-wishlist-button"
+          class="clear-wishlist-button b-radius-0"
           @click="clearWishlist"
         >
           {{ $t("wishlist.clear_wishlist") }}
@@ -51,14 +51,14 @@
 
     <VRow v-else>
       <VCol
-        cols="12"
-        sm="6"
+        cols="6"
+        sm="4"
         md="4"
         lg="3"
         v-for="product in wishlistItems"
         :key="product.id"
       >
-        <WishlistProductCard :productProp="product" viewMode="grid" />
+        <ProductCard :productProp="product" viewMode="grid" />
       </VCol>
     </VRow>
   </div>
@@ -69,7 +69,7 @@
 <script setup>
 import Footer from "@/components/costumComponents/Footer.vue";
 import Header from "@/components/costumComponents/Header.vue";
-import WishlistProductCard from "@/components/costumComponents/WishlistProductCard.vue";
+import ProductCard from "@/components/costumComponents/ProductCard.vue";
 import { useCartStore } from "@/stores/useCartStore";
 import { useWishlistStore } from "@/stores/useWishlistStore";
 import "@styles/header.css";
@@ -112,24 +112,9 @@ const clearWishlist = () => {
 @use "@core/scss/template/pages/page-auth";
 
 .section-title {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 800;
   line-height: 36px;
-}
-
-.section-title::after {
-  position: absolute !important;
-  z-index: 1 !important;
-  background: #ea580c !important;
-  background-size: contain !important;
-  block-size: 0% !important;
-  content: "" !important;
-  font-weight: 800 !important;
-  inline-size: 100% !important;
-  inset-block-end: 0 !important;
-  inset-inline-start: 0% !important;
-  opacity: 0.4 !important;
-  box-shadow: 0 0 5px 5px #ea580c !important;
 }
 
 @media (max-width: 600px) {

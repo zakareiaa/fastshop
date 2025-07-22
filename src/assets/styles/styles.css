@@ -2,7 +2,7 @@
   inline-size: 100%;
   margin-block: 0;
   margin-inline: auto;
-  max-inline-size: 1440px;
+  max-inline-size: 1200px;
   padding-inline: 20px;
 }
 
@@ -51,4 +51,12 @@
 /* border */
 .b-radius-16 {
   border-radius: 16px !important;
+}
+
+.b-radius-0 {
+  border-radius: 0 !important;
+}
+
+.b-radius-0 .v-field {
+  border-radius: 0 !important;
 }

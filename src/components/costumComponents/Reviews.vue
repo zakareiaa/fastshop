@@ -13,7 +13,7 @@
               class="headers d-flex justify-center flex-column align-start h-100"
               style="max-inline-size: 275px"
             >
-              <VChip label color="primary" class="mb-4" size="small">
+              <VChip label color="primary" class="mb-4 b-radius-0" size="small">
                 {{ $t("reviews.real_customers_reviews") }}
               </VChip>
               <div class="position-relative mb-1 me-2">
@@ -26,7 +26,7 @@
               </p>
               <div class="position-relative">
                 <IconBtn
-                  class="reviews-button-prev rounded me-4"
+                  class="reviews-button-prev me-3 b-radius-0"
                   variant="tonal"
                   color="primary"
                   @click="slide('prev')"
@@ -35,7 +35,7 @@
                 </IconBtn>
 
                 <IconBtn
-                  class="reviews-button-next rounded"
+                  class="reviews-button-next b-radius-0"
                   variant="tonal"
                   color="primary"
                   @click="slide('next')"
@@ -53,7 +53,7 @@
               <swiper-container
                 ref="customerReviewSwiper"
                 slides-per-view="2"
-                space-between="20"
+                space-between="12"
                 autoplay-delay="3000"
                 autoplay-disable-on-interaction="false"
                 events-prefix="swiper-"
@@ -81,17 +81,17 @@
                   },
                   960: {
                     slidesPerView: 2,
-                    spaceBetween: 20,
+                    spaceBetween: 16,
                   },
                   600: {
                     slidesPerView: 2,
-                    spaceBetween: 20,
+                    spaceBetween: 12,
                   },
                 }"
                 v-show="!getReviewsLoading"
               >
                 <swiper-slide v-for="(data, index) in reviewData" :key="index">
-                  <VCard class="d-flex h-100 align-stretch" >
+                  <VCard class="d-flex h-100 align-stretch b-radius-0" variant="outlined">
                     <VCardText
                       class="pa-6 d-flex flex-column justify-space-between align-start"
                     >
@@ -134,7 +134,7 @@
               <swiper-container
                 ref="customerReviewSwiperSkeleton"
                 slides-per-view="2"
-                space-between="20"
+                space-between="12"
                 autoplay-delay="3000"
                 autoplay-disable-on-interaction="false"
                 events-prefix="swiper-"
@@ -146,11 +146,11 @@
                   },
                   960: {
                     slidesPerView: 2,
-                    spaceBetween: 20,
+                    spaceBetween: 16,
                   },
                   600: {
                     slidesPerView: 2,
-                    spaceBetween: 20,
+                    spaceBetween: 12,
                   },
                 }"
                 v-show="getReviewsLoading"
@@ -159,7 +159,7 @@
                   <div
                     class="skeleton"
                     style="
-                      border-radius: 6px;
+                      border-radius: 0px;
                       block-size: 300px;
                       inline-size: 100%;
                     "
@@ -277,7 +277,7 @@ export default {
 @use "swiper/css/bundle";
 
 swiper-container::part(bullet-active) {
-  border-radius: 6px;
+  border-radius: 0px;
   background-color: rgba(
     var(--v-theme-on-background),
     var(--v-disabled-opacity)
@@ -313,7 +313,7 @@ swiper-container::part(bullet) {
 
 <style lang="scss" scoped>
 .customer-reviews {
-  padding-block: 48px 0;
+  padding-block-start: 24px;
 }
 
 @media (max-width: 600px) {
@@ -323,29 +323,13 @@ swiper-container::part(bullet) {
 }
 
 #customer-review {
-  border-radius: 3.75rem 3.75rem 0 0;
+  border-radius: 0;
   background-color: rgb(var(--v-theme-background));
 }
 
 .section-title {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 800;
   line-height: 36px;
-}
-
-
-.section-title::after {
-  position: absolute !important;
-  background-size: contain !important;
-  background: #ea580c !important;
-  block-size: 0% !important;
-  content: "" !important;
-  font-weight: 800 !important;
-  inline-size: 100% !important;
-  inset-block-end: 0 !important;
-  inset-inline-start: 0% !important;
-  opacity: .4 !important;
-  z-index: 1 !important;
-  box-shadow: 0 0 5px 5px #ea580c !important;
 }
 </style>

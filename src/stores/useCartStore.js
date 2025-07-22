@@ -1,4 +1,5 @@
-import { defineStore } from 'pinia'
+import isEqual from 'lodash/isEqual';
+import { defineStore } from 'pinia';
 
 export const useCartStore = defineStore('cart', {
   state: () => ({
@@ -12,42 +13,77 @@ export const useCartStore = defineStore('cart', {
     
     totalAmount: (state) => {
       return state.items.reduce((total, item) => {
-        return total + (item.price * item.quantity)
+        // Calculate base price
+        let itemPrice = item.price || 0
+        
+        // Add price from selected options
+        if (item.selectedOptions) {
+          for (const optionName in item.selectedOptions) {
+            const selectedOption = item.selectedOptions[optionName]
+            if (selectedOption && selectedOption.price_added) {
+              itemPrice += selectedOption.price_added
+            }
+          }
+        }
+        
+        return total + (itemPrice * item.quantity)
       }, 0)
     },
 
     isInCart: (state) => {
-      return (productId) => {
-        return state.items.some(item => item.id === productId)
+      return (productId, selectedOptions = {}) => {
+        return state.items.some(item => {
+          const sameProduct = item.id === productId
+          const sameOptions = isEqual(item.selectedOptions || {}, selectedOptions)
+          return sameProduct && sameOptions
+        })
       }
     },
   },
   
   actions: {
     addItem(product) {
-      const existingItem = this.items.find(item => item.id === product.id)
+      console.log('Cart: Adding product', product.id, 'with options:', product.selectedOptions);
+      
+      // Find existing item with same product ID AND same selected options
+      const existingItem = this.items.find(item => {
+        const sameProduct = item.id === product.id
+        const sameOptions = isEqual(item.selectedOptions || {}, product.selectedOptions || {})
+        return sameProduct && sameOptions
+      })
       
       if (existingItem) {
-        existingItem.selectedOptions = product.selectedOptions
-
-        existingItem.quantity += 1
+        console.log('Cart: Found existing item, incrementing quantity');
+        existingItem.quantity += (product.quantity || 1)
       } else {
+        console.log('Cart: Adding new item');
         this.items.push({
           ...product,
-          quantity: 1,
+          quantity: product.quantity || 1,
+          selectedOptions: product.selectedOptions || {},
         })
       }
+      
+      console.log('Cart: Total items now:', this.items.length);
     },
     
-    removeItem(productId) {
-      const index = this.items.findIndex(item => item.id === productId)
+    removeItem(productId, selectedOptions = {}) {
+      const index = this.items.findIndex(item => {
+        const sameProduct = item.id === productId
+        const sameOptions = isEqual(item.selectedOptions || {}, selectedOptions)
+        return sameProduct && sameOptions
+      })
       if (index !== -1) {
         this.items.splice(index, 1)
       }
     },
     
-    updateQuantity(productId, quantity) {
-      const item = this.items.find(item => item.id === productId)
+    updateQuantity(productId, quantity, selectedOptions = {}) {
+      const item = this.items.find(item => {
+        const sameProduct = item.id === productId
+        const sameOptions = isEqual(item.selectedOptions || {}, selectedOptions)
+        return sameProduct && sameOptions
+      })
       if (item) {
         item.quantity = quantity
       }
@@ -57,19 +93,27 @@ export const useCartStore = defineStore('cart', {
       this.items = []
     },
     
-    incrementQuantity(productId) {
-      const item = this.items.find(item => item.id === productId)
+    incrementQuantity(productId, selectedOptions = {}) {
+      const item = this.items.find(item => {
+        const sameProduct = item.id === productId
+        const sameOptions = isEqual(item.selectedOptions || {}, selectedOptions)
+        return sameProduct && sameOptions
+      })
       if (item) {
         item.quantity += 1
       }
     },
     
-    decrementQuantity(productId) {
-      const item = this.items.find(item => item.id === productId)
+    decrementQuantity(productId, selectedOptions = {}) {
+      const item = this.items.find(item => {
+        const sameProduct = item.id === productId
+        const sameOptions = isEqual(item.selectedOptions || {}, selectedOptions)
+        return sameProduct && sameOptions
+      })
       if (item && item.quantity > 1) {
         item.quantity -= 1
       } else if (item && item.quantity === 1) {
-        this.removeItem(productId)
+        this.removeItem(productId, selectedOptions)
       }
     }
   },

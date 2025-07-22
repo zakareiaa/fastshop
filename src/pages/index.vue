@@ -2,16 +2,10 @@
   <Header />
 
   <!-- Hero Section -->
-  <div class="app-container heroContainer py-sm-6 py-3 fade-up-animation">
-    <div v-show="getThumbnailLoading">
-      <div class="skeleton hero-swiper" style="border-radius: 16px"></div>
-    </div>
-
+  <div class="aheroContainer fade-up-animation">
     <swiper-container
-      v-show="!getThumbnailLoading"
       ref="swiperEl"
       pagination="true"
-      space-between="20"
       events-prefix="swiper-"
       class="hero-swiper"
     >
@@ -20,25 +14,43 @@
         :key="thumbnail.image_url"
         class="thumbnail-slide"
       >
-        <img
-          class="thumbnail-image"
-          :src="thumbnail?.image_url"
+        <div
+          class="slide-container"
           :class="{ 'cursor-pointer': thumbnail.product_url }"
           @click="handleThumbnailClick(thumbnail)"
-        />
+        >
+          <img class="thumbnail-image" :src="thumbnail?.image_url" />
+          <div class="slide-overlay"></div>
+          <div class="slide-content">
+            <h2 class="slide-title text-h2">{{ $t("hero.main_title") }}</h2>
+            <VBtn
+              color="white"
+              size="large"
+              variant="outlined"
+              rounded="0"
+              @click="$router.push('/shop')"
+            >
+              {{ $t("hero.cta_button") }}
+            </VBtn>
+            <p class="slide-description">{{ $t("hero.description") }}</p>
+          </div>
+        </div>
       </swiper-slide>
     </swiper-container>
   </div>
 
   <!-- Categories Section -->
-  <div class="fade-up-animation fade-up-delay-1">
+  <!-- <div class="fade-up-animation fade-up-delay-1">
     <CategoriesSection />
-  </div>
+  </div> -->
 
   <!-- New Arrivals -->
-  <div v-show="!getNewProductsLoading && newProducts.length > 0">
+  <div
+    class="pt-4"
+    v-show="!(!getNewProductsLoading && newProducts.length == 0)"
+  >
     <CategoryProductsSection
-      :title="$t('home.new_arrivals')"
+      :title="$t('home.recommended')"
       :products="newProducts"
       :productsLoading="getNewProductsLoading"
     />
@@ -59,7 +71,7 @@
   </template>
 
   <!-- 👉 Brand-logo Swiper  -->
-  <div class="app-container pt-2 pb-4">
+  <!-- <div class="app-container pt-2 pb-4">
     <div class="swiper-brands-carousel pt-6 pb-4">
       <swiper-container
         slides-per-view="3"
@@ -89,7 +101,7 @@
         </swiper-slide>
       </swiper-container>
     </div>
-  </div>
+  </div> -->
 
   <Reviews />
 
@@ -158,8 +170,14 @@ export default {
 
   data() {
     return {
-      thumbnails: [],
-      getThumbnailLoading: true,
+      thumbnails: [
+        {
+          id: 2,
+          image_url: "/src/assets/images/thumbnails.webp",
+          position: 1,
+          product_url: null,
+        },
+      ],
 
       newProducts: [],
       getNewProductsLoading: true,
@@ -202,7 +220,6 @@ export default {
   methods: {
     async getThumbnail() {
       try {
-        this.getThumbnailLoading = true;
         const response = await axios.get(this.api_url + "/thumbnails", {
           headers: {
             Accept: "application/json",
@@ -214,8 +231,6 @@ export default {
           "Something went wrong while fetching thumbnail urls",
           "error"
         );
-      } finally {
-        this.getThumbnailLoading = false;
       }
     },
 
@@ -245,7 +260,6 @@ export default {
             },
           }
         );
-        console.log(response.data);
         this.newProducts = response.data.data;
       } catch (error) {
         this.showSnackbar(
@@ -343,20 +357,13 @@ definePage({
 <style lang="scss">
 .hero-swiper {
   overflow: hidden;
-  border-radius: 8px;
-  block-size: 500px;
+  block-size: 700px;
   inline-size: 100%;
 }
 
 @media (max-width: 991px) {
   .hero-swiper {
-    block-size: 300px;
-  }
-}
-
-@media (max-width: 600px) {
-  .hero-swiper {
-    block-size: 200px;
+    block-size: calc(100vh - 100px);
   }
 }
 
@@ -367,36 +374,70 @@ definePage({
   inline-size: 100%;
 }
 
-.cursor-pointer {
+.slide-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  block-size: 100%;
+  inline-size: 100%;
+}
+
+.slide-container.cursor-pointer {
   cursor: pointer;
 }
 
 .thumbnail-image {
-  border-radius: 16px;
   block-size: 100%;
   inline-size: 100%;
   object-fit: cover;
 }
 
-.section-title {
-  font-size: 24px;
-  font-weight: 800;
-  line-height: 36px;
+.slide-overlay {
+  position: absolute;
+  z-index: 1;
+  background: linear-gradient(
+    135deg,
+    rgb(0 0 0 / 70%) 0%,
+    rgb(0 0 0 / 50%) 50%,
+    rgb(0 0 0 / 80%) 100%
+  );
+  inset: 0;
 }
 
-.section-title::after {
-  position: absolute !important;
-  z-index: 1 !important;
-  background: #ea580c !important;
-  background-size: contain !important;
-  block-size: 0% !important;
-  box-shadow: 0 0 5px 5px #ea580c !important;
-  content: "" !important;
-  font-weight: 800 !important;
-  inline-size: 100% !important;
-  inset-block-end: 0 !important;
-  inset-inline-start: 0% !important;
-  opacity: 0.4 !important;
+.slide-content {
+  position: absolute;
+  z-index: 2;
+  inline-size: 100%;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  text-align: center;
+  transform: translate(-50%, -50%);
+}
+
+.slide-title {
+  z-index: 40;
+  color: #fff;
+  font-weight: 900;
+  margin-block-end: 1.3rem;
+  padding-inline: 8px;
+}
+
+.slide-description {
+  z-index: 40;
+  color: rgba(255, 255, 255, 75%);
+  font-weight: 500;
+  line-height: 1.8;
+  margin-block-start: 1.3rem;
+  margin-inline: auto;
+  max-inline-size: 830px;
+  padding-inline: 8px;
+}
+
+.section-title {
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 36px;
 }
 
 .brand-logo-container {

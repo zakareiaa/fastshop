@@ -4,7 +4,7 @@
       <div class="position-relative">
         <VBtn icon="tabler-shopping-cart" variant="text" v-bind="props">
           <VIcon
-            :color="$vuetify.theme.current.dark ? 'white' : 'secondary'"
+            :color="$vuetify.theme.current.dark ? 'white' : '#000'"
             icon="tabler-shopping-cart"
             size="24"
           />
@@ -45,7 +45,12 @@
           class="mb-2"
         />
         <div class="text-body-1 mb-2">{{ $t("cart.empty_cart") }}</div>
-        <VBtn color="primary" variant="tonal" @click="$router.push('/shop')">
+        <VBtn
+          color="primary"
+          class="b-radius-0"
+          variant="tonal"
+          @click="$router.push('/shop')"
+        >
           {{ $t("cart.continue_shopping") }}
         </VBtn>
       </div>
@@ -72,6 +77,21 @@
 
           <VListItemSubtitle class="ms-2">
             {{ item.quantity }} × {{ formatPrice(item.price) }}
+            <div
+              v-if="
+                item.selectedOptions &&
+                Object.keys(item.selectedOptions).length > 0
+              "
+              class="text-caption mt-1"
+            >
+              <span
+                v-for="(option, optionKey) in item.selectedOptions"
+                :key="optionKey"
+                class="me-2"
+              >
+                <strong>{{ optionKey }}:</strong> {{ option.name }}
+              </span>
+            </div>
           </VListItemSubtitle>
 
           <template #append>
@@ -106,6 +126,7 @@
           block
           color="primary"
           variant="tonal"
+          class="b-radius-0"
           @click="$router.push('/checkout')"
         >
           {{ $t("cart.proceed_to_checkout") }}
@@ -144,8 +165,8 @@ const formatPrice = (price) => {
 
 // Remove item from cart
 const removeItem = (index) => {
-  const productId = cartItems.value[index].id;
-  cartStore.removeItem(productId);
+  const item = cartItems.value[index];
+  cartStore.removeItem(item.id, item.selectedOptions);
 };
 
 // Clear all items from cart
@@ -157,7 +178,8 @@ const clearCart = () => {
 <style scoped>
 .cart-menu {
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: 0 !important;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 15%), 0 4px 8px rgb(0 0 0 / 10%);
 }
 
 .cart-items-list {
@@ -171,5 +193,9 @@ const clearCart = () => {
 
 .cart-item:last-child {
   border-block-end: none;
+}
+
+.v-list-item--one-line .v-list-item-subtitle {
+  -webkit-line-clamp: none !important;
 }
 </style>

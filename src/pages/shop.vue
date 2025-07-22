@@ -10,7 +10,10 @@
             <div class="section-title">{{ $t("shop.title") }}</div>
           </div>
         </div>
-        <VCard class="pa-4">
+        <VCard
+          class="pa-4 b-radius-0 shop-filters-card"
+          :variant="!$vuetify.theme.current.dark ? 'outlined' : 'flat'"
+        >
           <h3 class="text-h5 font-weight-bold mb-4">
             {{ $t("shop.filters") }}
           </h3>
@@ -31,7 +34,7 @@
                   max="1000000"
                   hide-details
                   variant="outlined"
-                  class="price-input"
+                  class="price-input b-radius-0"
                   density="compact"
                   @update:model-value="handlePriceInputChange"
                 />
@@ -48,7 +51,7 @@
                   max="1000000"
                   hide-details
                   variant="outlined"
-                  class="price-input"
+                  class="price-input b-radius-0"
                   density="compact"
                   @update:model-value="handlePriceInputChange"
                 />
@@ -66,7 +69,7 @@
           </div>
 
           <!-- Categories Filter -->
-          <div class="mb-6" v-if="categories.length > 0">
+          <div class="mb-0" v-if="categories.length > 0">
             <h4 class="text-subtitle-1 font-weight-bold mb-3">
               {{ $t("shop.categories") }}
             </h4>
@@ -85,6 +88,9 @@
           </div>
 
           <!-- Attributes Filter -->
+          <div
+            :class="{ 'mt-6': categories[selectedCategoryIndex]?.attributes }"
+          ></div>
           <div
             v-if="categories[selectedCategoryIndex]?.attributes"
             class="mb-4"
@@ -120,6 +126,7 @@
               color="primary"
               @click="mobileFiltersDrawer = true"
               prepend-icon="tabler-filter"
+              class="b-radius-0"
             >
               {{ $t("shop.filters") }}
             </VBtn>
@@ -153,7 +160,7 @@
               ]"
               :label="$t('shop.sort_by')"
               hide-details
-              class="sort-select"
+              class="sort-select b-radius-0"
               :class="{ 'bg-white': !$vuetify.theme.current.dark }"
               @update:model-value="handleSortChange"
             />
@@ -181,27 +188,32 @@
             v-model="searchQuery"
             :placeholder="$t('shop.search_placeholder')"
             prepend-inner-icon="tabler-search"
-            class="search-field"
+            class="search-field b-radius-0"
             :class="{ 'bg-white': !$vuetify.theme.current.dark }"
             variant="outlined"
           />
         </div>
 
-        <VRow>
-          <VCol
+        <div class="products-grid">
+          <div
             v-for="product in products"
             :key="product.id"
-            cols="12"
-            :sm="viewMode === 'grid' ? 4 : 12"
-            :lg="viewMode === 'grid' ? 3 : 12"
+            :class="[
+              'product-col',
+              viewMode === 'grid' ? 'product-col-grid' : 'product-col-list',
+            ]"
             v-show="!getProductsLoading && products.length > 0"
           >
             <ProductCard :productProp="product" :viewMode="viewMode" />
-          </VCol>
+          </div>
 
-          <VCol cols="12" v-show="products.length === 0 && !getProductsLoading">
+          <div
+            class="no-products-col"
+            v-show="products.length === 0 && !getProductsLoading"
+          >
             <VCard
-              class="d-flex flex-column align-center justify-center py-8 elevation-1"
+              class="d-flex flex-column align-center justify-center py-8 elevation-1 b-radius-0"
+              :variant="!$vuetify.theme.current.dark ? 'outlined' : 'flat'"
             >
               <VIcon
                 icon="tabler-basket-off"
@@ -215,40 +227,41 @@
               <p class="text-body-1 text-center text-medium-emphasis mt-2">
                 {{ $t("shop.no_products_message") }}
               </p>
-              <VBtn color="primary" @click="resetFilters">
+              <VBtn color="primary" @click="resetFilters" class="b-radius-0">
                 {{ $t("shop.reset_filters") }}
               </VBtn>
             </VCard>
-          </VCol>
+          </div>
 
           <!-- skeleton -->
-          <VCol
+          <div
             v-for="i in 12"
             :key="i"
-            cols="12"
-            :sm="viewMode === 'grid' ? 4 : 12"
-            :lg="viewMode === 'grid' ? 3 : 12"
+            :class="[
+              'skeleton-col',
+              viewMode === 'grid' ? 'skeleton-col-grid' : 'skeleton-col-list',
+            ]"
             v-show="getProductsLoading"
           >
             <div
               class="skeleton"
-              style="border-radius: 8px; block-size: 380px; inline-size: 100%"
+              style="border-radius: 0; block-size: 380px; inline-size: 100%"
             ></div>
-          </VCol>
+          </div>
 
           <!-- Pagination -->
-          <VCol
-            cols="12"
-            class="mt-4"
+          <div
+            class="pagination-col"
             v-show="!getProductsLoading && products.length > 0"
           >
             <VPagination
               v-model="page"
               :length="Math.ceil(totalProducts / per_page)"
               @update:model-value="getProducts()"
+              class="shop-pagination"
             />
-          </VCol>
-        </VRow>
+          </div>
+        </div>
       </VCol>
     </VRow>
   </div>
@@ -284,6 +297,7 @@
     :width="320"
     class="mobile-filters-drawer"
     elevation="0"
+    @click:outside="mobileFiltersDrawer = false"
   >
     <!-- Drawer Header -->
     <div
@@ -319,7 +333,7 @@
               max="1000000"
               hide-details
               variant="outlined"
-              class="price-input"
+              class="price-input b-radius-0"
               density="compact"
               @update:model-value="handlePriceInputChange"
             />
@@ -335,7 +349,7 @@
               max="1000000"
               hide-details
               variant="outlined"
-              class="price-input"
+              class="price-input b-radius-0"
               density="compact"
               @update:model-value="handlePriceInputChange"
             />
@@ -344,7 +358,7 @@
       </div>
 
       <!-- Categories Filter -->
-      <div class="mb-6" v-if="categories.length > 0">
+      <div class="mb-0" v-if="categories.length > 0">
         <h4 class="text-subtitle-1 font-weight-bold mb-3">
           {{ $t("shop.categories") }}
         </h4>
@@ -363,6 +377,9 @@
       </div>
 
       <!-- Attributes Filter -->
+      <div
+        :class="{ 'mt-6': categories[selectedCategoryIndex]?.attributes }"
+      ></div>
       <div
         v-if="categories[selectedCategoryIndex]?.attributes"
         class="mb-4"
@@ -388,7 +405,13 @@
     <div class="drawer-footer pa-4 mt-auto">
       <VDivider class="mb-4" />
       <div class="d-flex flex-wrap gap-2">
-        <VBtn variant="outlined" color="secondary" block @click="resetFilters">
+        <VBtn
+          variant="outlined"
+          color="secondary"
+          class="b-radius-0"
+          block
+          @click="resetFilters"
+        >
           {{ $t("shop.reset_filters") }}
         </VBtn>
         <VBtn
@@ -396,6 +419,7 @@
           color="primary"
           block
           @click="mobileFiltersDrawer = false"
+          class="b-radius-0"
         >
           {{ $t("shop.apply_filters") }}
         </VBtn>
@@ -696,24 +720,9 @@ definePage({
 @use "@core/scss/template/pages/page-auth";
 
 .section-title {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 800;
   line-height: 36px;
-}
-
-.section-title::after {
-  position: absolute !important;
-  z-index: 1 !important;
-  background: #ea580c !important;
-  background-size: contain !important;
-  block-size: 0% !important;
-  content: "" !important;
-  font-weight: 800 !important;
-  inline-size: 100% !important;
-  inset-block-end: 0 !important;
-  inset-inline-start: 0% !important;
-  opacity: 0.4 !important;
-  box-shadow: 0 0 5px 5px #ea580c !important;
 }
 
 .product-card {
@@ -725,23 +734,17 @@ definePage({
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.product-card:hover {
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 10%);
-  transform: translateY(-5px);
-}
+// .shop .product-image {
+//   block-size: auto !important;
+//   inline-size: auto;
+//   max-inline-size: 100%;
+//   object-fit: contain;
+//   transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
-.shop .product-image {
-  border-radius: 8px;
-  block-size: auto !important;
-  inline-size: auto;
-  max-inline-size: 100%;
-  object-fit: contain;
-  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-
-  @media (max-width: 768px) {
-    block-size: 170px !important;
-  }
-}
+//   @media (max-width: 768px) {
+//     block-size: 170px !important;
+//   }
+// }
 
 .product-title {
   overflow: hidden;
@@ -787,9 +790,11 @@ definePage({
 
 .search-field-container {
   position: relative;
-  overflow: hidden;
+
+  // overflow: hidden;
   border-radius: 5px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 10%);
+
+  // box-shadow: 0 5px 15px rgba(0, 0, 0, 10%);
   inline-size: 100%;
 }
 
@@ -828,5 +833,70 @@ definePage({
   flex-shrink: 0;
   background: rgba(var(--v-theme-surface), 0.9);
   border-block-start: 1px solid rgba(var(--v-border-color), 0.08);
+}
+
+/* Custom products grid layout */
+.products-grid {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: repeat(12, 1fr);
+  inline-size: 100%;
+}
+
+/* Product columns */
+.product-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.product-col-grid {
+  grid-column: span 6;
+
+  @media (min-width: 600px) {
+    grid-column: span 4;
+  }
+}
+
+.product-col-list {
+  grid-column: span 12;
+}
+
+/* No products column */
+.no-products-col {
+  grid-column: span 12;
+}
+
+/* Skeleton columns */
+.skeleton-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.skeleton-col-grid {
+  grid-column: span 6;
+
+  @media (min-width: 600px) {
+    grid-column: span 4;
+  }
+}
+
+.skeleton-col-list {
+  grid-column: span 12;
+}
+
+/* Pagination column */
+.pagination-col {
+  grid-column: span 12;
+  margin-block-start: 1rem;
+}
+
+.shop-pagination .v-btn {
+  border-radius: 0 !important;
+}
+
+.shop-filters-card {
+  position: sticky !important;
+  top: 15px;
+  z-index: 99;
 }
 </style>

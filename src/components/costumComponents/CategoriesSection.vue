@@ -6,7 +6,7 @@
       </div>
       <div class="position-relative">
         <IconBtn
-          class="categories-button-prev rounded me-4"
+          class="categories-button-prev me-3 b-radius-0"
           variant="tonal"
           color="primary"
           @click="slidePrev"
@@ -15,7 +15,7 @@
         </IconBtn>
 
         <IconBtn
-          class="categories-button-next rounded"
+          class="categories-button-next b-radius-0"
           variant="tonal"
           color="primary"
           @click="slideNext"
@@ -34,28 +34,28 @@
           1440: {
             slidesPerView: 8,
             spaceBetween: 20,
-            },
-            1024: {
+          },
+          1024: {
             slidesPerView: 6,
             spaceBetween: 20,
-            },
-            768: {
+          },
+          768: {
             slidesPerView: 5,
             spaceBetween: 20,
-            },
-            600: {
+          },
+          600: {
             slidesPerView: 4,
             spaceBetween: 15,
-            },
-            350: {
+          },
+          350: {
             slidesPerView: 2.5,
             spaceBetween: 12,
-            },
-            0: {
+          },
+          0: {
             slidesPerView: 2,
             spaceBetween: 10,
-            },
-          }"
+          },
+        }"
         events-prefix="swiper-"
       >
         <swiper-slide
@@ -251,24 +251,9 @@ export default {
 
 <style lang="scss">
 .section-title {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 800;
   line-height: 36px;
-}
-
-.section-title::after {
-  position: absolute !important;
-  background-size: contain !important;
-  background: #ea580c !important;
-  block-size: 0% !important;
-  content: "" !important;
-  font-weight: 800 !important;
-  inline-size: 100% !important;
-  inset-block-end: 0 !important;
-  inset-inline-start: 0% !important;
-  opacity: .4 !important;
-  z-index: 1 !important;
-  box-shadow: 0 0 5px 5px #ea580c !important;
 }
 </style>
 

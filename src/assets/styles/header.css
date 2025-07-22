@@ -9,10 +9,9 @@
 .headerLogoContainer {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   max-inline-size: 250px;
   padding-block: 6px !important;
-  padding-inline: 0 30px;
 }
 
 @media (max-width: 1279px) {
@@ -23,7 +22,6 @@
 }
 
 .headerLogo {
-  margin-inline: 0;
   max-block-size: 75px;
   object-fit: contain;
 }
@@ -88,11 +86,9 @@
 
 .heroContainer {
   inline-size: 100%;
-  padding-block: 20px;
 }
 
 .heroContainer img {
-  border-radius: 16px;
   block-size: 100%;
   inline-size: 100%;
   object-fit: cover;

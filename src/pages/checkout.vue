@@ -2,8 +2,8 @@
   <Header />
 
   <div class="app-container py-6">
-    <VCard>
-      <VCardText class="px-0 py-2 py-sm-4 px-sm-6">
+    <VCard variant="flat" class="b-radius-0">
+      <VCardText class="px-0 py-0 py-sm-4">
         <!-- 👉 stepper content -->
         <VWindow
           v-model="currentStep"
@@ -11,7 +11,7 @@
           :touch="false"
         >
           <VWindowItem>
-            <VRow v-if="checkoutCartDataLocal" class="pa-4">
+            <VRow v-if="checkoutCartDataLocal" class="pa-0 pa-sm-4">
               <VCol cols="12" :lg="cartItems.length > 0 ? 8 : 12">
                 <!-- <h5 class="text-h5 my-4">
                   My Shopping Bag ({{ checkoutCartDataLocal.cartItems.length }}
@@ -26,38 +26,25 @@
                 </div>
 
                 <!-- 👉 Cart items -->
-                <div v-if="cartItems.length" class="border rounded">
+                <div v-if="cartItems.length" class="border b-radius-0">
                   <template v-for="(item, index) in cartItems" :key="item.id">
                     <div
-                      class="d-flex align-center gap-4 pa-6 position-relative flex-column flex-sm-row"
+                      class="d-flex align-center gap-4 py-3 px-3 position-relative flex-column flex-sm-row"
                       :class="index ? 'border-t' : ''"
                     >
-                      <IconBtn
-                        class="checkout-item-remove-btn"
-                        @click="removeItem(item.id)"
-                      >
-                        <VIcon
-                          size="18"
-                          icon="tabler-x"
-                          class="text-disabled"
-                        />
-                      </IconBtn>
+                      <img
+                        width="140"
+                        class="checkout-product-image"
+                        :src="item.main_image_url"
+                      />
 
-                      <div>
-                        <img
-                          width="140"
-                          class="checkout-product-image"
-                          :src="item.main_image_url"
-                        />
-                      </div>
-
-                      <div class="d-flex w-100 flex-column flex-md-row">
+                      <div class="d-flex w-100">
                         <div class="d-flex flex-column gap-y-2">
                           <div class="d-flex align-center gap-3">
                             <h6 class="text-h6">
                               {{ item.name }}
                             </h6>
-                            <div
+                            <!-- <div
                               class="d-flex align-center text-no-wrap gap-4 text-body-1"
                             >
                               <VChip
@@ -71,7 +58,7 @@
                               <VChip color="warning" label size="small" v-else>
                                 {{ $t("product.out_of_stock") }}
                               </VChip>
-                            </div>
+                            </div> -->
                           </div>
                           <!-- Product Options -->
                           <div
@@ -79,13 +66,12 @@
                               item.selectedOptions &&
                               Object.keys(item.selectedOptions).length > 0
                             "
-                            class="ms-3"
                           >
-                            <div
+                            <!-- <div
                               class="text-caption text-medium-emphasis font-weight-bold mb-1"
                             >
                               {{ $t("confirmation.selected_options") }}
-                            </div>
+                            </div> -->
                             <div
                               v-for="(
                                 option, optionKey
@@ -119,12 +105,14 @@
                             >
                           </div> -->
 
-                          <div class="d-flex align-center">
+                          <div class="d-flex align-center border w-fit-content">
                             <VBtn
                               icon="tabler-minus"
                               size="small"
                               variant="text"
-                              @click="decrementQuantity(item.id)"
+                              @click="
+                                decrementQuantity(item.id, item.selectedOptions)
+                              "
                               :disabled="item.quantity <= 1"
                             />
                             <span class="mx-2">{{ item.quantity }}</span>
@@ -132,7 +120,9 @@
                               icon="tabler-plus"
                               size="small"
                               variant="text"
-                              @click="incrementQuantity(item.id)"
+                              @click="
+                                incrementQuantity(item.id, item.selectedOptions)
+                              "
                             />
                           </div>
                         </div>
@@ -140,13 +130,21 @@
                         <VSpacer />
 
                         <div
-                          class="d-flex flex-column mt-7 text-start text-md-end mb-2"
+                          class="d-flex flex-column text-start align-end text-md-end mb-2"
                           :class="
                             $vuetify.display.mdAndDown
                               ? 'gap-2 align-end'
                               : 'gap-4'
                           "
                         >
+                          <VBtn
+                            icon="tabler-x"
+                            size=""
+                            variant="text"
+                            @click="removeItem(item.id, item.selectedOptions)"
+                          >
+                          </VBtn>
+
                           <div class="text-primary font-weight-bold">
                             {{ formatPrice(item.price * item.quantity) }}
                           </div>
@@ -156,6 +154,7 @@
                               variant="tonal"
                               size="small"
                               @click="moveToWishlist(item.id)"
+                              class="b-radius-0"
                             >
                               {{ $t("cart.move_to_wishlist") }}
                             </VBtn>
@@ -179,7 +178,7 @@
                   <p class="text-body-1 mb-6">
                     {{ $t("cart.empty_cart_message") }}
                   </p>
-                  <VBtn color="primary" to="/shop">{{
+                  <VBtn color="primary" class="b-radius-0" to="/shop">{{
                     $t("cart.continue_shopping")
                   }}</VBtn>
                 </div>
@@ -187,7 +186,7 @@
                 <!-- 👉 Add more from wishlist -->
                 <div
                   v-if="wishlistItems.length > 0 && cartItems.length > 0"
-                  class="d-flex align-center justify-space-between rounded py-2 px-5 text-base mt-4 cursor-pointer"
+                  class="d-flex align-center justify-space-between b-radius-0 py-2 px-5 text-base mt-4 cursor-pointer"
                   style="border: 1px solid rgb(var(--v-theme-primary))"
                   @click="$router.push('/wishlist')"
                 >
@@ -211,9 +210,9 @@
                   </div>
                 </div>
 
-                <VCard flat variant="outlined">
+                <VCard flat variant="outlined" class="b-radius-0">
                   <!-- 👉 Price details -->
-                  <VCardText class="pa-3 pa-sm-6">
+                  <VCardText class="pa-3 pa-sm-5">
                     <!-- <h6 class="text-h6 mb-4">Price Details</h6> -->
 
                     <div class="text-high-emphasis">
@@ -258,7 +257,7 @@
                   <VDivider />
 
                   <!-- 👉 Total -->
-                  <VCardText class="d-flex justify-space-between pa-3 pa-sm-6">
+                  <VCardText class="d-flex justify-space-between pa-3 pa-sm-5">
                     <h6 class="text-h6">{{ $t("cart.total") }}</h6>
                     <h6 class="text-h6 font-weight-bold">
                       {{
@@ -269,8 +268,8 @@
                     </h6>
                   </VCardText>
 
-                  <VCardText class="pt-0 pa-3 pa-sm-6">
-                    <VBtn block @click="nextStep">
+                  <VCardText class="pt-0 pa-3 pa-sm-5">
+                    <VBtn block @click="nextStep" class="b-radius-0">
                       {{ $t("cart.continue") }}
                       <VIcon icon="tabler-arrow-right" end class="" />
                     </VBtn>
@@ -291,11 +290,16 @@
                   </div>
                 </div>
 
-                <VCard flat variant="outlined" class="pa-5 px-3 px-sm-5 mb-5">
+                <VCard
+                  flat
+                  variant="outlined"
+                  class="pa-5 px-3 px-sm-5 mb-5 b-radius-0"
+                >
                   <VForm ref="confirmOrderForm">
                     <VRow>
                       <VCol cols="12" md="6">
                         <VTextField
+                          class="b-radius-0"
                           v-model="name"
                           :label="$t('checkout.full_name')"
                           :placeholder="$t('checkout.full_name_placeholder')"
@@ -305,6 +309,7 @@
 
                       <VCol cols="12" md="6">
                         <VTextField
+                          class="b-radius-0"
                           v-model="phone"
                           :label="$t('checkout.phone_number')"
                           :placeholder="$t('checkout.phone_placeholder')"
@@ -314,6 +319,7 @@
 
                       <VCol cols="12" md="6">
                         <VSelect
+                          class="b-radius-0"
                           v-model="wilaya"
                           :label="$t('checkout.wilaya')"
                           :items="wilayas"
@@ -326,6 +332,7 @@
 
                       <VCol cols="12" md="6">
                         <VSelect
+                          class="b-radius-0"
                           v-model="commune"
                           :label="$t('checkout.commune')"
                           :items="communesByWilaya"
@@ -343,6 +350,7 @@
                           v-model:selected-checkbox="selectedCheckbox"
                           :checkbox-content="checkboxContent"
                           :grid-column="{ sm: '6', cols: '12' }"
+                          class="b-radius-0"
                         />
 
                         <!-- Warning message when pickup is not available -->
@@ -380,6 +388,7 @@
 
                       <VCol cols="12" v-if="selectedCheckbox.includes('home')">
                         <VTextField
+                          class="b-radius-0"
                           v-model="address"
                           :label="$t('checkout.detailed_address')"
                           :placeholder="$t('checkout.address_placeholder')"
@@ -389,6 +398,7 @@
 
                       <VCol cols="12">
                         <VTextField
+                          class="b-radius-0"
                           v-model="email"
                           :label="$t('checkout.email_optional')"
                           :placeholder="$t('checkout.email_placeholder')"
@@ -398,6 +408,7 @@
 
                       <VCol cols="12">
                         <VTextarea
+                          class="b-radius-0"
                           v-model="note"
                           :label="$t('checkout.note_optional')"
                           :placeholder="$t('checkout.note_placeholder')"
@@ -418,8 +429,8 @@
                   </div>
                 </div>
 
-                <VCard flat variant="outlined">
-                  <VCardText class="pa-3 pa-sm-6">
+                <VCard flat variant="outlined" class="b-radius-0">
+                  <VCardText class="pa-3 pa-sm-5">
                     <!-- <h6 class="text-h6 mb-4">Price Details</h6> -->
 
                     <div class="text-high-emphasis">
@@ -464,7 +475,7 @@
                   <VDivider />
 
                   <!-- 👉 Total -->
-                  <VCardText class="d-flex justify-space-between pa-3 pa-sm-6">
+                  <VCardText class="d-flex justify-space-between pa-3 pa-sm-5">
                     <h6 class="text-h6">{{ $t("cart.total") }}</h6>
                     <h6 class="text-h6 font-weight-bold">
                       {{ formatPrice(totalCost + shippingPrice) }}
@@ -473,11 +484,11 @@
 
                   <VDivider />
 
-                  <VCardActions class="pa-3 pa-sm-6">
+                  <VCardActions class="pa-3 pa-sm-5">
                     <VBtn
                       color="primary"
                       variant="flat"
-                      class="w-100"
+                      class="w-100 b-radius-0"
                       :loading="confirmOrderLoading"
                       :disabled="confirmOrderLoading"
                       @click="confirmOrder"
@@ -608,16 +619,8 @@ export default {
       orderItems: null,
       orderSummary: null,
 
-      coming_from_build_page: false,
-
       api_url: import.meta.env.VITE_API_URL,
     };
-  },
-
-  mounted() {
-    if (this.$route.query.coming_from_build_page === "true") {
-      this.coming_from_build_page = true;
-    }
   },
 
   computed: {
@@ -743,8 +746,6 @@ export default {
             quantity: item.quantity,
             product_options: item.selectedOptions,
           })),
-
-          coming_from_build_page: this.coming_from_build_page,
         };
 
         // Submit order to API
@@ -846,24 +847,24 @@ export default {
       }, 300);
     },
 
-    removeItem(productId) {
-      this.cartStore.removeItem(productId);
+    removeItem(productId, selectedOptions = {}) {
+      this.cartStore.removeItem(productId, selectedOptions);
     },
 
     moveToWishlist(productId) {
       const item = this.cartItems.find((item) => item.id === productId);
       if (item) {
         this.wishlistStore.addItem(item);
-        this.cartStore.removeItem(productId);
+        this.cartStore.removeItem(productId, item.selectedOptions);
       }
     },
 
-    incrementQuantity(productId) {
-      this.cartStore.incrementQuantity(productId);
+    incrementQuantity(productId, selectedOptions = {}) {
+      this.cartStore.incrementQuantity(productId, selectedOptions);
     },
 
-    decrementQuantity(productId) {
-      this.cartStore.decrementQuantity(productId);
+    decrementQuantity(productId, selectedOptions = {}) {
+      this.cartStore.decrementQuantity(productId, selectedOptions);
     },
 
     formatPrice(price) {
@@ -883,6 +884,11 @@ export default {
       if (this.currentStep < 2) {
         this.currentStep += 1;
       }
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
     },
 
     placeOrder() {
@@ -945,8 +951,8 @@ definePage({
 <style lang="scss" scoped>
 .checkout-item-remove-btn {
   position: absolute;
-  inset-block-start: 14px;
-  inset-inline-end: 14px;
+  inset-block-start: 5px;
+  inset-inline-end: 5px;
 }
 </style>
 
@@ -954,36 +960,15 @@ definePage({
 @use "@core/scss/template/pages/page-auth";
 
 .section-title {
-  font-size: 24px;
+  color: rgb(var(--v-theme-primary));
+  font-size: 28px;
   font-weight: 800;
   line-height: 36px;
-}
-
-
-.section-title::after {
-  position: absolute !important;
-  background-size: contain !important;
-  background: #ea580c !important;
-  block-size: 0% !important;
-  content: "" !important;
-  font-weight: 800 !important;
-  inline-size: 100% !important;
-  inset-block-end: 0 !important;
-  inset-inline-start: 0% !important;
-  opacity: .4 !important;
-  z-index: 1 !important;
-  box-shadow: 0 0 5px 5px #ea580c !important;
 }
 
 .border-t {
   border-block-start: 1px solid
     rgba(var(--v-border-color), var(--v-border-opacity));
-}
-
-.checkout-item-remove-btn {
-  position: absolute;
-  inset-block-start: 0.5rem;
-  inset-inline-end: 0.5rem;
 }
 
 .disable-tab-transition {
@@ -999,7 +984,17 @@ definePage({
 }
 
 .checkout-product-image {
-  border-radius: 8px;
+  max-block-size: 140px;
+  min-block-size: 120px;
+  min-inline-size: 140px;
   object-fit: cover;
+}
+
+.w-fit-content {
+  inline-size: fit-content !important;
+}
+
+.v-label.custom-input {
+  border-radius: 0 !important;
 }
 </style>

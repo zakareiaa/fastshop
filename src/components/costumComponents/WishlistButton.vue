@@ -10,7 +10,7 @@
         :icon="isInWishlist ? 'tabler-heart-filled' : 'tabler-heart'"
         size="24"
         class="wishlist-icon"
-        :color="$vuetify.theme.current.dark ? 'white' : 'secondary'"
+        :color="$vuetify.theme.current.dark ? 'white' : '#000'"
       />
     </VBtn>
     <VBadge

@@ -1,18 +1,74 @@
 <template>
-  <VCard class="product-card cursor-pointer">
+  <VCard
+    class="product-card cursor-pointer"
+    :variant="
+      viewMode === 'grid'
+        ? 'flat'
+        : viewMode === 'list'
+        ? $vuetify.theme.current.dark
+          ? 'flat'
+          : 'outlined'
+        : undefined
+    "
+    :style="
+      viewMode === 'list'
+        ? 'background-color: rgb(var(--v-theme-surface));'
+        : 'background-color: rgb(var(--v-theme-background));'
+    "
+  >
     <div
       class="cursor-pointer product-image-info"
       :class="viewMode === 'list' ? 'd-flex flex-row' : ''"
     >
       <div
         class="product-image-container"
-        :class="{ 'bg-white': !$vuetify.theme.current.dark }"
-        :style="{
-          'min-inline-size': viewMode === 'list' ? '200px' : 'auto',
+        :class="{
+          'bg-white': !$vuetify.theme.current.dark,
+          'no-inline-padding': viewMode === 'grid',
+          list: viewMode === 'list',
         }"
         @click="product.id && $router.push(`/product/${product.id}`)"
       >
-        <img :src="product.main_image_url" class="product-image" />
+        <img
+          :src="product.main_image_url"
+          class="product-image"
+          :class="viewMode"
+        />
+
+        <!-- Action buttons - top right -->
+        <div class="action-buttons" v-if="viewMode === 'grid'">
+          <VBtn
+            icon
+            size="small"
+            variant="flat"
+            color="error"
+            class="action-btn wishlist-btn"
+            @click.stop="toggleWishlist()"
+          >
+            <VIcon
+              :icon="isInWishlist ? 'tabler-heart-filled' : 'tabler-heart'"
+              size="20"
+            />
+          </VBtn>
+          <VBtn
+            icon
+            size="small"
+            variant="flat"
+            color="primary"
+            class="action-btn cart-btn"
+            @click.stop="addToCart()"
+          >
+            <VIcon
+              :icon="
+                isInCart
+                  ? 'tabler-shopping-cart-filled'
+                  : 'tabler-shopping-cart'
+              "
+              size="20"
+            />
+          </VBtn>
+        </div>
+
         <div class="new-tag">
           <VChip
             color="warning"
@@ -33,7 +89,7 @@
             {{ $t("product.new") }}
           </VChip>
           <VChip
-            color="success"
+            color="#28a745"
             variant="flat"
             v-if="product.is_promo && viewMode === 'grid'"
             class="font-weight-bold"
@@ -42,7 +98,7 @@
             {{ $t("product.promo") }}
           </VChip>
           <VChip
-            color="primary"
+            color="#1c3a63"
             variant="flat"
             v-if="product.limited_offer && viewMode === 'grid'"
             class="font-weight-bold"
@@ -58,7 +114,7 @@
           :class="
             viewMode === 'list'
               ? 'border-right flex-1 flex-grow-1 px-6 pb-5'
-              : 'flex-grow-1'
+              : 'flex-grow-1 no-inline-padding-grid'
           "
           @click="product.id && $router.push(`/product/${product.id}`)"
         >
@@ -71,9 +127,11 @@
           >
             <h1
               class="product-title text-h6 font-weight-bold text-truncate-1 w-100"
-              :class="viewMode === 'list' ? 'px-0' : 'ms-3 me-3 pt-0 pb-0'"
+              :class="viewMode === 'list' ? 'px-0 text-h5' : 'px-0 pt-0 pb-0'"
+              :style="viewMode === 'grid' ? 'font-size: 14px !important;' : ''"
             >
               {{ product.name || "Product" }}
+              <!-- <span class="underline-animation"></span> -->
             </h1>
             <!-- <div class="d-flex align-end">
             <VRating
@@ -98,11 +156,17 @@
                 ? 'px-0 text-truncate-5'
                 : 'text-truncate-1 px-3 mb-3'
             "
-            >{{ product.short_description || "" }}</span
+            :style="viewMode === 'list' ? 'line-height: 1.6 !important;' : ''"
+            v-if="viewMode === 'list'"
+            >{{ stripHtml(product.description || "") }}</span
           >
 
           <div
-            class="d-flex align-end justify-end gap-2 px-4 pb-1"
+            class="d-flex align-end gap-2"
+            :class="{
+              'justify-start px-0 pb-1': viewMode === 'grid',
+              'justify-end px-4 pb-1': viewMode !== 'grid',
+            }"
             v-if="viewMode === 'grid'"
           >
             <span
@@ -110,12 +174,17 @@
               class="text-secondary text-h6 text-decoration-line-through d-none d-md-inline"
               >{{ product.old_price }} DA</span
             >
-            <span class="text-primary text-h5 font-weight-bold"
+            <span
+              class="text-primary font-weight-bold"
+              :class="viewMode === 'grid' ? 'text-h6' : 'text-h5'"
+              :style="
+                viewMode === 'grid'
+                  ? 'font-size: 16px !important; font-weight: 500 !important;'
+                  : ''
+              "
               >{{ product.price }} DA</span
             >
           </div>
-
-          <VDivider class="my-2" v-show="viewMode === 'grid'" />
         </div>
 
         <VCardActions
@@ -126,6 +195,7 @@
               : 'justify-space-between gap-0 pa-0 pb-2 px-1'
           "
           :style="viewMode !== 'list' ? 'gap: 0' : ''"
+          v-if="viewMode === 'list'"
         >
           <div class="d-flex align-end mb-2" v-if="viewMode === 'list'">
             <span
@@ -141,6 +211,7 @@
             :variant="viewMode === 'list' ? 'tonal' : 'text'"
             color="error"
             :class="viewMode === 'list' ? 'w-100' : 'pe-2 ps-2'"
+            class="b-radius-0"
             @click="toggleWishlist()"
           >
             <VIcon
@@ -156,6 +227,7 @@
             :variant="viewMode === 'list' ? 'flat' : 'text'"
             color="primary"
             :class="viewMode === 'list' ? 'w-100' : 'ps-2 pe-2'"
+            class="b-radius-0"
             @click="addToCart()"
           >
             <VIcon
@@ -218,6 +290,18 @@ export default {
     },
   },
   methods: {
+    // Strip HTML tags from text
+    stripHtml(html) {
+      if (!html) return "";
+
+      // Create a temporary div element to parse HTML
+      const tmp = document.createElement("div");
+      tmp.innerHTML = html;
+
+      // Get text content and clean up extra whitespace
+      return tmp.textContent || tmp.innerText || "";
+    },
+
     // Toggle wishlist status
     toggleWishlist() {
       if (this.product) {
@@ -240,15 +324,16 @@ export default {
   display: flex !important;
   overflow: hidden !important;
   flex-direction: column !important;
-  border-radius: 8px !important;
+  border-radius: 0 !important;
   block-size: 100% !important;
   transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
     box-shadow 0.3s ease !important;
 }
 
-.product-card:hover {
-  // box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12) !important;
-  transform: translateY(-3px) !important;
+.product-card.v-card--variant-flat {
+  .v-card__underlay {
+    display: none;
+  }
 }
 
 .product-image-container {
@@ -261,19 +346,40 @@ export default {
 
   // max-block-size: 233px;
   // margin-block-end: 1rem;
-  padding: 0.75rem;
+  // padding: 0.75rem;
 
   // padding-block: 1rem 0;
   // padding-inline: 1rem;
+
+  &.no-inline-padding {
+    padding: 0;
+    margin-block-end: 0.75rem;
+  }
 }
 
 .product-image {
-  border-radius: 8px;
-  block-size: 245px !important;
+  block-size: 330px !important;
   inline-size: 100%;
   max-inline-size: 100%;
   object-fit: cover;
   transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.product-image.list {
+  block-size: 100% !important;
+  inline-size: 100% !important;
+}
+
+.product-image-container.list {
+  block-size: 180px !important;
+  inline-size: 200px !important;
+  min-inline-size: 200px !important;
+}
+
+@media (max-width: 480px) {
+  .product-image {
+    block-size: 220px !important;
+  }
 }
 
 .product-card:hover .product-image {
@@ -281,19 +387,30 @@ export default {
 }
 
 .product-title {
+  position: relative;
   overflow: hidden;
   font-size: 1.1rem !important;
-  font-weight: 600;
+  font-weight: 400 !important;
   line-height: 1.4;
   text-overflow: ellipsis;
+  text-wrap: wrap !important;
   transition: color 0.3s ease;
   white-space: nowrap;
-  text-wrap: wrap !important;
 }
 
-.product-card:hover .product-title {
-  color: rgb(var(--v-theme-primary)) !important;
-}
+// .underline-animation {
+//   position: absolute;
+//   background-color: rgb(var(--v-theme-primary));
+//   block-size: 1px;
+//   inline-size: 0;
+//   inset-block-end: 0;
+//   inset-inline-start: 0;
+//   transition: inline-size 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+// }
+
+// .product-card:hover .underline-animation {
+//   inline-size: 100%;
+// }
 
 .product-description {
   overflow: hidden;
@@ -333,10 +450,10 @@ export default {
   z-index: 999;
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-end;
+  justify-content: flex-start;
   gap: 4px;
-  inset-block-start: 12px;
-  inset-inline-end: 12px;
+  inset-block-end: 12px;
+  inset-inline-start: 12px;
 }
 
 .filters-sidebar {
@@ -362,5 +479,23 @@ export default {
 
 .product-card-actions.list {
   min-inline-size: 200px;
+}
+
+.no-inline-padding-grid {
+  padding-inline-start: 0 !important;
+
+  .d-flex.align-end {
+    padding-inline-end: 0 !important;
+  }
+}
+
+.action-buttons {
+  position: absolute;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  inset-block-start: 8px;
+  inset-inline-end: 8px;
 }
 </style>

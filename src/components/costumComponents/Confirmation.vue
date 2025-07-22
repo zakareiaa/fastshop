@@ -5,7 +5,7 @@
       <p>
         {{ $t("confirmation.your_order") }}
         <span class="text-body-1 font-weight-medium text-high-emphasis">
-          #{{ orderSummary?.order_number || "N/A" }}
+          #{{ orderSummary?.order_number || "" }}
         </span>
         {{ $t("confirmation.order_placed") }}
       </p>
@@ -24,13 +24,13 @@
           {{
             orderSummary?.created_at
               ? moment(orderSummary.created_at).format("YYYY-MM-DD HH:mm")
-              : "N/A"
+              : ""
           }}</span
         >
       </div>
     </div>
 
-    <VRow class="border rounded ma-0 mt-6">
+    <VRow class="border b-radius-0 ma-0 mt-6">
       <VCol
         cols="12"
         md="6"
@@ -45,11 +45,11 @@
         </div>
 
         <p class="mb-1 font-weight-medium">
-          {{ orderSummary?.customer_name || "N/A" }}
+          {{ orderSummary?.customer_name || "" }}
         </p>
-        <p class="mb-1">{{ orderSummary?.customer_phone || "N/A" }}</p>
-        <p class="mb-1">{{ wilaya || "N/A" }}, {{ commune || "N/A" }}</p>
-        <p class="mb-1">{{ orderSummary?.address?.address || "N/A" }}</p>
+        <p class="mb-1">{{ orderSummary?.customer_phone || "" }}</p>
+        <p class="mb-1">{{ wilaya || "" }}, {{ commune || "" }}</p>
+        <p class="mb-1">{{ orderSummary?.address?.address || "" }}</p>
 
         <p v-if="orderSummary?.notes" class="mt-4 mb-0">
           <span class="font-weight-medium">{{ $t("confirmation.note") }}</span>
@@ -81,10 +81,10 @@
     <VRow>
       <VCol cols="12" md="7">
         <!-- 👉 cart items -->
-        <div class="border rounded">
+        <div class="border b-radius-0">
           <template v-for="(item, index) in orderItems" :key="item.id">
             <div
-              class="d-flex align-start gap-4 pa-6 position-relative flex-column flex-sm-row"
+              class="d-flex align-start gap-4 pa-3 position-relative flex-column flex-sm-row"
               :class="index ? 'border-t' : ''"
             >
               <div>
@@ -94,7 +94,6 @@
                     'https://via.placeholder.com/80?text=No+Image'
                   "
                   :alt="item?.name || 'Product Image'"
-                  class="rounded"
                   style="object-fit: cover"
                   :style="{
                     width: $vuetify.display.width <= 700 ? '100%' : '120px',
@@ -109,11 +108,11 @@
                 "
               >
                 <div>
-                  <div class="d-flex align-center gap-2 mb-2">
+                  <div class="d-flex align-center mb-2">
                     <h6 class="text-h6">
                       {{ item?.name || $t("confirmation.unknown_product") }}
                     </h6>
-                    <VChip
+                    <!-- <VChip
                       size="small"
                       :color="item?.in_stock ? 'success' : 'warning'"
                     >
@@ -122,7 +121,7 @@
                           ? $t("product.in_stock")
                           : $t("product.out_of_stock")
                       }}
-                    </VChip>
+                    </VChip> -->
                   </div>
                   <!-- Product Options -->
                   <div
@@ -130,20 +129,24 @@
                       item.selectedOptions &&
                       Object.keys(item.selectedOptions).length > 0
                     "
-                    class="ms-3 mb-2"
+                    class="mb-2"
                   >
-                    <div
+                    <!-- <div
                       class="text-caption text-medium-emphasis font-weight-bold mb-1"
                     >
                       {{ $t("confirmation.selected_options") }}
-                    </div>
+                    </div> -->
                     <div
                       v-for="(option, optionKey) in item.selectedOptions"
                       :key="optionKey"
                       class="d-flex justify-space-between align-center mb-1"
                     >
                       <span class="text-caption">
-                        <strong>{{ optionKey }}:</strong> {{ option.name }}
+                        <span
+                          class="text-caption text-medium-emphasis font-weight-bold"
+                          >{{ optionKey }}:</span
+                        >
+                        {{ option.name }}
                       </span>
                       <span
                         class="text-caption text-success ms-3"
@@ -187,8 +190,8 @@
       </VCol>
 
       <VCol cols="12" md="5">
-        <div class="border rounded">
-          <div class="border-b pa-6">
+        <div class="border b-radius-0">
+          <div class="border-b pa-4">
             <h6 class="text-base font-weight-medium mb-4">
               {{ $t("confirmation.order_summary") }}
             </h6>
@@ -242,7 +245,7 @@
               color="primary"
               variant="tonal"
               block
-              class="mb-3"
+              class="mb-3 b-radius-0"
               @click="continueShopping"
             >
               <VIcon start icon="tabler-shopping-bag" />
@@ -297,18 +300,18 @@ export default {
 
   computed: {
     wilaya() {
-      if (!this.orderSummary?.address?.wilaya_id) return "N/A";
+      if (!this.orderSummary?.address?.wilaya_id) return "";
       const wilaya = wilayas.find(
         (w) => w.id === this.orderSummary.address.wilaya_id
       );
-      return wilaya?.name || "N/A";
+      return wilaya?.name || "";
     },
     commune() {
-      if (!this.orderSummary?.address?.commune_id) return "N/A";
+      if (!this.orderSummary?.address?.commune_id) return "";
       const commune = communes.find(
         (c) => c.id === this.orderSummary.address.commune_id
       );
-      return commune?.name || "N/A";
+      return commune?.name || "";
     },
 
     isReady() {

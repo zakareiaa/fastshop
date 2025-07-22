@@ -1,4 +1,9 @@
 {
+    "hero": {
+        "main_title": "Look your best in less than 72 hours",
+        "description": "Welcome to Modiasn, your one-stop shop for unique, unisex fashion in Algeria. Discover our curated selection of aesthetic, oversized clothing, perfect for acuby, y2k, and vintage enthusiasts. With fast shipping, payment at delivery, and easy browsing, Modiasn makes it simple to elevate your style",
+        "cta_button": "Shop now"
+    },
     "header": {
         "search_placeholder": "Search for products",
         "categories": "Categories",
@@ -134,25 +139,43 @@
     },
     "home": {
         "categories": "Categories",
-        "new_arrivals": "New Arrivals"
+        "new_arrivals": "New Arrivals",
+        "recommended": "Recommended"
     },
     "footer": {
+        "tagline": "Your one-stop shop for unique, unisex fashion in Algeria.",
+        "contact_us": "Contact Us",
+        "menu": "Menu",
+        "home": "Home",
+        "shop": "Shop",
+        "about": "About",
+        "returns_policy": "Returns Policy",
         "why_buy_from_us": "Why Buy From Us",
-        "company_description": "At Hichem Technology, we do more than just sell computer parts — we build trust. With years of hands-on experience in the tech world and a growing community, we know exactly what our customers need. Here's why Hichem Technology is the right choice for you:",
-        "competitive_prices": "Competitive Prices",
-        "competitive_prices_desc": "Save big on all your tech needs with our unbeatable prices and regular deals.",
+        "company_description": "At Modiasn, we're passionate about bringing unique, unisex fashion to Algeria. Our curated collection of aesthetic and oversized clothing is perfect for those who love acuby, y2k, and vintage styles. We're committed to providing a seamless shopping experience with fast delivery and payment on delivery.",
+        "unique_styles": "Unique Styles",
+        "unique_styles_desc": "Discover a curated collection of aesthetic, oversized, and vintage-inspired pieces.",
         "fast_delivery": "Fast Delivery",
-        "fast_delivery_desc": "Quick and reliable delivery anywhere in Algeria with real-time tracking.",
-        "customer_service": "Customer Service",
-        "customer_service_desc": "Need help? Our customer service is here to assist you with any query or issue.",
-        "real_warranty": "Real Warranty",
-        "real_warranty_desc": "Most items come with a trial warranty. Some have 1-2 year coverage, as mentioned in the description.",
+        "fast_delivery_desc": "Get your order delivered to your doorstep in less than 72 hours, anywhere in Algeria.",
+        "easy_returns": "Easy Returns",
+        "easy_returns_desc": "Enjoy hassle-free returns and exchanges within 7 days of receiving your order.",
+        "pay_on_delivery": "Pay on Delivery",
+        "pay_on_delivery_desc": "For your convenience, we accept cash on delivery for all orders.",
+        "questions_answers": "QUESTIONS & ANSWERS",
+        "delivery_time_question": "Delivery time",
+        "delivery_time_answer": "1-3 days",
+        "payment_method_question": "Payment method",
+        "payment_method_answer": "Cash on delivery: Pay when you receive your order",
+        "order_tracking_question": "How do I track my order?",
+        "order_tracking_answer": "You can track your order from the office or delivery to home",
+        "shipping_cost_question": "Shipping cost",
+        "shipping_cost_answer": "The price varies according to the state",
         "about_us": "ABOUT-US",
         "privacy_policy": "Privacy Policy",
         "terms_of_use": "Terms of Use",
         "terms_of_sale": "Terms of Sale",
         "all_rights_reserved": "© 2025, All rights reserved",
         "developed_by": "Developed by",
+        "see_my_work": "See my work",
         "follow_us": "Follow us !"
     },
     "shop": {
@@ -214,15 +237,15 @@
         "headset": "Headset"
     },
     "about": {
-        "company_name": "Hichem Technology",
-        "intro_p1": "We specialize in providing high-quality computer parts and custom-built PCs tailored to meet the unique needs of our clients.",
-        "intro_p2": "Based in Algeria, we pride ourselves on being the go-to destination for tech enthusiasts and gamers alike, offering the best products at competitive prices.",
-        "intro_p3": "With extensive experience in the tech field and deep understanding of our customers' needs, we created an online store that reflects our passion and expertise. We offer top-quality products from all the most trusted brands, with full warranty and support.",
+        "company_name": "Modiasn",
+        "intro_p1": "Look your best in less than 72 hours. Welcome to Modiasn, your one-stop shop for unique, unisex fashion in Algeria.",
+        "intro_p2": "Discover our curated selection of aesthetic, oversized clothing, perfect for acuby, y2k, and vintage enthusiasts.",
+        "intro_p3": "With fast shipping, payment at delivery, and easy browsing, Modiasn makes it simple to elevate your style. We deliver across Algeria with payment on delivery for your convenience.",
         "shop_now": "Shop Now",
         "contact_us": "Contact Us",
         "our_mission": "Our Mission",
-        "mission_p1": "We believe in fair pricing and fast delivery to all states. Whether you're a beginner building your first PC or a professional looking for serious upgrades, we're here to guide you with honest advice and solid knowledge.",
-        "mission_p2": "Our mission is to make your shopping experience easy, smooth, and reliable.",
+        "mission_p1": "We believe in making fashion accessible to everyone with fast delivery in less than 72 hours and payment on delivery. Whether you're looking for aesthetic oversized pieces or vintage-inspired clothing, we're here to help you express your unique style.",
+        "mission_p2": "Our mission is to provide high-quality, unique fashion pieces that help you look and feel your best, delivered right to your doorstep in Batna and across Algeria.",
         "contact_questions": "For any questions or support, contact us at:",
         "contact_email": "Or email us at:"
     },
@@ -303,5 +326,12 @@
             "failed_to_add_review": "Failed to add review",
             "failed_to_add_review_generic": "Failed to add review. Please try again later."
         }
+    },
+    "refund_policy": {
+        "title": "Return or Exchange Policy",
+        "subtitle": "You can return the product for a refund or exchange",
+        "policy_text": "Every faulty product can be kept and returned in the same condition it was received in, unused and in its original packaging.",
+        "contact_info": "We communicate with our customers via our Instagram account: modiasn",
+        "process_info": "After contacting us, we will explain how the return or exchange process will be, in addition to how it returns to Hilal."
     }
 }

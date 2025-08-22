@@ -39,6 +39,17 @@ export const useCartStore = defineStore('cart', {
         })
       }
     },
+
+    getProductQuantity: (state) => {
+      return (productId, selectedOptions = {}) => {
+        const item = state.items.find(item => {
+          const sameProduct = item.id === productId
+          const sameOptions = isEqual(item.selectedOptions || {}, selectedOptions)
+          return sameProduct && sameOptions
+        })
+        return item ? item.quantity : 0
+      }
+    },
   },
   
   actions: {

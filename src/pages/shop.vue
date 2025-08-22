@@ -581,7 +581,10 @@ export default {
         this.getProductsLoading = true;
 
         const searchParam = this.searchQuery?.trim()
-          ? { "name[like]": this.searchQuery }
+          ? { 
+            // "name[like]": this.searchQuery,
+            "hashtags[like]": this.searchQuery,
+           }
           : {};
 
         let sortParams = {};

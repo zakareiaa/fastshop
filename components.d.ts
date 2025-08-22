@@ -74,6 +74,5 @@ declare module 'vue' {
     UserInfoEditDialog: typeof import('./src/components/dialogs/UserInfoEditDialog.vue')['default']
     UserUpgradePlanDialog: typeof import('./src/components/dialogs/UserUpgradePlanDialog.vue')['default']
     WishlistButton: typeof import('./src/components/costumComponents/WishlistButton.vue')['default']
-    WishlistProductCard: typeof import('./src/components/costumComponents/WishlistProductCard.vue')['default']
   }
 }

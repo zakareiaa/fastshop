@@ -204,6 +204,11 @@
                       :value="item"
                       label
                       class="select-item-ship"
+                      :class="{
+                        'text-decoration-line-through':
+                          item.stock_quantity === 0,
+                      }"
+                      :disabled="item.stock_quantity === 0"
                     >
                       {{ item.name }}
                       <VBadge
@@ -213,6 +218,9 @@
                         inline
                         class="ms-2"
                       />
+                      <!-- <span v-if="item.stock_quantity === 0" class="ms-2 text-error">
+                      ({{$t('product_detail.out_of_stock')}})
+                      </span> -->
                     </VChip>
                   </VChipGroup>
                 </div>
@@ -250,6 +258,18 @@
                     @click="incrementQuantity"
                   />
                 </div>
+              </div>
+
+              <!-- Stock Warning Message -->
+              <div v-if="stockWarningMessage" class="mb-4">
+                <VAlert
+                  type="warning"
+                  variant="tonal"
+                  class="text-body-2"
+                  density="compact"
+                >
+                  {{ stockWarningMessage }}
+                </VAlert>
               </div>
 
               <div
@@ -302,6 +322,44 @@
               <VDivider class="mt-3"></VDivider>
 
               <div v-html="product.description" class="mt-6"></div>
+
+              <!-- Size Chart Table -->
+              <div
+                v-if="parsedMeasurements && parsedMeasurements.length > 0"
+                class="mt-8"
+              >
+                <h3 class="text-h6 font-weight-bold mb-4">
+                  {{ $t("product_detail.size_chart") }}
+                </h3>
+
+                <VTable class="size-chart-table">
+                  <thead>
+                    <tr>
+                      <th class="text-center font-weight-bold">
+                        {{ $t("product_detail.size") }}
+                      </th>
+                      <th class="text-center font-weight-bold">
+                        {{ $t("product_detail.width") }}
+                      </th>
+                      <th class="text-center font-weight-bold">
+                        {{ $t("product_detail.length") }}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      v-for="measurement in parsedMeasurements"
+                      :key="measurement.size"
+                    >
+                      <td class="text-center font-weight-medium">
+                        {{ measurement.size }}
+                      </td>
+                      <td class="text-center">{{ measurement.width }}</td>
+                      <td class="text-center">{{ measurement.length }}</td>
+                    </tr>
+                  </tbody>
+                </VTable>
+              </div>
             </div>
           </VCol>
         </VRow>
@@ -439,6 +497,9 @@ export default {
       snackbarText: "",
       snackbarColor: "",
 
+      // Stock warning message
+      stockWarningMessage: "",
+
       // Image preview
       imagePreviewDialog: false,
       previewImageUrl: "",
@@ -480,6 +541,64 @@ export default {
       return (
         this.product.id && this.wishlistStore.isInWishlist(this.product.id)
       );
+    },
+
+    // Get the current stock quantity based on selected options
+    currentStockQuantity() {
+      if (
+        !this.product.product_options ||
+        this.product.product_options.length === 0
+      ) {
+        return null; // No stock limit if no options
+      }
+
+      let minStock = Infinity;
+      let hasValidStock = false;
+      let hasUnlimitedStock = false;
+
+      // Check stock for all selected options
+      for (const optionName in this.selectedOptions) {
+        const selectedItem = this.selectedOptions[optionName];
+        if (selectedItem) {
+          // Check if stock is unlimited (null or empty string)
+          if (
+            selectedItem.stock_quantity === null ||
+            selectedItem.stock_quantity === ""
+          ) {
+            hasUnlimitedStock = true;
+          } else {
+            const stock = parseInt(selectedItem.stock_quantity) || 0;
+            minStock = Math.min(minStock, stock);
+            hasValidStock = true;
+          }
+        }
+      }
+
+      // If any option has unlimited stock, return null (unlimited)
+      if (hasUnlimitedStock && !hasValidStock) {
+        return null;
+      }
+
+      // If we have both limited and unlimited stock, return the limited stock
+      return hasValidStock ? minStock : null;
+    },
+
+    // Parse measurements from JSON string
+    parsedMeasurements() {
+      if (!this.product.measurements) {
+        return [];
+      }
+
+      try {
+        // Check if it's already an object or a string that needs parsing
+        if (typeof this.product.measurements === "string") {
+          return JSON.parse(this.product.measurements);
+        }
+        return this.product.measurements;
+      } catch (parseError) {
+        console.warn("Failed to parse measurements:", parseError);
+        return [];
+      }
     },
   },
 
@@ -581,12 +700,31 @@ export default {
     },
 
     incrementQuantity() {
+      const stockLimit = this.currentStockQuantity;
+
+      if (stockLimit !== null && this.quantity >= stockLimit) {
+        // Show warning message when trying to exceed stock
+        this.stockWarningMessage =
+          this.$t("product.stock_limit_reached", { count: stockLimit }) +
+          ". " +
+          this.$t("product.cannot_exceed_stock");
+
+        // Auto-hide the message after 5 seconds
+        setTimeout(() => {
+          this.stockWarningMessage = "";
+        }, 10000);
+
+        return;
+      }
+
       this.quantity++;
+      this.stockWarningMessage = ""; // Clear any existing warning
     },
 
     decrementQuantity() {
       if (this.quantity > 1) {
         this.quantity--;
+        this.stockWarningMessage = ""; // Clear any existing warning
       }
     },
 
@@ -598,6 +736,39 @@ export default {
         this.selectedOptions
       );
 
+      const stockLimit = this.currentStockQuantity;
+
+      // Check current cart quantity for this product with same options
+      const existingCartQuantity = this.cartStore.getProductQuantity(
+        this.product.id,
+        this.selectedOptions
+      );
+
+      let quantityToAdd = this.quantity;
+      let warningMessage = "";
+
+      // If there's a stock limit, validate the total quantity
+      if (stockLimit !== null) {
+        const totalQuantity = existingCartQuantity + this.quantity;
+
+        if (existingCartQuantity >= stockLimit) {
+          // Already at max quantity in cart
+          this.stockWarningMessage = this.$t("product.max_quantity_in_cart");
+          setTimeout(() => {
+            this.stockWarningMessage = "";
+          }, 5000);
+          return;
+        }
+
+        if (totalQuantity > stockLimit) {
+          // Adjust quantity to what's available
+          quantityToAdd = stockLimit - existingCartQuantity;
+          warningMessage = this.$t("product.limited_quantity_added", {
+            count: quantityToAdd,
+          });
+        }
+      }
+
       // Create a deep copy of selectedOptions to avoid reference issues
       const selectedOptionsCopy = JSON.parse(
         JSON.stringify(this.selectedOptions)
@@ -606,20 +777,49 @@ export default {
       const productToAdd = {
         ...this.product,
         selectedOptions: selectedOptionsCopy,
-        quantity: this.quantity,
+        quantity: quantityToAdd,
       };
 
       this.cartStore.addItem(productToAdd);
 
-      this.showSnackbar(
-        `Added ${this.quantity} ${this.product.name} to cart`,
-        "success"
-      );
+      // Show appropriate message
+      if (warningMessage) {
+        this.stockWarningMessage = warningMessage;
+        setTimeout(() => {
+          this.stockWarningMessage = "";
+        }, 5000);
+      } else {
+        this.showSnackbar(
+          `Added ${quantityToAdd} ${this.product.name} to cart`,
+          "success"
+        );
+      }
     },
 
     proceedToCheckout() {
+      const stockLimit = this.currentStockQuantity;
+
+      // Check current cart quantity for this product with same options
+      const existingCartQuantity = this.cartStore.getProductQuantity(
+        this.product.id,
+        this.selectedOptions
+      );
+
+      // If there's a stock limit and we're already at max, don't proceed
+      if (stockLimit !== null && existingCartQuantity >= stockLimit) {
+        this.stockWarningMessage = this.$t("product.max_quantity_in_cart");
+        setTimeout(() => {
+          this.stockWarningMessage = "";
+        }, 5000);
+        return;
+      }
+
       this.addToCart();
-      this.$router.push("/checkout");
+
+      // Only navigate if no warning message (item was successfully added)
+      if (!this.stockWarningMessage) {
+        this.$router.push("/checkout");
+      }
     },
 
     toggleWishlist() {
@@ -646,6 +846,31 @@ export default {
     updateSelectedOption(optionName, selectedValue) {
       console.log("Option changed:", optionName, "→", selectedValue.name);
       this.selectedOptions[optionName] = selectedValue;
+
+      // Check if current quantity exceeds new stock limit
+      const newStockLimit = this.currentStockQuantity;
+
+      // Only validate if there's a stock limit (not unlimited)
+      if (newStockLimit !== null && this.quantity > newStockLimit) {
+        const previousQuantity = this.quantity;
+        this.quantity = Math.max(1, newStockLimit); // Set to stock limit or 1, whichever is higher
+
+        if (newStockLimit === 0) {
+          this.quantity = 1; // Keep quantity at 1 even if no stock
+          this.stockWarningMessage = this.$t("product.stock_unavailable");
+        } else if (previousQuantity > newStockLimit) {
+          this.stockWarningMessage = this.$t("product.quantity_adjusted", {
+            quantity: this.quantity,
+          });
+        }
+
+        // Auto-hide the message after 5 seconds
+        setTimeout(() => {
+          this.stockWarningMessage = "";
+        }, 5000);
+      } else {
+        this.stockWarningMessage = ""; // Clear any existing warning
+      }
     },
 
     initializeSelectedOptions() {
@@ -657,18 +882,39 @@ export default {
         this.product.product_options &&
         this.product.product_options.length > 0
       ) {
-        // Initialize with first option for each product option type
+        // Initialize with best available option for each product option type
         this.product.product_options.forEach((option) => {
           if (option.items && option.items.length > 0) {
-            // Always select the first option by default
-            newSelectedOptions[option.name] = option.items[0];
+            console.log(`Processing option: ${option.name}`, option.items);
+
+            // Find first option with available stock (stock > 0 OR unlimited stock)
+            const availableOption = option.items.find((item) => {
+              // Check if stock is unlimited (null or empty string)
+              const isUnlimited =
+                item.stock_quantity === null || item.stock_quantity === "";
+
+              // Check if stock quantity > 0
+              const stockQty = parseInt(item.stock_quantity);
+              const hasLimitedStock = !isNaN(stockQty) && stockQty > 0;
+
+              const hasStock = isUnlimited || hasLimitedStock;
+              console.log(
+                `  ${item.name}: stock_quantity=${item.stock_quantity}, isUnlimited=${isUnlimited}, hasLimitedStock=${hasLimitedStock}, hasStock=${hasStock}`
+              );
+              return hasStock;
+            });
+
+            // Select first available option or fallback to first option
+            const selected = availableOption || option.items[0];
+            console.log(`  Selected for ${option.name}:`, selected);
+            newSelectedOptions[option.name] = selected;
           }
         });
       }
 
       // Replace the entire selectedOptions object to ensure reactivity
       this.selectedOptions = newSelectedOptions;
-      console.log("Options initialized:", Object.keys(this.selectedOptions));
+      console.log("Final options initialized:", this.selectedOptions);
     },
   },
 
@@ -946,5 +1192,43 @@ td {
   justify-content: center;
   border-radius: 16px;
   min-inline-size: 60px;
+}
+
+.size-chart-table {
+  border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+  border-radius: 0;
+
+  th {
+    background-color: rgba(var(--v-theme-surface), 0.8);
+    border-block-end: 1px solid
+      rgba(var(--v-border-color), var(--v-border-opacity));
+    font-size: 0.875rem;
+    padding-block: 12px;
+    padding-inline: 16px;
+  }
+
+  td {
+    border-block-end: 1px solid
+      rgba(var(--v-border-color), var(--v-border-opacity));
+    font-size: 0.875rem;
+    padding-block: 12px;
+    padding-inline: 16px;
+  }
+
+  tr:last-child td {
+    border-block-end: none;
+  }
+}
+
+// Responsive adjustments for the table
+@media (max-width: 600px) {
+  .size-chart-table {
+    th,
+    td {
+      font-size: 0.8rem;
+      padding-block: 8px;
+      padding-inline: 12px;
+    }
+  }
 }
 </style>

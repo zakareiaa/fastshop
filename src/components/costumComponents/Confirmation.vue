@@ -220,6 +220,20 @@
                 }}</span>
               </div>
 
+              <!-- Coupon discount -->
+              <div
+                v-if="couponDiscount > 0"
+                class="d-flex justify-space-between"
+              >
+                <span class="text-success"
+                  >{{ $t("cart.discount") }}
+                  <span v-if="couponCode">({{ couponCode }})</span>
+                </span>
+                <span class="text-success font-weight-bold">
+                  -{{ formatPrice(couponDiscount) }}
+                </span>
+              </div>
+
               <div class="d-flex justify-space-between">
                 <span class="text-medium-emphasis">{{
                   $t("confirmation.shipping")
@@ -265,13 +279,31 @@
       {{ $t("confirmation.loading_confirmation") }}
     </p>
   </VCard>
+
+  <VSnackbar
+    v-model="isSnackbarVisible"
+    transition="scroll-y-reverse-transition"
+    location="top end"
+    :timeout="3000"
+    :color="snackbarColor"
+  >
+    <span style="color: rgb(var(--v-theme-on-primary))">
+      {{ snackbarText }}
+    </span>
+
+    <template #actions>
+      <VBtn
+        color="rgb(var(--v-theme-on-primary))"
+        @click="isSnackbarVisible = false"
+      >
+        {{ $t("common.close") }}
+      </VBtn>
+    </template>
+  </VSnackbar>
 </template>
 
 <script>
 import moment from "moment";
-
-import communes from "@/assets/data/commune.json";
-import wilayas from "@/assets/data/wilayas.json";
 
 export default {
   name: "OrderConfirmation",
@@ -279,6 +311,14 @@ export default {
   setup() {
     return {
       moment,
+    };
+  },
+
+  data() {
+    return {
+      isSnackbarVisible: false,
+      snackbarText: "",
+      snackbarColor: "success",
     };
   },
 
@@ -291,24 +331,27 @@ export default {
       type: Array,
       default: () => [],
     },
-  },
-
-  mounted() {
-    // console.log('OrderSummary in Confirmation:', this.orderSummary);
-    // console.log('OrderItems in Confirmation:', this.orderItems);
+    wilayas: {
+      type: Array,
+      default: () => [],
+    },
+    communes: {
+      type: Array,
+      default: () => [],
+    },
   },
 
   computed: {
     wilaya() {
       if (!this.orderSummary?.address?.wilaya_id) return "";
-      const wilaya = wilayas.find(
+      const wilaya = this.wilayas.find(
         (w) => w.id === this.orderSummary.address.wilaya_id
       );
       return wilaya?.name || "";
     },
     commune() {
       if (!this.orderSummary?.address?.commune_id) return "";
-      const commune = communes.find(
+      const commune = this.communes.find(
         (c) => c.id === this.orderSummary.address.commune_id
       );
       return commune?.name || "";
@@ -361,18 +404,35 @@ export default {
     },
 
     shippingCost() {
-      // Try to get shipping cost from the API response first, fallback to other methods
+      // Get shipping cost from the API response
+      return this.orderSummary?.amounts?.shipping_amount || 0;
+    },
+
+    // Coupon related computed properties
+    couponDiscount() {
       return (
-        this.orderSummary?.amounts?.shipping_amount ||
-        this.orderSummary?.shipping_method?.price ||
-        this.orderSummary?.shipping_fee ||
+        this.orderSummary?.amounts?.coupon_discount ||
+        this.orderSummary?.coupon?.discount_amount ||
         0
       );
     },
 
+    couponCode() {
+      return this.orderSummary?.coupon?.coupon_code || "";
+    },
+
     grandTotal() {
+      // Use backend's calculated total if available, otherwise calculate manually
+      if (this.orderSummary?.amounts?.total_amount) {
+        return parseFloat(this.orderSummary.amounts.total_amount);
+      }
+
+      // Fallback calculation
       const total =
-        this.subtotalCost + this.totalOptionsPrice + Number(this.shippingCost);
+        this.subtotalCost +
+        this.totalOptionsPrice +
+        Number(this.shippingCost) -
+        this.couponDiscount;
       console.log(
         "Debug - Subtotal:",
         this.subtotalCost,
@@ -380,6 +440,8 @@ export default {
         this.totalOptionsPrice,
         "Shipping:",
         this.shippingCost,
+        "Discount:",
+        this.couponDiscount,
         "Total:",
         total
       );
@@ -390,6 +452,12 @@ export default {
   },
 
   methods: {
+    showSnackbar(message, color = "success") {
+      this.snackbarText = message;
+      this.snackbarColor = color;
+      this.isSnackbarVisible = true;
+    },
+
     formatPrice(price) {
       // Ensure price is a number and handle potential issues
       const numPrice = parseFloat(price) || 0;

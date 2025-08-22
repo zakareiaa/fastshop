@@ -11,7 +11,7 @@
           :touch="false"
         >
           <VWindowItem>
-            <VRow v-if="checkoutCartDataLocal" class="pa-0 pa-sm-4">
+            <VRow class="pa-0 pa-sm-4">
               <VCol cols="12" :lg="cartItems.length > 0 ? 8 : 12">
                 <!-- <h5 class="text-h5 my-4">
                   My Shopping Bag ({{ checkoutCartDataLocal.cartItems.length }}
@@ -124,6 +124,7 @@
                                 incrementQuantity(item.id, item.selectedOptions)
                               "
                             />
+                            <!-- :disabled="isIncrementDisabled(item)" -->
                           </div>
                         </div>
 
@@ -165,8 +166,20 @@
                   </template>
                 </div>
 
+                <!-- Stock Warning Message -->
+                <div v-if="stockWarningMessage" class="mt-4">
+                  <VAlert
+                    type="warning"
+                    variant="tonal"
+                    class="text-body-2"
+                    density="compact"
+                  >
+                    {{ stockWarningMessage }}
+                  </VAlert>
+                </div>
+
                 <!-- 👉 Empty Cart -->
-                <div v-else class="text-center py-6">
+                <div v-if="cartItems.length === 0" class="text-center py-6">
                   <VIcon
                     icon="tabler-shopping-cart-off"
                     size="64"
@@ -240,6 +253,21 @@
                         }}</span>
                       </div>
 
+                      <!-- Coupon discount -->
+                      <!-- <div
+                        v-if="appliedCoupon"
+                        class="d-flex justify-space-between mb-2"
+                      >
+                        <span class="text-success"
+                          >{{ $t("cart.discount") }} ({{
+                            appliedCoupon.code
+                          }})</span
+                        >
+                        <span class="text-success font-weight-bold">
+                          -{{ formatPrice(couponDiscount) }}
+                        </span>
+                      </div> -->
+
                       <div class="d-flex justify-space-between mb-2">
                         <span>{{ $t("cart.delivery_charges") }}</span>
 
@@ -252,6 +280,70 @@
                         </div>
                       </div>
                     </div>
+
+                    <!-- Coupon Code Input -->
+                    <!-- <div v-if="!appliedCoupon" class="mt-4">
+                      <VTextField
+                        v-model="couponCode"
+                        :label="$t('cart.coupon_code')"
+                        :placeholder="$t('cart.enter_coupon_code')"
+                        class="b-radius-0"
+                        :error-messages="couponError"
+                        :loading="couponValidationLoading"
+                        :disabled="couponValidationLoading"
+                        @keyup.enter="validateCoupon"
+                      >
+                        <template #append-inner>
+                          <VBtn
+                            size="small"
+                            variant="text"
+                            @click="validateCoupon"
+                            :loading="couponValidationLoading"
+                            :disabled="
+                              !couponCode.trim() || couponValidationLoading
+                            "
+                          >
+                            {{ $t("cart.apply") }}
+                          </VBtn>
+                        </template>
+                      </VTextField>
+                    </div> -->
+
+                    <!-- Applied Coupon Display -->
+                    <!-- <div v-else class="mt-4">
+                      <div class="coupon-applied-card pa-3 b-radius-0 border">
+                        <div class="d-flex align-center justify-space-between">
+                          <div class="d-flex align-center">
+                            <VIcon
+                              icon="tabler-tag"
+                              color="success"
+                              size="20"
+                              class="me-2"
+                            />
+                            <div>
+                              <div
+                                class="text-success font-weight-bold text-body-2"
+                              >
+                                {{ appliedCoupon.code }}
+                              </div>
+                              <div
+                                class="text-caption text-medium-emphasis"
+                                v-if="appliedCoupon.description"
+                              >
+                                {{ appliedCoupon.description }}
+                              </div>
+                            </div>
+                          </div>
+                          <VBtn
+                            icon="tabler-x"
+                            size="x-small"
+                            variant="text"
+                            color="medium-emphasis"
+                            @click="removeCoupon"
+                          />
+                        </div>
+                      </div>
+                    </div> -->
                   </VCardText>
 
                   <VDivider />
@@ -262,8 +354,8 @@
                     <h6 class="text-h6 font-weight-bold">
                       {{
                         shippingPrice
-                          ? formatPrice(totalCost + shippingPrice)
-                          : formatPrice(totalCost)
+                          ? formatPrice(finalTotal)
+                          : formatPrice(totalAfterDiscount)
                       }}
                     </h6>
                   </VCardText>
@@ -325,6 +417,8 @@
                           :items="wilayas"
                           item-title="name"
                           item-value="id"
+                          :loading="getWilayasLoading"
+                          :disabled="getWilayasLoading"
                           :placeholder="$t('checkout.wilaya_placeholder')"
                           :rules="[requiredValidator]"
                         />
@@ -342,6 +436,9 @@
                           :no-data-text="
                             $t('checkout.select_wilaya_first_commune')
                           "
+                          :loading="getCommunesLoading"
+                          :disabled="getCommunesLoading"
+                          :rules="[requiredValidator]"
                         />
                       </VCol>
 
@@ -366,6 +463,7 @@
                           {{ $t("checkout.pickup_not_available_message") }}
                         </VAlert>
 
+                        <!-- 
                         <VAlert
                           v-if="
                             isDeliveryOfficeAvailable == 'false' &&
@@ -383,7 +481,7 @@
                               "checkout.office_not_available_in_your_commune_message"
                             )
                           }}
-                        </VAlert>
+                        </VAlert> -->
                       </VCol>
 
                       <VCol cols="12" v-if="selectedCheckbox.includes('home')">
@@ -392,7 +490,6 @@
                           v-model="address"
                           :label="$t('checkout.detailed_address')"
                           :placeholder="$t('checkout.address_placeholder')"
-                          :rules="[requiredValidator]"
                         />
                       </VCol>
 
@@ -458,6 +555,21 @@
                         }}</span>
                       </div>
 
+                      <!-- Coupon discount -->
+                      <div
+                        v-if="appliedCoupon"
+                        class="d-flex justify-space-between mb-2"
+                      >
+                        <span class="text-success"
+                          >{{ $t("cart.discount") }} ({{
+                            appliedCoupon.code
+                          }})</span
+                        >
+                        <span class="text-success font-weight-bold">
+                          - DZD {{ formatPrice(couponDiscount) }}
+                        </span>
+                      </div>
+
                       <div class="d-flex justify-space-between mb-2">
                         <span>{{ $t("cart.delivery_charges") }}</span>
 
@@ -470,6 +582,70 @@
                         </div>
                       </div>
                     </div>
+
+                    <!-- Coupon Code Input -->
+                    <div v-if="!appliedCoupon" class="mt-4">
+                      <VTextField
+                        v-model="couponCode"
+                        :label="$t('cart.coupon_code')"
+                        :placeholder="$t('cart.enter_coupon_code')"
+                        class="b-radius-0"
+                        :error-messages="couponError"
+                        :loading="couponValidationLoading"
+                        :disabled="couponValidationLoading"
+                        @keyup.enter="validateCoupon"
+                      >
+                        <template #append-inner>
+                          <VBtn
+                            size="small"
+                            variant="text"
+                            @click="validateCoupon"
+                            :loading="couponValidationLoading"
+                            :disabled="
+                              !couponCode.trim() || couponValidationLoading
+                            "
+                          >
+                            {{ $t("cart.apply") }}
+                          </VBtn>
+                        </template>
+                      </VTextField>
+                    </div>
+
+                    <!-- Applied Coupon Display -->
+                    <div v-else class="mt-4">
+                      <div class="coupon-applied-card pa-3 b-radius-0 border">
+                        <div class="d-flex align-center justify-space-between">
+                          <div class="d-flex align-center">
+                            <VIcon
+                              icon="tabler-ticket"
+                              color="success"
+                              size="20"
+                              class="me-2"
+                            />
+                            <div>
+                              <div
+                                class="text-success font-weight-bold text-body-2"
+                              >
+                                {{ appliedCoupon.code }}
+                              </div>
+                              <div
+                                class="text-caption text-medium-emphasis"
+                                v-if="appliedCoupon.description"
+                              >
+                                {{ appliedCoupon.description }}
+                              </div>
+                            </div>
+                          </div>
+                          <VBtn
+                            icon="tabler-x"
+                            size="x-small"
+                            variant="text"
+                            color="medium-emphasis"
+                            @click="removeCoupon"
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </VCardText>
 
                   <VDivider />
@@ -478,7 +654,7 @@
                   <VCardText class="d-flex justify-space-between pa-3 pa-sm-5">
                     <h6 class="text-h6">{{ $t("cart.total") }}</h6>
                     <h6 class="text-h6 font-weight-bold">
-                      {{ formatPrice(totalCost + shippingPrice) }}
+                      {{ formatPrice(finalTotal) }}
                     </h6>
                   </VCardText>
 
@@ -506,6 +682,8 @@
               <Confirmation
                 :order-summary="orderSummary"
                 :order-items="orderItems"
+                :wilayas="wilayas"
+                :communes="communes"
               />
             </div>
             <div v-else class="text-center py-8">
@@ -560,9 +738,6 @@ import {
   createRequiredValidator,
 } from "@/@core/utils/validators";
 
-import communes from "@/assets/data/commune.json";
-import wilayas from "@/assets/data/wilayas.json";
-
 export default {
   name: "CheckoutPage",
 
@@ -589,6 +764,12 @@ export default {
       address: null,
       note: null,
 
+      wilayas: [],
+      getWilayasLoading: false,
+
+      communes: [],
+      getCommunesLoading: true,
+
       checkboxContent: [
         {
           title: this.$t("checkout.pickup_option_title"),
@@ -610,11 +791,20 @@ export default {
       cartStore: null,
       wishlistStore: null,
 
+      // Coupon code data
+      couponCode: "",
+      appliedCoupon: null,
+      couponValidationLoading: false,
+      couponError: "",
+
       confirmOrderLoading: false,
 
       isSnackbarVisible: false,
       snackbarText: "",
       snackbarColor: "",
+
+      // Stock warning message
+      stockWarningMessage: "",
 
       orderItems: null,
       orderSummary: null,
@@ -629,19 +819,19 @@ export default {
     },
 
     // Check if selected commune has delivery office
-    isDeliveryOfficeAvailable() {
-      if (!this.commune || !this.communesByWilaya.length) return null;
+    // isDeliveryOfficeAvailable() {
+    //   if (!this.commune || !this.communesByWilaya.length) return null;
 
-      const selectedCommune = this.communesByWilaya.find(
-        (c) => c.id === this.commune
-      );
+    //   const selectedCommune = this.communesByWilaya.find(
+    //     (c) => c.id === this.commune
+    //   );
 
-      if (!selectedCommune) return null;
+    //   if (!selectedCommune) return null;
 
-      console.log(selectedCommune.have_delivery_office);
+    //   console.log(selectedCommune.have_delivery_office);
 
-      return selectedCommune.have_delivery_office;
-    },
+    //   return selectedCommune.have_delivery_office;
+    // },
 
     // Translated validators
     requiredValidator() {
@@ -700,12 +890,32 @@ export default {
     shippingPrice() {
       if (!this.wilaya || !this.selectedCheckbox) return 0;
 
-      const selectedWilaya = wilayas.find((w) => w.id === this.wilaya);
+      const selectedWilaya = this.wilayas.find((w) => w.id === this.wilaya);
       if (!selectedWilaya) return 0;
 
-      return selectedWilaya.shipping_price[
-        this.selectedCheckbox[0] === "pickup" ? "pickup" : "home"
-      ];
+      // Check if commune is selected and has shipping prices
+      const selectedCommune = this.selectedCommune;
+      const shippingMethod = this.selectedCheckbox[0];
+
+      // Prioritize commune shipping price if it exists (not null)
+      if (selectedCommune) {
+        if (shippingMethod === "pickup") {
+          // Use commune pickup price if available, otherwise fall back to wilaya
+          return selectedCommune.pickup_shipping_price !== null
+            ? selectedCommune.pickup_shipping_price
+            : selectedWilaya.pickup_shipping_price;
+        } else {
+          // Use commune home price if available, otherwise fall back to wilaya
+          return selectedCommune.home_shipping_price !== null
+            ? selectedCommune.home_shipping_price
+            : selectedWilaya.home_shipping_price;
+        }
+      }
+
+      // Fallback to wilaya prices if no commune selected or commune doesn't have prices
+      return shippingMethod === "pickup"
+        ? selectedWilaya.pickup_shipping_price
+        : selectedWilaya.home_shipping_price;
     },
 
     totalWithShipping() {
@@ -715,17 +925,76 @@ export default {
     // Add selectedWilaya computed property
     selectedWilaya() {
       if (!this.wilaya) return null;
-      return wilayas.find((w) => w.id === this.wilaya);
+      return this.wilayas.find((w) => w.id === this.wilaya);
+    },
+
+    // Add selectedCommune computed property
+    selectedCommune() {
+      if (!this.commune || !this.communesByWilaya.length) return null;
+      return this.communesByWilaya.find((c) => c.id === this.commune);
     },
 
     // Add isPickupAvailable computed property
     isPickupAvailable() {
       if (!this.selectedWilaya) return null;
-      return this.selectedWilaya.shipping_price.pickup !== null;
+
+      // If commune is selected and has pickup price, use that
+      const selectedCommune = this.selectedCommune;
+      if (selectedCommune && selectedCommune.pickup_shipping_price !== null) {
+        return true;
+      }
+
+      // Otherwise, check wilaya pickup availability
+      return this.selectedWilaya.pickup_shipping_price !== null;
+    },
+
+    // Coupon discount calculations
+    couponDiscount() {
+      if (!this.appliedCoupon) return 0;
+      return this.appliedCoupon.discount_amount || 0;
+    },
+
+    totalAfterDiscount() {
+      return this.totalCost - this.couponDiscount;
+    },
+
+    finalTotal() {
+      return this.totalAfterDiscount + this.shippingPrice;
     },
   },
 
+  mounted() {
+    this.getWilayas();
+    this.getCommunes();
+  },
+
   methods: {
+    async getWilayas() {
+      try {
+        this.getWilayasLoading = true;
+        const response = await axios.get(`${this.api_url}/wilayas`);
+        this.wilayas = response.data.data || [];
+      } catch (error) {
+        console.error("Failed to fetch wilayas:", error);
+        this.showSnackbar(this.$t("checkout.failed_to_load_wilayas"), "error");
+      } finally {
+        this.getWilayasLoading = false;
+      }
+    },
+
+    async getCommunes() {
+      try {
+        this.getCommunesLoading = true;
+        const response = await axios.get(`${this.api_url}/communes`);
+        this.communes = response.data.data || [];
+      } catch (error) {
+        console.error("Failed to fetch communes:", error);
+        this.showSnackbar(this.$t("checkout.failed_to_load_communes"), "error");
+      } finally {
+        this.getCommunesLoading = false;
+      }
+    },
+
     async confirmOrder() {
       const validate = await this.$refs.confirmOrderForm.validate();
 
@@ -740,7 +1009,8 @@ export default {
           address: this.address,
           shipping_method: this.selectedCheckbox[0],
           notes: this.note,
-          shipping_amount: this.shippingPrice,
+          // shipping_amount: this.shippingPrice,
+          coupon_code: this.appliedCoupon ? this.appliedCoupon.code : null,
           items: this.cartItems.map((item) => ({
             product_id: item.id,
             quantity: item.quantity,
@@ -792,6 +1062,11 @@ export default {
         } finally {
           this.confirmOrderLoading = false;
         }
+      } else {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
       }
     },
 
@@ -799,6 +1074,46 @@ export default {
       this.snackbarText = text;
       this.snackbarColor = color;
       this.isSnackbarVisible = true;
+    },
+
+    async validateCoupon() {
+      if (!this.couponCode.trim()) return;
+
+      try {
+        this.couponValidationLoading = true;
+        this.couponError = "";
+
+        const response = await axios.post(
+          `${this.api_url}/coupon-codes/validate`,
+          {
+            code: this.couponCode.trim(),
+            order_amount: this.totalCost,
+          }
+        );
+
+        if (response.data.valid) {
+          this.appliedCoupon = response.data.coupon;
+          this.couponCode = "";
+          this.showSnackbar(
+            this.$t("cart.coupon_applied_successfully"),
+            "success"
+          );
+        }
+      } catch (error) {
+        console.error("Coupon validation error:", error);
+        this.couponError =
+          error.response?.data?.message || this.$t("cart.invalid_coupon_code");
+        this.appliedCoupon = null;
+      } finally {
+        this.couponValidationLoading = false;
+      }
+    },
+
+    removeCoupon() {
+      this.appliedCoupon = null;
+      this.couponCode = "";
+      this.couponError = "";
+      this.showSnackbar(this.$t("cart.coupon_removed"), "info");
     },
 
     triggerConfetti() {
@@ -860,11 +1175,89 @@ export default {
     },
 
     incrementQuantity(productId, selectedOptions = {}) {
+      // Find the cart item
+      const cartItem = this.cartItems.find(
+        (item) =>
+          item.id === productId &&
+          JSON.stringify(item.selectedOptions) ===
+            JSON.stringify(selectedOptions)
+      );
+
+      if (!cartItem) return;
+
+      // Get current stock limit for this item
+      const stockLimit = this.getItemStockLimit(cartItem);
+
+      // Check if we can increment
+      if (stockLimit !== null && cartItem.quantity >= stockLimit) {
+        // Show warning message when trying to exceed stock
+        this.stockWarningMessage =
+          this.$t("product.stock_limit_reached", { count: stockLimit }) +
+          ". " +
+          this.$t("product.cannot_exceed_stock");
+
+        // Auto-hide the message after 10 seconds
+        setTimeout(() => {
+          this.stockWarningMessage = "";
+        }, 10000);
+
+        return;
+      }
+
+      // Clear any existing warning and increment
+      this.stockWarningMessage = "";
       this.cartStore.incrementQuantity(productId, selectedOptions);
     },
 
     decrementQuantity(productId, selectedOptions = {}) {
+      this.stockWarningMessage = ""; // Clear any existing warning
       this.cartStore.decrementQuantity(productId, selectedOptions);
+    },
+
+    // Check if increment button should be disabled for an item
+    isIncrementDisabled(item) {
+      const stockLimit = this.getItemStockLimit(item);
+      return stockLimit !== null && item.quantity >= stockLimit;
+    },
+
+    // Get the stock limit for a cart item based on its selected options
+    getItemStockLimit(item) {
+      // If no product options, no stock limit
+      if (!item.product_options || item.product_options.length === 0) {
+        return null;
+      }
+
+      let minStock = Infinity;
+      let hasValidStock = false;
+      let hasUnlimitedStock = false;
+
+      // Check stock for all selected options in this item
+      if (item.selectedOptions) {
+        for (const optionName in item.selectedOptions) {
+          const selectedOption = item.selectedOptions[optionName];
+          if (selectedOption) {
+            // Check if stock is unlimited (null or empty string)
+            if (
+              selectedOption.stock_quantity === null ||
+              selectedOption.stock_quantity === ""
+            ) {
+              hasUnlimitedStock = true;
+            } else {
+              const stock = parseInt(selectedOption.stock_quantity) || 0;
+              minStock = Math.min(minStock, stock);
+              hasValidStock = true;
+            }
+          }
+        }
+      }
+
+      // If any option has unlimited stock, return null (unlimited)
+      if (hasUnlimitedStock && !hasValidStock) {
+        return null;
+      }
+
+      // If we have both limited and unlimited stock, return the limited stock
+      return hasValidStock ? minStock : null;
     },
 
     formatPrice(price) {
@@ -908,11 +1301,11 @@ export default {
   watch: {
     wilaya() {
       this.commune = null;
-      this.communesByWilaya = communes.filter(
-        (commune) => commune.wilaya_id === this.wilaya
+      this.communesByWilaya = this.communes.filter(
+        (commune) => commune?.wilaya_id === this.wilaya
       );
-      const wilaya = wilayas.find((w) => w.id === this.wilaya);
-      if (wilaya.shipping_price.pickup === null) {
+      const wilaya = this.wilayas.find((w) => w.id === this.wilaya);
+      if (wilaya.pickup_shipping_price === null) {
         this.selectedCheckbox = ["home"];
       }
     },
@@ -996,5 +1389,15 @@ definePage({
 
 .v-label.custom-input {
   border-radius: 0 !important;
+}
+
+.coupon-applied-card {
+  border: 1px solid rgba(var(--v-theme-success), 0.3) !important;
+  background: rgba(var(--v-theme-success), 0.08);
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(var(--v-theme-success), 0.12);
+  }
 }
 </style>

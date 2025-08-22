@@ -41,7 +41,13 @@
     "description": "Description",
     "specifications": "Spécifications",
     "reviews": "Avis",
-    "no_description": "Aucune description disponible"
+    "no_description": "Aucune description disponible",
+    "stock_limit_reached": "Seulement {count} article disponible | Seulement {count} articles disponibles",
+    "stock_unavailable": "Cette combinaison n'est pas en stock.",
+    "quantity_adjusted": "Quantité ajustée à {quantity} en raison de la disponibilité du stock.",
+    "cannot_exceed_stock": "Vous ne pouvez pas ajouter plus que le stock disponible.",
+    "limited_quantity_added": "Seulement {count} article a été ajouté à votre panier en raison de la disponibilité. | Seulement {count} articles ont été ajoutés à votre panier en raison de la disponibilité.",
+    "max_quantity_in_cart": "La quantité maximale de cet article est déjà dans votre panier."
   },
   "cart": {
     "my_cart": "Mon panier",
@@ -59,7 +65,14 @@
     "delivery_charges": "Frais de livraison",
     "total": "Total",
     "continue": "Continuer",
-    "add_from_wishlist": "Ajouter des produits de la liste de souhaits"
+    "add_from_wishlist": "Ajouter des produits de la liste de souhaits",
+    "discount": "Remise",
+    "coupon_code": "Code promo",
+    "enter_coupon_code": "Entrer le code promo",
+    "apply": "Appliquer",
+    "coupon_applied_successfully": "Code promo appliqué avec succès!",
+    "coupon_removed": "Code promo supprimé",
+    "invalid_coupon_code": "Code promo invalide"
   },
   "checkout": {
     "delivery_address": "Adresse de livraison",
@@ -72,7 +85,7 @@
     "commune": "Commune",
     "commune_placeholder": "Sélectionner la commune",
     "select_wilaya_first_commune": "Veuillez d'abord sélectionner une Wilaya pour voir les Communes.",
-    "detailed_address": "Adresse détaillée",
+    "detailed_address": "Adresse détaillée (Optionnel)",
     "address_placeholder": "123 Rue Principale",
     "email_optional": "E-mail (Optionnel)",
     "email_placeholder": "jeanexample.com",
@@ -86,7 +99,9 @@
     "home_option_desc": "Faites livrer votre commande directement chez vous.",
     "order_summary": "Résumé de la commande",
     "confirm_order": "Confirmer la commande",
-    "select_wilaya_first": "Sélectionnez votre wilaya"
+    "select_wilaya_first": "Sélectionnez votre wilaya",
+    "failed_to_load_wilayas": "Échec du chargement des wilayas. Veuillez réessayer.",
+    "failed_to_load_communes": "Échec du chargement des communes. Veuillez réessayer."
   },
   "confirmation": {
     "thank_you": "Merci ! 😇",
@@ -315,6 +330,10 @@
     "product_added_to_wishlist": "Produit ajouté aux favoris !",
     "product_removed_from_wishlist": "Produit retiré des favoris !",
     "link_copied": "Lien du produit copié dans le presse-papiers !",
+    "size_chart": "Guide des Tailles",
+    "size": "Taille",
+    "width": "Largeur",
+    "length": "Longueur",
     "failed_to_load": "Échec du chargement du produit",
     "failed_to_add_cart": "Échec de l'ajout du produit au panier",
     "failed_to_add_wishlist": "Échec de l'ajout du produit aux favoris"

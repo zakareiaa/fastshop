@@ -38,7 +38,13 @@
         "description": "Description",
         "specifications": "Specifications",
         "reviews": "Reviews",
-        "no_description": "No description available"
+        "no_description": "No description available",
+        "stock_limit_reached": "Only {count} item available | Only {count} items available",
+        "stock_unavailable": "This combination is out of stock.",
+        "quantity_adjusted": "Quantity adjusted to {quantity} due to stock availability.",
+        "cannot_exceed_stock": "You cannot add more than the available stock.",
+        "limited_quantity_added": "Only {count} item was added to your cart due to availability. | Only {count} items were added to your cart due to availability.",
+        "max_quantity_in_cart": "The maximum quantity of this item is already in your cart."
     },
     "cart": {
         "my_cart": "My Cart",
@@ -56,7 +62,14 @@
         "delivery_charges": "Delivery Charges",
         "total": "Total",
         "continue": "Continue",
-        "add_from_wishlist": "Add products from wishlist"
+        "add_from_wishlist": "Add products from wishlist",
+        "discount": "Discount",
+        "coupon_code": "Coupon Code",
+        "enter_coupon_code": "Enter coupon code",
+        "apply": "Apply",
+        "coupon_applied_successfully": "Coupon applied successfully!",
+        "coupon_removed": "Coupon removed",
+        "invalid_coupon_code": "Invalid coupon code"
     },
     "checkout": {
         "delivery_address": "Delivery Address",
@@ -69,7 +82,7 @@
         "commune": "Commune",
         "commune_placeholder": "Select Commune",
         "select_wilaya_first_commune": "Please select a Wilaya first to see Communes.",
-        "detailed_address": "Detailed Address",
+        "detailed_address": "Detailed Address (Optional)",
         "address_placeholder": "123 Main Street",
         "email_optional": "Email (Optional)",
         "email_placeholder": "johnexample.com",
@@ -83,7 +96,9 @@
         "office_not_available_in_your_commune_message": "Delivery office is not available in your selected commune.",
         "order_summary": "Order Summary",
         "confirm_order": "Confirm Order",
-        "select_wilaya_first": "Select your wilaya"
+        "select_wilaya_first": "Select your wilaya",
+        "failed_to_load_wilayas": "Failed to load wilayas. Please try again.",
+        "failed_to_load_communes": "Failed to load communes. Please try again."
     },
     "confirmation": {
         "thank_you": "Thank You! 😇",
@@ -272,6 +287,10 @@
         "product_added_to_wishlist": "Product added to wishlist!",
         "product_removed_from_wishlist": "Product removed from wishlist!",
         "link_copied": "Product link copied to clipboard!",
+        "size_chart": "Size Chart",
+        "size": "Size",
+        "width": "Width",
+        "length": "Length",
         "failed_to_load": "Failed to load product",
         "failed_to_add_cart": "Failed to add product to cart",
         "failed_to_add_wishlist": "Failed to add product to wishlist"

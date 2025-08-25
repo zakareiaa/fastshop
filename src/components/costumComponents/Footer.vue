@@ -170,7 +170,7 @@
           <VCol cols="12" md="6" class="d-flex align-center justify-center">
             <div class="qa-image-container">
               <img
-                src="/src/assets/images/thumbnails2.webp"
+                src="/src/assets/images/thumbnails2.jpg"
                 alt="Questions & Answers"
                 class="qa-image"
                 style="block-size: auto; max-inline-size: 100%"
@@ -192,7 +192,7 @@
   >
     <div class="app-container">
       <VRow class="py-12">
-        <!-- 👉 Modiasn -->
+        <!-- 👉 FASTSHOP -->
         <VCol cols="12" md="4">
           <div class="text-center text-sm-start">
             <h3
@@ -203,7 +203,7 @@
                   : '',
               }"
             >
-              MODIASN
+              FASTSHOP
             </h3>
             <p
               class="text-body-1"
@@ -239,9 +239,9 @@
                   : '',
               }"
             >
-              0675131178 | 0669999143
+              0562815787
             </p>
-            <p
+            <!-- <p
               class="text-body-1"
               :style="{
                 color: !$vuetify.theme.current.dark
@@ -249,26 +249,62 @@
                   : '',
               }"
             >
-              officialmodiasn@gmail.com
-            </p>
+              Fastshop1097@gmail.com
+            </p> -->
             <div class="d-flex gap-x-2 justify-center justify-sm-start">
               <VBtn
                 icon="tabler-phone"
                 variant="text"
-                :color="!$vuetify.theme.current.dark ? '#ffffff' : '#4CAF50'"
-                @click="callNumber('tel:0669999143')"
+                color="#4CAF50"
+                @click="callNumber('tel:+213562815787')"
               />
               <VBtn
                 icon="tabler-brand-instagram"
                 variant="text"
-                :color="!$vuetify.theme.current.dark ? '#ffffff' : '#E4405F'"
-                @click="openLink('https://www.instagram.com/modiasn/')"
+                color="#E4405F"
+                @click="openLink('https://www.instagram.com/fast_.shop1/')"
               />
               <VBtn
                 icon="tabler-brand-tiktok"
                 variant="text"
-                :color="!$vuetify.theme.current.dark ? '#ffffff' : '#FFFFFF'"
-                @click="openLink('https://www.tiktok.com/@modiasn')"
+                color="#FFFFFF"
+                @click="openLink('https://www.tiktok.com/@fast_.shop01')"
+              />
+              <VBtn
+                icon="tabler-brand-telegram"
+                variant="text"
+                color="#0088CC"
+                @click="openLink('https://t.me/fastshop00')"
+              />
+            </div>
+            <div class="d-flex gap-x-2 justify-center justify-sm-start">
+              <VBtn
+                icon="tabler-brand-facebook"
+                variant="text"
+                color="#1877F2"
+                @click="
+                  openLink(
+                    'https://www.facebook.com/profile.php?id=61575564910912&mibextid=wwXIfr&rdid=vnjuX0rA9Oc3ucAw&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1JGB6fo5cx%2F%3Fmibextid%3DwwXIfr#'
+                  )
+                "
+              />
+              <VBtn
+                icon="tabler-brand-snapchat"
+                variant="text"
+                color="#FFFC00"
+                @click="openLink('https://www.snapchat.com/add/fast.shop1')"
+              />
+              <VBtn
+                icon="tabler-brand-youtube"
+                variant="text"
+                color="#FF0000"
+                @click="openLink('https://www.youtube.com/@FASTSHOP-3')"
+              />
+              <VBtn
+                icon="tabler-brand-whatsapp"
+                variant="text"
+                color="#25D366"
+                @click="openLink('https://wa.me/213562815787')"
               />
             </div>
           </div>
@@ -357,21 +393,14 @@
                 Zakaria Djeddai</a
               >
             </p>
-            <p>
-              <a
-                href="https://zakariadjeddai.com/portfolio"
-                target="_blank"
-                class="text-body-1 text-decoration-none"
-                :style="{
-                  color: !$vuetify.theme.current.dark
-                    ? 'rgba(var(--v-theme-background), var(--v-medium-emphasis-opacity)) !important'
-                    : '',
-                }"
-              >
-                {{ $t("footer.see_my_work") }} →
-              </a>
-            </p>
             <div class="d-flex gap-x-2 justify-center justify-sm-start">
+              <VBtn
+                icon="tabler-briefcase"
+                variant="text"
+                :color="!$vuetify.theme.current.dark ? '#ffffff' : '#1976D2'"
+                @click="openLink('https://zakariadjeddai.com/portfolio')"
+                :title="$t('footer.see_my_work')"
+              />
               <VBtn
                 icon="tabler-phone"
                 variant="text"
@@ -409,18 +438,19 @@
               : '',
           }"
         >
-          &copy; {{ new Date().getFullYear() }}, Modiasn
+          &copy; {{ new Date().getFullYear() }}, FASTSHOP
         </span>
         <div
-        @click="$router.push('/refund-policy')"
+          @click="$router.push('/refund-policy')"
           class="text-body-2 cursor-pointer"
           :style="{
             color: !$vuetify.theme.current.dark
               ? 'rgba(var(--v-theme-background), var(--v-medium-emphasis-opacity)) !important'
               : '',
           }"
-          >{{ $t("footer.returns_policy") }}</div
         >
+          {{ $t("footer.returns_policy") }}
+        </div>
       </div>
     </div>
   </div>

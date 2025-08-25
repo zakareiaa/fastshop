@@ -43,7 +43,7 @@
       >
         <img
           class="headerLogo"
-          src="@/assets/images/logo-light.avif"
+          src="@/assets/images/logo-light.png"
           alt="Logo"
           :style="$vuetify.theme.current.dark ? 'filter: invert(1);' : ''"
         />
@@ -315,7 +315,7 @@
           <img
             v-if="!$vuetify.theme.current.dark"
             class="sidebar-logo"
-            src="@/assets/images/logo-light.avif"
+            src="@/assets/images/logo-light.png"
             alt="Logo"
             @click="closeSidebarAndNavigate('/')"
             :style="$vuetify.theme.current.dark ? 'filter: invert(1);' : ''"
@@ -509,7 +509,7 @@
             color="primary"
             rounded="xl"
             class="contact-card"
-            @click="callPhoneNumber('0675131178')"
+            @click="callPhoneNumber(' 0562815787')"
           >
             <VCardText class="pa-4">
               <div class="d-flex align-center">
@@ -519,7 +519,7 @@
                     class="phone-number"
                     style="color: rgb(var(--v-theme-on-primary))"
                   >
-                    0675131178
+                    0562815787
                   </div>
                   <div
                     class="contact-label"
@@ -652,7 +652,9 @@ export default {
             },
           }
         );
-        this.alertMessages = response.data.data;
+        if (response.data.data.length > 0) {
+          this.alertMessages = response.data.data;
+        }
         // .map((item) =>
         //   localStorage.getItem("locale") === "ar" ? item.text_ar : item.text
         // );
@@ -853,6 +855,12 @@ export default {
 
 .headerLogo {
   block-size: 40px;
+}
+
+@media (min-width: 375px) {
+  .headerLogo {
+    block-size: 60px !important;
+  }
 }
 
 .headerSearchContainer {

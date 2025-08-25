@@ -173,7 +173,7 @@ export default {
       thumbnails: [
         {
           id: 2,
-          image_url: "/src/assets/images/thumbnails.webp",
+          image_url: "/src/assets/images/thumbnails.jpeg",
           position: 1,
           product_url: null,
         },
@@ -225,7 +225,9 @@ export default {
             Accept: "application/json",
           },
         });
-        this.thumbnails = response.data;
+        if (response.data && response.data.length > 0) {
+          this.thumbnails = response.data;
+        }
       } catch (error) {
         this.showSnackbar(
           "Something went wrong while fetching thumbnail urls",

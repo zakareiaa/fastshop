@@ -81,13 +81,13 @@
                       !$vuetify.theme.current.dark ? 'outlined' : 'elevated'
                     "
                     size="large"
-                    href="https://instagram.com/modiasn"
+                    href="https://instagram.com/fast_.shop1"
                     target="_blank"
                     rel="noopener noreferrer"
                     class="mb-4"
                   >
                     <VIcon icon="tabler-brand-instagram" class="me-2" />
-                    modiasn
+                    fast_.shop1
                   </VBtn>
                 </div>
               </VCard>

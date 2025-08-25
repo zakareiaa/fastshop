@@ -45,7 +45,7 @@
           </VCol>
           <VCol cols="12" md="6" class="d-flex justify-center align-center">
             <img
-              src="@/assets/images/thumbnails.webp"
+              src="@/assets/images/about-1.jpg"
               alt="About Us Hero Image"
               class="hero-image b-radius-0"
               style="
@@ -62,7 +62,7 @@
         <VRow>
           <VCol cols="12" md="6" class="d-flex justify-center align-center">
             <img
-              src="@/assets/images/about-2.webp"
+              src="@/assets/images/about-2.jpg"
               alt="Our Mission Image"
               class="hero-image b-radius-0"
               style="
@@ -103,9 +103,9 @@
                   >{{ $t("about.contact_email") }}
                   <span
                     class="pa-0 text-primary cursor-pointer"
-                    @click="openEmail('contact@modiasn.com')"
+                    @click="openEmail('Fastshop1097@gmail.com')"
                   >
-                    contact@modiasn.com
+                    Fastshop1097@gmail.com
                   </span>
                 </span>
               </div>

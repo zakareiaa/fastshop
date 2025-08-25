@@ -493,6 +493,13 @@ export default {
 
   created() {
     this.debouncedSearch = debounce(() => {
+      this.$router.replace({
+        query: {
+          ...this.$route.query,
+          search: this.searchQuery || undefined,
+        },
+      });
+
       this.page = 1;
       this.getProducts();
     }, 500);
@@ -529,9 +536,18 @@ export default {
     },
 
     selectedCategory() {
-      console.log(this.selectedCategory);
-
-      console.log(this.categories[this.selectedCategoryIndex]?.attributes);
+      // Add selectedCategory and searchQuery to route query when category changes
+      if (this.selectedCategory !== 0) {
+        this.$router.replace({
+          query: {
+            ...this.$route.query,
+            category_id: this.selectedCategory,
+          },
+        });
+      } else {
+        const { category_id, ...rest } = this.$route.query;
+        this.$router.replace({ query: { ...rest } });
+      }
 
       this.page = 1;
       this.selectedAttributes = [];
@@ -581,10 +597,10 @@ export default {
         this.getProductsLoading = true;
 
         const searchParam = this.searchQuery?.trim()
-          ? { 
-            // "name[like]": this.searchQuery,
-            "hashtags[like]": this.searchQuery,
-           }
+          ? {
+              // "name[like]": this.searchQuery,
+              "hashtags[like]": this.searchQuery,
+            }
           : {};
 
         let sortParams = {};
@@ -899,7 +915,7 @@ definePage({
 
 .shop-filters-card {
   position: sticky !important;
-  top: 15px;
   z-index: 99;
+  inset-block-start: 15px;
 }
 </style>

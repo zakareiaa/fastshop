@@ -257,7 +257,7 @@
             <VPagination
               v-model="page"
               :length="Math.ceil(totalProducts / per_page)"
-              @update:model-value="getProducts()"
+              @update:model-value="handlePaginationChange"
               class="shop-pagination"
             />
           </div>
@@ -477,7 +477,7 @@ export default {
       selectedAttributes: [],
 
       page: 1,
-      per_page: 16,
+      per_page: 15,
       totalProducts: null,
 
       isSnackbarVisible: false,
@@ -719,6 +719,12 @@ export default {
     addToCart(productId) {
       // Implementation for adding to cart
       console.log(`Added product ${productId} to cart`);
+    },
+
+    handlePaginationChange() {
+      // scroll to top
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      this.getProducts();
     },
   },
 };

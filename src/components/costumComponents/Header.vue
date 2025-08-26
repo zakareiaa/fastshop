@@ -621,9 +621,10 @@ export default {
 
   methods: {
     toggleTheme() {
-      this.$vuetify.theme.global.name = this.$vuetify.theme.current.dark
-        ? "light"
-        : "dark";
+      const newTheme = this.$vuetify.theme.current.dark ? "light" : "dark";
+      this.$vuetify.theme.global.name = newTheme;
+      // Save to localStorage
+      localStorage.setItem("theme", newTheme);
     },
 
     changeLanguage(locale) {
@@ -749,6 +750,12 @@ export default {
   },
 
   mounted() {
+    // Initialize theme from localStorage
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme && (savedTheme === "dark" || savedTheme === "light")) {
+      this.$vuetify.theme.global.name = savedTheme;
+    }
+
     this.getHeaderMessages();
     this.getCategories();
     // Change message every 3 seconds
@@ -857,7 +864,7 @@ export default {
   block-size: 40px;
 }
 
-@media (min-width: 375px) {
+@media (min-width: 425px) {
   .headerLogo {
     block-size: 60px !important;
   }

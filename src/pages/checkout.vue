@@ -450,9 +450,26 @@
                           class="b-radius-0"
                         />
 
-                        <!-- Warning message when pickup is not available -->
+                        <!-- Warning message when no delivery options are available -->
                         <VAlert
-                          v-if="selectedWilaya && isPickupAvailable == false"
+                          v-if="selectedWilaya && !isAnyDeliveryAvailable"
+                          type="error"
+                          variant="tonal"
+                          class="mt-3"
+                        >
+                          <template #prepend>
+                            <VIcon icon="tabler-alert-circle" />
+                          </template>
+                          {{ $t("checkout.no_delivery_available_message") }}
+                        </VAlert>
+
+                        <!-- Warning message when pickup is not available (only show if at least one delivery option exists) -->
+                        <VAlert
+                          v-if="
+                            selectedWilaya &&
+                            isAnyDeliveryAvailable &&
+                            isPickupAvailable == false
+                          "
                           type="info"
                           variant="tonal"
                           class="mt-3"
@@ -461,6 +478,23 @@
                             <VIcon icon="tabler-info-circle" />
                           </template>
                           {{ $t("checkout.pickup_not_available_message") }}
+                        </VAlert>
+
+                        <!-- Warning message when home delivery is not available (only show if at least one delivery option exists) -->
+                        <VAlert
+                          v-if="
+                            selectedWilaya &&
+                            isAnyDeliveryAvailable &&
+                            isHomeAvailable == false
+                          "
+                          type="info"
+                          variant="tonal"
+                          class="mt-3"
+                        >
+                          <template #prepend>
+                            <VIcon icon="tabler-info-circle" />
+                          </template>
+                          {{ $t("checkout.home_not_available_message") }}
                         </VAlert>
 
                         <!-- 
@@ -666,7 +700,7 @@
                       variant="flat"
                       class="w-100 b-radius-0"
                       :loading="confirmOrderLoading"
-                      :disabled="confirmOrderLoading"
+                      :disabled="confirmOrderLoading || !isAnyDeliveryAvailable"
                       @click="confirmOrder"
                     >
                       {{ $t("checkout.confirm_order") }}
@@ -946,6 +980,25 @@ export default {
 
       // Otherwise, check wilaya pickup availability
       return this.selectedWilaya.pickup_shipping_price !== null;
+    },
+
+    // Add isHomeAvailable computed property
+    isHomeAvailable() {
+      if (!this.selectedWilaya) return null;
+
+      // If commune is selected and has home price, use that
+      const selectedCommune = this.selectedCommune;
+      if (selectedCommune && selectedCommune.home_shipping_price !== null) {
+        return true;
+      }
+
+      // Otherwise, check wilaya home availability
+      return this.selectedWilaya.home_shipping_price !== null;
+    },
+
+    // Check if any delivery method is available
+    isAnyDeliveryAvailable() {
+      return this.isPickupAvailable || this.isHomeAvailable;
     },
 
     // Coupon discount calculations
@@ -1305,8 +1358,25 @@ export default {
         (commune) => commune?.wilaya_id === this.wilaya
       );
       const wilaya = this.wilayas.find((w) => w.id === this.wilaya);
-      if (wilaya.pickup_shipping_price === null) {
-        this.selectedCheckbox = ["home"];
+
+      // Auto-select available delivery method
+      if (wilaya) {
+        if (
+          wilaya.pickup_shipping_price !== null &&
+          wilaya.home_shipping_price !== null
+        ) {
+          // Both available, default to pickup
+          this.selectedCheckbox = ["pickup"];
+        } else if (wilaya.pickup_shipping_price !== null) {
+          // Only pickup available
+          this.selectedCheckbox = ["pickup"];
+        } else if (wilaya.home_shipping_price !== null) {
+          // Only home available
+          this.selectedCheckbox = ["home"];
+        } else {
+          // No delivery available
+          this.selectedCheckbox = [];
+        }
       }
     },
 
@@ -1324,7 +1394,25 @@ export default {
         this.selectedCheckbox.includes("pickup") &&
         this.isPickupAvailable == false
       ) {
-        this.selectedCheckbox = ["home"];
+        // Try to fallback to home if available
+        if (this.isHomeAvailable) {
+          this.selectedCheckbox = ["home"];
+        } else {
+          this.selectedCheckbox = [];
+        }
+      }
+
+      // Prevent selecting home if not available
+      if (
+        this.selectedCheckbox.includes("home") &&
+        this.isHomeAvailable == false
+      ) {
+        // Try to fallback to pickup if available
+        if (this.isPickupAvailable) {
+          this.selectedCheckbox = ["pickup"];
+        } else {
+          this.selectedCheckbox = [];
+        }
       }
     },
   },

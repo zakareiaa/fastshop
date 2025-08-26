@@ -19,7 +19,12 @@
           :class="{ 'cursor-pointer': thumbnail.product_url }"
           @click="handleThumbnailClick(thumbnail)"
         >
-          <img class="thumbnail-image" :src="thumbnail?.image_url" />
+          <img
+            class="thumbnail-image"
+            :src="thumbnail?.image_url"
+            loading="lazy"
+            decoding="async"
+          />
           <div class="slide-overlay"></div>
           <div class="slide-content">
             <h2 class="slide-title text-h2">{{ $t("hero.main_title") }}</h2>

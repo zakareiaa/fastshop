@@ -33,6 +33,8 @@
           :src="product.main_image_url"
           class="product-image"
           :class="viewMode"
+          loading="lazy"
+          decoding="async"
         />
 
         <!-- Action buttons - top right -->

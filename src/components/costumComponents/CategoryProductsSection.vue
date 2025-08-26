@@ -83,6 +83,7 @@
 
 <script>
 import { register } from "swiper/element/bundle";
+import ProductCard from "./ProductCard.vue";
 register();
 
 export default {
@@ -102,11 +103,11 @@ export default {
   },
 
   mounted() {
-    this.startAutoplay();
+    // this.startAutoplay();
   },
 
   unmounted() {
-    this.stopAutoplay();
+    // this.stopAutoplay();
   },
 
   methods: {
